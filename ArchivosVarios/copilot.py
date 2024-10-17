@@ -1,7 +1,7 @@
 #### Esto es lo que me hace copilot si le revoleo todo el pdf ####	
 import matplotlib.pyplot as plt
 import csv
-from datetime import datetime
+from datetime import datetime 
 import os
 
 class Central:
