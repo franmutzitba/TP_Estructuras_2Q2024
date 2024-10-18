@@ -11,9 +11,9 @@ ID (único), Nombre, Modelo, Sistema Operativo y versión, capacidad de memoria 
 almacenamiento y número telefónico.
 
 Un teléfono celular debe al menos poder:
-1. Prenderse y apagarse.
+1. Prenderse y apagarse. OK
 
-2. Bloquearse y desbloquearse.
+2. Bloquearse y desbloquearse. OK
 
 3. Abrir una cierta aplicación para interactuar con ella (Contactos, Mensajería SMS, e-mail, Teléfono,
 App Store, Configuración, etc.), para al menos poder:
@@ -29,9 +29,9 @@ App Store, Configuración, etc.), para al menos poder:
         ii. “por fecha” (del último en llegar al primero)
     i. Descargar una nueva app desde la tienda de aplicaciones.
     j. Configurar:
-        i. nombre de teléfono, código de desbloqueo.
-        ii. Activar red móvil: cada vez que el dispositivo se enciende esta acción debe ejecutarse.
-        iii. Desactivar red móvil
+        i. nombre de teléfono, código de desbloqueo. OK
+        ii. Activar red móvil: cada vez que el dispositivo se enciende esta acción debe ejecutarse. OK
+        iii. Desactivar red móvil OK
         iv. Activar y desactivar datos (conectividad a internet)
 
 
