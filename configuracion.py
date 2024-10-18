@@ -27,14 +27,14 @@ class ConfigApp(Aplicacion):
                 
     def set_servicio(self,valor:bool):
         if self.configuracion.servicio == valor:
-            print(f"El servicio ya se encuentra {'encendido' if valor==True else 'apagado'}")
+            raise ValueError(f"El servicio ya se encuentra {'encendido' if valor==True else 'apagado'}")
         else:
             self.configuracion.servicio=valor
             print(f"El servicio se ha {'encendido' if valor==True else 'apagado'}")
              
     def set_wifi(self,valor:bool):
         if self.configuracion.wifi == valor:
-            print(f"El wifi ya se encuentra {'encendido' if valor==True else 'apagado'}")
+            raise ValueError(f"El wifi ya se encuentra {'encendido' if valor==True else 'apagado'}")
         else:
             self.configuracion.wifi=valor
             print(f"El wifi se ha {'encendido' if valor==True else 'apagado'}")
@@ -42,6 +42,9 @@ class ConfigApp(Aplicacion):
     def set_contrasenia(self, contrasenia):
         self.configuracion.contrasenia = contrasenia
         print("Contraseña actualizada correctamente")
+        
+    def get_contrasenia(self):
+        return self.configuracion.contrasenia
         
     @staticmethod
     def validar_contrasenia(contrasenia:str):
