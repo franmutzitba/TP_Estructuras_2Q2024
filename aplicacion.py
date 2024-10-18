@@ -1,7 +1,7 @@
 class Aplicacion:
-    def __init__(self, nombre, tamanio, esencial = False):
+    def __init__(self, nombre, tamanio_mb, esencial = False):
         self.nombre = nombre
-        self.tamanio = tamanio
+        self.tamanio_mb = tamanio_mb
         self.esencial = esencial
         
     def __str__(self) -> str:
