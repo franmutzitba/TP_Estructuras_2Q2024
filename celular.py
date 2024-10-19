@@ -1,5 +1,6 @@
 from configuracion import Configuracion
 from configuracion import ConfigApp
+from appstore import AppStore
 import uuid
 
 class Celular:
@@ -11,49 +12,50 @@ class Celular:
         self.numero = numero
         self.sistema_operativo = sistema
         self.memoria_ram = memoria_ram
-        self.almacenamiento = almacenamiento_gb
+        self.almacenamiento_gb = int(almacenamiento_gb)
         
         self.encendido = False
         self.bloqueado = False
         
         self.aplicaciones = {}  
-        self.descargar_apps_basicas(nombre)
+        self.descargar_apps_basicas(nombre, almacenamiento_gb)
     
-    def descargar_apps_basicas(self, nombre):
+    def descargar_apps_basicas(self, nombre, almacenamiento_gb):
         #self.aplicaciones['Configuracion'] = ConfigApp(self.configuracion)
-        self.aplicaciones['Configuracion'] = ConfigApp(Configuracion(nombre))
-        self.aplicaciones['Llamadas'] = None
-        self.aplicaciones['Mensajes'] = None
-        self.aplicaciones['Mail'] = None
+        self.aplicaciones["Configuracion"] = ConfigApp(Configuracion(nombre, almacenamiento_gb))
+        self.aplicaciones["Telefono"] = None
+        self.aplicaciones["Mensajes"] = None
+        self.aplicaciones["Mail"] = None
+        self.aplicaciones["AppStore"] = AppStore(self.aplicaciones, self.aplicaciones["Configuracion"])
         
     def encencer_dispositivo(self):
         if self.encendido:
-            raise ValueError(f" El dispositivo {self.aplicaciones["Configuracion"].get_nombre()} ya se encuentra encendido ")
+            raise ValueError(f" El dispositivo {self.aplicaciones['Configuracion'].get_nombre()} ya se encuentra encendido ")
         else:
             self.encendido = True
             self.servicio = True
-            print(f"Se ha encencido el dispositivo - {self.aplicaciones["Configuracion"].get_nombre()} -")
+            print(f"Se ha encencido el dispositivo - {self.aplicaciones['Configuracion'].get_nombre()} -")
             
     def apagar_dispositivo(self):
         if self.encendido:
             self.encendido = False
-            print(f"Se ha apagado el dispositivo - {self.aplicaciones["Configuracion"].get_nombre()} -")
+            print(f"Se ha apagado el dispositivo - {self.aplicaciones['Configuracion'].get_nombre()} -")
         else:
-            raise ValueError(f" El dispositivo {self.aplicaciones["Configuracion"].get_nombre()} ya se encuentra apagado ")
+            raise ValueError(f" El dispositivo {self.aplicaciones['Configuracion'].get_nombre()} ya se encuentra apagado ")
     
     def bloquear_dispositivo(self):
         if self.bloqueado:
-            raise ValueError(f" El dispositivo {self.aplicaciones["Configuracion"].get_nombre()} ya se encuentra bloqueado ")
+            raise ValueError(f" El dispositivo {self.aplicaciones['Configuracion'].get_nombre()} ya se encuentra bloqueado ")
         else:
             self.bloqueado = True
-            print(f"Se ha bloqueado el dispositivo - {self.aplicaciones["Configuracion"].get_nombre()} -")
+            print(f"Se ha bloqueado el dispositivo - {self.aplicaciones['Configuracion'].get_nombre()} -")
     
     def desbloquear_dispositivo(self, contrasenia = None):
-        if self.bloqueado and (contrasenia == self.aplicaciones["Configuracion"].get_contrasenia() or contrasenia == None):
+        if self.bloqueado and (contrasenia == self.aplicaciones['Configuracion'].get_contrasenia() or contrasenia == None):
             self.bloqueado = False
-            print(f"Se ha desbloqueado el dispositivo - {self.aplicaciones["Configuracion"].get_nombre()} -")
+            print(f"Se ha desbloqueado el dispositivo - {self.aplicaciones['Configuracion'].get_nombre()} -")
         elif not(self.bloqueado):
-            raise ValueError(f"El dispositivo {self.aplicaciones["Configuracion"].get_nombre()} ya se encuentra desbloqueado")
+            raise ValueError(f"El dispositivo {self.aplicaciones['Configuracion'].get_nombre()} ya se encuentra desbloqueado")
         else:
             raise ValueError("La contraseña ingresada es incorrecta")
         
@@ -62,13 +64,21 @@ class Celular:
         return self.numero
     
     def __str__(self) -> str:
-        return f"ID: {self.id}\nNombre: {self.aplicaciones["Configuracion"].get_nombre()}\nModelo: {self.modelo}\nSistema operativo: {self.sistema_operativo}\nMemoria RAM: {self.memoria_ram}\nAlmacenamiento: {self.almacenamiento}"
+        return f"ID: {self.id}\nNombre: {self.aplicaciones['Configuracion'].get_nombre()}\nModelo: {self.modelo}\nSistema operativo: {self.sistema_operativo}\nMemoria RAM: {self.memoria_ram}\nAlmacenamiento: {self.almacenamiento}"
 
 
 
 if __name__== "__main__":
-    celular1 = Celular("Samsung", "Galaxy", "123456789", "Android", "2GB", "16GB")
-    print(celular1.aplicaciones["Configuracion"])
-    celular1.aplicaciones["Configuracion"].configurar_contrasenia("1234")
-    print(celular1.aplicaciones["Configuracion"])
+    celular1 = Celular("Samsung", "Galaxy", "123456789", "Android", "2GB", "16")
+    celular2 = Celular("iPhone", "11", "987654321", "iOS", "4GB", "64")
+    celular1.aplicaciones["AppStore"].mostrar_apps()
+    print("\n")
+    #celular2.aplicaciones["AppStore"].mostrar_apps()
+    
+    print(celular1.aplicaciones["Configuracion"].get_almacenamiento_disponible())
+    celular1.aplicaciones["AppStore"].descargar_app("WhatsApp")
+    print(celular1.aplicaciones["Configuracion"].get_almacenamiento_disponible())
+    celular1.aplicaciones["AppStore"].mostrar_apps()
+ 
+    # celular1.aplicaciones["AppStore"].mostar_apps()
     

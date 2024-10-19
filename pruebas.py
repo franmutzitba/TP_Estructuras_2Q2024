@@ -11,10 +11,12 @@ class Configuracion:
     def actualizar_contrasenia(self,contra_nueva):
         self.datos[0]=contra_nueva
         
-if __name__ =="main.py":
-    celular=Celular("hola",10)
-    print(celular.contrasenia)
-    celular.configuracion.actualizar_contrasenia("chau")
-    print(celular.contrasenia)
-    
-    
+if __name__ =="__main__":
+    # celular=Celular("hola",10)
+    # print(celular.contrasenia)
+    # celular.configuracion.actualizar_contrasenia("chau")
+    # print(celular.contrasenia)
+    diccionario = {"hola":1, "chau":2}
+    print(diccionario.keys())
+    print("hoa" in diccionario)    
+

@@ -1,12 +1,13 @@
 from aplicacion import Aplicacion
 
 class Configuracion():
-    def __init__(self, nombre, modo_avion=False, servicio=False, contrasenia = None, wifi=False):
+    def __init__(self, nombre, almacenamiento_gb, modo_avion=False, servicio=False, contrasenia = None, wifi=False):
         self.modo_avion = modo_avion
         self.servicio = servicio
         self.wifi = wifi
         self.contrasenia = contrasenia
         self.nombre = nombre
+        self.almacenamiento_disponible = int(almacenamiento_gb)*1024 #Trabajo en megas que es más sencillo pero dejo que se ingrese en gb que es mas común
         
     def __str__(self):
         return f"Modo avion: {self.modo_avion}\nServicio: {self.servicio}\nWifi: {self.wifi}\nContraseña: {self.contrasenia}"
@@ -50,11 +51,17 @@ class ConfigApp(Aplicacion):
         self.configuracion.contrasenia = contrasenia
         print("Contraseña actualizada correctamente")
         
+    def set_almacenamiento_disponible(self, almacenamiento):
+        self.configuracion.almacenamiento_disponible = almacenamiento
+        
     def get_contrasenia(self):
         return self.configuracion.contrasenia
     
     def get_nombre(self):
         return self.configuracion.nombre
+    
+    def get_almacenamiento_disponible(self):
+        return int(self.configuracion.almacenamiento_disponible)
         
     @staticmethod
     def validar_contrasenia(contrasenia:str): #la contraseña debe ser un número de 4 a 6 dígitos
@@ -63,6 +70,7 @@ class ConfigApp(Aplicacion):
         else:
             return False
     
+    @staticmethod
     def validar_nombre(nombre:str): #el nombre debe contener al menos 6 caracteres y no puede contener caracteres especiales. Ademas debe comenzar con una letra
         if len(nombre) >= 6 and nombre.isalnum() and nombre[0].isalpha():
             return True
