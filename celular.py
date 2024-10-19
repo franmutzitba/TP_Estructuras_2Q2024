@@ -71,14 +71,12 @@ class Celular:
 if __name__== "__main__":
     celular1 = Celular("Samsung", "Galaxy", "123456789", "Android", "2GB", "16")
     celular2 = Celular("iPhone", "11", "987654321", "iOS", "4GB", "64")
-    celular1.aplicaciones["AppStore"].mostrar_apps()
-    print("\n")
-    #celular2.aplicaciones["AppStore"].mostrar_apps()
-    
+    celular1.aplicaciones["AppStore"].mostrar_apps_disponibles()
+    print("\n") 
     print(celular1.aplicaciones["Configuracion"].get_almacenamiento_disponible())
     celular1.aplicaciones["AppStore"].descargar_app("WhatsApp")
     print(celular1.aplicaciones["Configuracion"].get_almacenamiento_disponible())
-    celular1.aplicaciones["AppStore"].mostrar_apps()
- 
+    celular1.aplicaciones["AppStore"].mostrar_apps_disponibles()
+    print(celular1.aplicaciones) #Las apps nuevas del appstore no van a tener ningun objeto asociado pq "no existen" como objetos
     # celular1.aplicaciones["AppStore"].mostar_apps()
     

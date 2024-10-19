@@ -8,7 +8,7 @@ class AppStore(Aplicacion):
         self.aplicaciones_celular = aplicaciones_celular
         self.configuracion = configuracion
     
-    def mostrar_apps(self):
+    def mostrar_apps_disponibles(self):
         aplicaciones_disponibles = self.aplicaciones_disponibles()
         for app in aplicaciones_disponibles:
             if app[0] not in self.aplicaciones_celular:
