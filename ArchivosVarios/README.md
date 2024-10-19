@@ -27,7 +27,7 @@ App Store, Configuración, etc.), para al menos poder:
     h. Ver e-mails, los cuales deben poder consultarse según:
         i. “no leídos primeros”
         ii. “por fecha” (del último en llegar al primero)
-    i. Descargar una nueva app desde la tienda de aplicaciones.
+    i. Descargar una nueva app desde la tienda de aplicaciones. OK
     j. Configurar:
         i. nombre de teléfono, código de desbloqueo. OK
         ii. Activar red móvil: cada vez que el dispositivo se enciende esta acción debe ejecutarse. OK
