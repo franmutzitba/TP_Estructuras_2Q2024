@@ -78,5 +78,8 @@ if __name__== "__main__":
     print(celular1.aplicaciones["Configuracion"].get_almacenamiento_disponible())
     celular1.aplicaciones["AppStore"].mostrar_apps_disponibles()
     print(celular1.aplicaciones) #Las apps nuevas del appstore no van a tener ningun objeto asociado pq "no existen" como objetos
+    celular1.aplicaciones["AppStore"].descargar_app("Zoom") #No hay espacio suficiente
+    celular1.aplicaciones["AppStore"].mostrar_apps_disponibles()
+
     # celular1.aplicaciones["AppStore"].mostar_apps()
     
