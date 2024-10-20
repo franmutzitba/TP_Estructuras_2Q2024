@@ -60,7 +60,7 @@ class Celular:
             raise ValueError("La contraseña ingresada es incorrecta")
         
     
-    def get_numero(self):
+    def get_numero(self) -> str:
         return self.numero
     
     def __str__(self) -> str:
