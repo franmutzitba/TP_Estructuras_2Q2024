@@ -3,15 +3,15 @@ from celular import Celular
 from central import Central
 from comunicacion import Llamada, Llamada_perdida
 
-class Telefono(Aplicacion):
+class TelefonoApp(Aplicacion):
     
     todos_los_telefonos = {}
     def __init__(self, celular:Celular, contactos:dict):
         super().__init__("Telefono", 200, True)
         self.numero = celular.get_numero()
         self.historial_llamadas = []
-        self.contactos = contactos                            #ver como poner los contactos en un diccionario aca. la calve debe ser el numero telefonico y el valor el nombre del contacto.
-        Telefono.todos_los_telefonos[self.numero] = self
+        self.contactos = contactos                   #ver como poner los contactos en un diccionario aca. la calve debe ser el numero telefonico y el valor el nombre del contacto.
+        TelefonoApp.todos_los_telefonos[self.numero] = self
 
     def numero_en_contactos(self, numero):
         return numero in self.contactos.keys() 

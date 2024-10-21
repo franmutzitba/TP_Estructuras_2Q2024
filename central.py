@@ -24,10 +24,10 @@ class Central:
         return  self.registro_dispositivos[numero].encendido and self.registro_dispositivos[numero].servicio 
     
     def registrar_llamada(self, emisor, receptor, duracion):
-        self.registro_comunicaciones[datetime.now()]=Llamada(emisor, receptor ,duracion)
+        self.registro_comunicaciones[datetime.now()] = Llamada(emisor, receptor ,duracion)
     
     def registrar_mensaje(self, emisor, receptor, mensaje):
-        self.registro_comunicaciones[datetime.now()]=Mensaje(emisor, receptor, mensaje)
+        self.registro_comunicaciones[datetime.now()] = Mensaje(emisor, receptor, mensaje)
         
     def manejar_llamada(self, emisor, receptor, duracion):
         if self.esta_activo(emisor) and self.esta_activo(receptor):

@@ -1,6 +1,7 @@
 from configuracion import Configuracion
 from configuracion import ConfigApp
 from appstore import AppStore
+from telefono import TelefonoApp
 import uuid
 
 class Celular:
