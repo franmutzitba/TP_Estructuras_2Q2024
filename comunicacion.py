@@ -1,11 +1,10 @@
+
 class Comunicacion():
     
     def __init__(self, emisor, receptor, tipo):
         self.emisor = emisor
         self.receptor = receptor
         self.tipo = tipo
-
-
 
 class Llamada(Comunicacion):
     

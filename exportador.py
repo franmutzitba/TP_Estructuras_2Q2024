@@ -27,7 +27,21 @@ class Exportador:
             print("Error al exportar archivo")
             raise FileIO
         
-    def leer(self):
+    def leer_archivo(self, skip_first = False):
+        try:
+            with open(self.nombre_archivo, "r", encoding='utf-8') as archivo_csv:
+                lector = csv.reader(archivo_csv)
+                if skip_first:
+                    next(lector)
+                return list(lector)
+        except FileNotFoundError:
+            print("Archivo no encontrado")
+            raise FileNotFoundError
+        except IOError:
+            print("Error al leer archivo")
+            raise FileIO
+        
+    def leer_matriz(self):
         try:
             matriz = np.genfromtxt(self.nombre_archivo, delimiter=',', dtype=str, skip_header=1)
             return matriz
