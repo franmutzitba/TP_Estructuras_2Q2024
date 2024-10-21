@@ -1,10 +1,13 @@
 from configuracion import Configuracion
 from configuracion import ConfigApp
 from appstore import AppStore
-#from telefono import TelefonoApp
+from telefono import TelefonoApp
+from central import Central
+from mensajeriaSMS import MensajesApp
 import uuid
 
 class Celular:
+    central = Central()
     
     def __init__(self, nombre, modelo, numero, sistema, memoria_ram, almacenamiento_gb):
         #Almaceno los parámetros no modificables por Configuración
@@ -19,13 +22,13 @@ class Celular:
         self.bloqueado = False
         
         self.aplicaciones = {}  
-        self.descargar_apps_basicas(nombre, almacenamiento_gb)
-    
-    def descargar_apps_basicas(self, nombre, almacenamiento_gb):
+        self.descargar_apps_basicas(nombre, almacenamiento_gb, numero)
+ 
+    def descargar_apps_basicas(self, nombre, almacenamiento_gb, numero):
         #self.aplicaciones['Configuracion'] = ConfigApp(self.configuracion)
-        self.aplicaciones["Configuracion"] = ConfigApp(Configuracion(nombre, almacenamiento_gb))
-        self.aplicaciones["Telefono"] = None
-        self.aplicaciones["Mensajes"] = None
+        self.aplicaciones["Configuracion"] = ConfigApp(Configuracion(nombre, almacenamiento_gb, Celular.central, numero))
+        self.aplicaciones["Telefono"] = TelefonoApp(numero, Celular.central)
+        self.aplicaciones["Mensajes"] = MensajesApp(numero, Celular.central)
         self.aplicaciones["Mail"] = None
         self.aplicaciones["AppStore"] = AppStore(self.aplicaciones, self.aplicaciones["Configuracion"])
         
@@ -34,12 +37,12 @@ class Celular:
             raise ValueError(f" El dispositivo {self.aplicaciones['Configuracion'].get_nombre()} ya se encuentra encendido ")
         else:
             self.encendido = True
-            self.servicio = True
             print(f"Se ha encencido el dispositivo - {self.aplicaciones['Configuracion'].get_nombre()} -")
             
     def apagar_dispositivo(self):
         if self.encendido:
             self.encendido = False
+            self.aplicaciones["Configuracion"].set_servicio(False)
             print(f"Se ha apagado el dispositivo - {self.aplicaciones['Configuracion'].get_nombre()} -")
         else:
             raise ValueError(f" El dispositivo {self.aplicaciones['Configuracion'].get_nombre()} ya se encuentra apagado ")
@@ -59,7 +62,6 @@ class Celular:
             raise ValueError(f"El dispositivo {self.aplicaciones['Configuracion'].get_nombre()} ya se encuentra desbloqueado")
         else:
             raise ValueError("La contraseña ingresada es incorrecta")
-        
     
     def get_numero(self) -> str:
         return self.numero
@@ -72,15 +74,22 @@ class Celular:
 if __name__== "__main__":
     celular1 = Celular("Samsung", "Galaxy", "123456789", "Android", "2GB", "16")
     celular2 = Celular("iPhone", "11", "987654321", "iOS", "4GB", "64")
-    celular1.aplicaciones["AppStore"].mostrar_apps_disponibles()
-    print("\n") 
-    print(celular1.aplicaciones["Configuracion"].get_almacenamiento_disponible())
-    celular1.aplicaciones["AppStore"].descargar_app("WhatsApp")
-    print(celular1.aplicaciones["Configuracion"].get_almacenamiento_disponible())
-    celular1.aplicaciones["AppStore"].mostrar_apps_disponibles()
+    celular1.encencer_dispositivo()
+    celular1.central.mostrar_dispositivos()
+    celular1.aplicaciones["Configuracion"].set_servicio(True)
+    celular2.aplicaciones["Configuracion"].set_servicio(True)
+    celular1.central.mostrar_dispositivos()
+    celular1.apagar_dispositivo()
+    celular1.central.mostrar_dispositivos()
+
+    # celular1.aplicaciones["AppStore"].mostrar_apps_disponibles()
+    # print("\n") 
+    # print(celular1.aplicaciones["Configuracion"].get_almacenamiento_disponible())
+    # celular1.aplicaciones["AppStore"].descargar_app("WhatsApp")
+    # print(celular1.aplicaciones["Configuracion"].get_almacenamiento_disponible())
+    # celular1.aplicaciones["AppStore"].mostrar_apps_disponibles()
     # print(celular1.aplicaciones) #Las apps nuevas del appstore no van a tener ningun objeto asociado pq "no existen" como objetos
     # celular1.aplicaciones["AppStore"].descargar_app("Zoom") #No hay espacio suficiente
     # celular1.aplicaciones["AppStore"].mostrar_apps_disponibles()
-
     # celular1.aplicaciones["AppStore"].mostar_apps()
     

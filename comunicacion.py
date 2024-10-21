@@ -1,34 +1,47 @@
-
 class Comunicacion():
-    
     def __init__(self, emisor, receptor, tipo):
         self.emisor = emisor
         self.receptor = receptor
         self.tipo = tipo
 
+    def get_emisor(self):
+        return self.emisor
+
+    def get_receptor(self):
+        return self.receptor
+
 class Llamada(Comunicacion):
-    
-    def __init__(self, emisor, receptor, duracion):
+    def __init__(self, emisor, receptor, duracion, fecha):
         super().__init__(self, emisor, receptor, 'Llamada realizada')
         self.duracion = duracion
+        self.fecha = fecha
+        self.perdida = False
+    
+    def set_duracion(self, tiempo):
+        self.duracion = tiempo
+
+    def get_duracion(self):
+        return self.duracion
+    # Faltan getters y setters de emisor y receptor
+    def get_fecha(self):
+        return self.fecha
+    
+    def get_perdida(self):
+        return self.perdida
+    
+    def set_perdida(self, perdida):
+        self.perdida = perdida
 
     def __str__(self):
         return f"Emisor: {self.emisor}, Receptor: {self.receptor}, Duracion: {self.duracion}"
     
-class Llamada_perdida(Comunicacion):
-
-    def __init__(self, emisor, receptor, tipo="Llamada perdida"):
-        super().__init__(self, emisor, receptor, 'Llamada no realizada')
-        self.tipo = tipo
     
 class Mensaje(Comunicacion):
-
-    def __init__(self, emisor, receptor, mensaje):
+    def __init__(self, emisor, receptor, mensaje, fecha):
         super().__init__(self, emisor, receptor, 'Mensaje')
         self.mensaje = mensaje
+        self.fecha = fecha
 
     def __str__(self):
         return f"Emisor: {self.emisor}, Receptor: {self.receptor}, Duracion: {self.mensaje}"
 
-    
-        

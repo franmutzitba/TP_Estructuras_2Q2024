@@ -3,11 +3,12 @@ from configuracion import Configuracion
 from exportador import Exportador
 
 class AppStore(Aplicacion):
+    exportador = Exportador("appstore.csv")
+    
     def __init__(self, aplicaciones_celular, configuracion: Configuracion):
         super().__init__("AppStore", 200, True)
         self.aplicaciones_celular = aplicaciones_celular
         self.configuracion = configuracion
-        self.exportador = Exportador("appstore.csv")
     
     def mostrar_apps_disponibles(self):
         aplicaciones_disponibles = self.aplicaciones_disponibles()
@@ -52,7 +53,7 @@ class AppStore(Aplicacion):
             if app[0] == nombre:
                 app[2] = int(app[2]) + 1
         aplicaciones_disponibles.insert(0, ["Nombre", "Tamaño", "Descargas"])
-        self.exportador.exportar(aplicaciones_disponibles)
+        AppStore.exportador.exportar(aplicaciones_disponibles)
     
     def consultar_tamanio(self, nombre):
         aplicaciones_disponibles = self.aplicaciones_disponibles()
@@ -61,7 +62,7 @@ class AppStore(Aplicacion):
                 return int(app[1])
      
     def aplicaciones_disponibles(self):
-        return self.exportador.leer_archivo(True)
+        return AppStore.exportador.leer_archivo(True)
 
     def __str__(self):
         return super().__str__()
