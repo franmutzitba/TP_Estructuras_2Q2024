@@ -21,7 +21,7 @@ class Celular:
         self.encendido = False
         self.bloqueado = False
         
-        self.aplicaciones = {}  
+        self.aplicaciones = {}
         self.descargar_apps_basicas(nombre, almacenamiento_gb, numero)
  
     def descargar_apps_basicas(self, nombre, almacenamiento_gb, numero):
@@ -37,6 +37,7 @@ class Celular:
             raise ValueError(f" El dispositivo {self.aplicaciones['Configuracion'].get_nombre()} ya se encuentra encendido ")
         else:
             self.encendido = True
+            self.aplicaciones["Configuracion"].set_servicio(True)
             print(f"Se ha encencido el dispositivo - {self.aplicaciones['Configuracion'].get_nombre()} -")
             
     def apagar_dispositivo(self):
@@ -69,7 +70,34 @@ class Celular:
     def __str__(self) -> str:
         return f"ID: {self.id}\nNombre: {self.aplicaciones['Configuracion'].get_nombre()}\nModelo: {self.modelo}\nSistema operativo: {self.sistema_operativo}\nMemoria RAM: {self.memoria_ram}\nAlmacenamiento: {self.almacenamiento}"
 
+    def guardar_datos(self, filename): #ESTE METODO Y EL DE ABAJO HAY Q PASARLO AL EXPORTADOR Y HAY Q AGREGAR UNA VARIABLE CON TODOS LOS CELULARES
+        with open(filename, mode='w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(['id', 'nombre', 'modelo', 'numero', 'sistema_operativo', 'memoria_ram', 'almacenamiento_gb', 'aplicaciones'])
+            aplicaciones = ','.join(self.aplicaciones.keys())
+            writer.writerow([self.id, self.nombre, self.modelo, self.numero, self.sistema_operativo, self.memoria_ram, self.almacenamiento_gb, aplicaciones])
 
+    @staticmethod
+    def cargar_datos(filename):
+        celulares = []
+        with open(filename, mode='r') as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                celular = Celular(row['nombre'], row['modelo'], row['numero'], row['sistema_operativo'], row['memoria_ram'], row['almacenamiento_gb'])
+                aplicaciones = row['aplicaciones'].split(',')
+                for app in aplicaciones:
+                    if app == "Configuracion":
+                        celular.aplicaciones[app] = ConfigApp(Configuracion(celular.nombre, celular.almacenamiento_gb, Celular.central, celular.numero))
+                    elif app == "Telefono":
+                        celular.aplicaciones[app] = TelefonoApp(celular.numero, Celular.central)
+                    elif app == "Mensajes":
+                        celular.aplicaciones[app] = MensajesApp(celular.numero, Celular.central)
+                    elif app == "AppStore":
+                        celular.aplicaciones[app] = AppStore(celular.aplicaciones, celular.aplicaciones["Configuracion"])
+                    else:
+                        celular.aplicaciones[app] = None
+                celulares.append(celular)
+        return celulares
 
 if __name__== "__main__":
     celular1 = Celular("Samsung", "Galaxy", "123456789", "Android", "2GB", "16")
