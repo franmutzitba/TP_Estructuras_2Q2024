@@ -12,7 +12,7 @@ class Comunicacion():
 
 class Llamada(Comunicacion):
     def __init__(self, emisor, receptor, duracion, fecha):
-        super().__init__(self, emisor, receptor, 'Llamada realizada')
+        super().__init__(emisor, receptor, 'Llamada realizada')
         self.duracion = duracion
         self.fecha = fecha
         self.perdida = False
@@ -38,10 +38,17 @@ class Llamada(Comunicacion):
     
 class Mensaje(Comunicacion):
     def __init__(self, emisor, receptor, mensaje, fecha):
-        super().__init__(self, emisor, receptor, 'Mensaje')
+        super().__init__(emisor, receptor, 'Mensaje')
         self.mensaje = mensaje
         self.fecha = fecha
+        self.sincronizado = False #El mensaje se sincroniza cuando el receptor es capaz de recibirlo en su bandeja de entrada
+
+    def get_sincronizado(self):
+        return self.sincronizado
+    
+    def set_sincronizado(self):
+        self.sincronizado = True
 
     def __str__(self):
-        return f"Emisor: {self.emisor}, Receptor: {self.receptor}, Duracion: {self.mensaje}"
+        return f"Emisor: {self.emisor}, Receptor: {self.receptor}, Texto: {self.mensaje}, Fecha: {self.fecha}"
 

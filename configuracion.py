@@ -56,9 +56,9 @@ class ConfigApp(Aplicacion):
             self.configuracion.modo_red = ModoRed.SOLO_VOZ_Y_SMS if valor else ModoRed.SIN_RED
             if valor: #HAY Q VER ESTO
                 self.configuracion.modo_avion = False
-                self.configuracion.central.registrar_dispositivo(self.configuracion.numero)
-            else:
-                self.configuracion.central.eliminar_dispositivo(self.configuracion.numero)
+                #self.configuracion.central.registrar_dispositivo(self.configuracion.numero)
+            else: pass
+                #self.configuracion.central.eliminar_dispositivo(self.configuracion.numero)
         print(f"El servicio se ha {'encendido' if valor==True else 'apagado'}")
              
     def set_datos(self,valor:bool):
