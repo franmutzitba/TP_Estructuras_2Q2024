@@ -1,7 +1,7 @@
-from aplicacion import Aplicacion
+from Apps.aplicacion import Aplicacion
 from central import Central
 from comunicacion import Llamada
-from contactos import ContactosApp
+from Apps.contactos import ContactosApp
 import datetime
 
 class TelefonoApp(Aplicacion):

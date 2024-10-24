@@ -1,4 +1,4 @@
-from aplicacion import Aplicacion
+from Apps.aplicacion import Aplicacion
 from comunicacion import Mensaje
 import datetime
 from central import Central

@@ -1,4 +1,4 @@
-from aplicacion import Aplicacion
+from Apps.aplicacion import Aplicacion
 from central import Central
 from collections import deque
 import re

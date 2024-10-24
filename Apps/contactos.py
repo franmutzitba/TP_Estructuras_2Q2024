@@ -1,4 +1,4 @@
-from aplicacion import Aplicacion
+from Apps.aplicacion import Aplicacion
 
 class ContactosApp(Aplicacion):
     def __init__(self):

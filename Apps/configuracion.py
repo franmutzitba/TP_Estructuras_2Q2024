@@ -1,4 +1,4 @@
-from aplicacion import Aplicacion
+from Apps.aplicacion import Aplicacion
 from enum import Enum
 
 class ModoRed(Enum):

@@ -1,5 +1,5 @@
-from aplicacion import Aplicacion
-from configuracion import Configuracion
+from Apps.aplicacion import Aplicacion
+from Apps.configuracion import Configuracion
 from exportador import Exportador
 
 class AppStore(Aplicacion):
