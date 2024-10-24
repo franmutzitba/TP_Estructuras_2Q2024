@@ -10,7 +10,7 @@ from exportador import Exportador
 class Central:
     exportador_dispositivos = Exportador("dispositivos.csv")
     exportador_llamadas = Exportador("llamadas.csv")
-    exportador_mensajes = Exportador("mensajes.csv")
+    exportador_mensajes = Exportador("mensajes.csv") #creo q esto va en el main
     
     def __init__(self):
         self.registro_llamadas = {} #registro de llamadas_perdidas_o_realizadas
