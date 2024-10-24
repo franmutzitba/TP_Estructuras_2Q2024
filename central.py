@@ -3,6 +3,9 @@ import datetime
 #from telefono import TelefonoApp
 from exportador import Exportador
 
+#La primera vez que se activa el servicio del celular se da de alta en la central
+#Luego la central chequea que tenga servicio o LTE segun corresponda para realizar la comunicacion
+#
 
 class Central:
     exportador_dispositivos = Exportador("dispositivos.csv")

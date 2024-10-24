@@ -1,19 +1,25 @@
 from aplicacion import Aplicacion
+from enum import Enum
 
+class ModoRed(Enum):
+    SIN_RED = 0
+    SOLO_VOZ_Y_SMS = 1
+    LTE = 2
+    
 class Configuracion():
-    def __init__(self, nombre, almacenamiento_gb, central, numero, modo_avion=False, servicio=False, contrasenia = None, wifi=False):
+    def __init__(self, nombre, almacenamiento_gb, central, numero, aplicaciones_instaladas, modo_red = ModoRed.LTE, modo_avion=False, contrasenia = None):
         self.nombre = nombre
         self.almacenamiento_disponible = int(almacenamiento_gb)*1024 #Trabajo en megas que es más sencillo pero dejo que se ingrese en gb que es mas común
         self.central = central
         self.numero = numero
+        self.aplicaciones_instaladas = aplicaciones_instaladas 
+        
         self.modo_avion = modo_avion
-        self.servicio = servicio
-        self.wifi = wifi
+        self.modo_red = modo_red
         self.contrasenia = contrasenia
         
-        
     def __str__(self):
-        return f"Modo avion: {self.modo_avion}\nServicio: {self.servicio}\nWifi: {self.wifi}\nContraseña: {self.contrasenia}"
+        return f"Nombre: {self.nombre}, Almacenamiento disponible: {self.almacenamiento_disponible} MB, Número: {self.numero}, Modo avión: {self.modo_avion}, Modo red: {self.modo_red}"
         
 class ConfigApp(Aplicacion):
     def __init__(self, configuracion: Configuracion):
@@ -35,34 +41,44 @@ class ConfigApp(Aplicacion):
             print("Nombre actualizado correctamente")
         else:
             raise ValueError("El nombre ingresado no cumple con los requisitos")
+        
+    def listar_aplicaciones(self):
+        for app in self.configuracion.aplicaciones_instaladas.keys():
+            print(app)
     
     ##setters          
     def set_servicio(self,valor:bool):
-        if self.configuracion.servicio == valor:
-            raise ValueError(f"El servicio ya se encuentra {'encendido' if valor==True else 'apagado'}")
+        if self.configuracion.modo_red == ModoRed.SOLO_VOZ_Y_SMS and valor:
+            raise ValueError("El servicio ya se encuentra encendido")
+        elif self.configuracion.modo_red == ModoRed.SIN_RED and not valor:
+            raise ValueError("El servicio ya se encuentra apagado")
         else:
-            self.configuracion.servicio = valor
-            if valor:
+            self.configuracion.modo_red = ModoRed.SOLO_VOZ_Y_SMS if valor else ModoRed.SIN_RED
+            if valor: #HAY Q VER ESTO
                 self.configuracion.modo_avion = False
                 self.configuracion.central.registrar_dispositivo(self.configuracion.numero)
             else:
                 self.configuracion.central.eliminar_dispositivo(self.configuracion.numero)
         print(f"El servicio se ha {'encendido' if valor==True else 'apagado'}")
              
-    def set_wifi(self,valor:bool):
-        if self.configuracion.wifi == valor:
-            raise ValueError(f"El wifi ya se encuentra {'encendido' if valor==True else 'apagado'}")
+    def set_datos(self,valor:bool):
+        if self.configuracion.modo_red == ModoRed.LTE and valor:
+            raise ValueError("Los datos ya se encuentran encendidos")
+        elif self.configuracion.modo_red != ModoRed.LTE and not valor:
+            raise ValueError("Los datos ya se encuentran apagados")
         else:
-            self.configuracion.wifi=valor
-            print(f"El wifi se ha {'encendido' if valor==True else 'apagado'}")
+            self.configuracion.modo_red = ModoRed.LTE if valor else ModoRed.SOLO_VOZ_Y_SMS
+            print(f"Los datos se han {'encendido' if valor==True else 'apagado'}")
     
-    def set_modo_avion(self,valor:bool):
+    def set_modo_avion(self, valor:bool):
         if self.configuracion.modo_avion == valor:
             raise ValueError(f"El modo avion ya se encuentra {'encendido' if valor==True else 'apagado'}")
         else:
             if valor:
-                self.set_servicio(False)
-            self.configuracion.modo_avion=valor
+                self.modo_red = ModoRed.SIN_RED
+            else:
+                self.modo_red = ModoRed.SOLO_VOZ_Y_SMS
+            self.configuracion.modo_avion = valor
             print(f"El modo avion se ha {'encendido' if valor==True else 'apagado'}")
             
     def set_contrasenia(self, contrasenia):

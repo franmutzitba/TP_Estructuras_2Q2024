@@ -4,6 +4,7 @@ from appstore import AppStore
 from telefono import TelefonoApp
 from central import Central
 from mensajeriaSMS import MensajesApp
+import csv
 import uuid
 
 class Celular:
@@ -22,11 +23,10 @@ class Celular:
         self.bloqueado = False
         
         self.aplicaciones = {}
-        self.descargar_apps_basicas(nombre, almacenamiento_gb, numero)
+        self.descargar_apps_basicas(nombre, almacenamiento_gb, numero, self.aplicaciones)
  
-    def descargar_apps_basicas(self, nombre, almacenamiento_gb, numero):
-        #self.aplicaciones['Configuracion'] = ConfigApp(self.configuracion)
-        self.aplicaciones["Configuracion"] = ConfigApp(Configuracion(nombre, almacenamiento_gb, Celular.central, numero))
+    def descargar_apps_basicas(self, nombre, almacenamiento_gb, numero, aplicaciones):
+        self.aplicaciones["Configuracion"] = ConfigApp(Configuracion(nombre, almacenamiento_gb, Celular.central, numero, aplicaciones))
         self.aplicaciones["Telefono"] = TelefonoApp(numero, Celular.central)
         self.aplicaciones["Mensajes"] = MensajesApp(numero, Celular.central)
         self.aplicaciones["Mail"] = None
@@ -102,13 +102,16 @@ class Celular:
 if __name__== "__main__":
     celular1 = Celular("Samsung", "Galaxy", "123456789", "Android", "2GB", "16")
     celular2 = Celular("iPhone", "11", "987654321", "iOS", "4GB", "64")
-    celular1.encencer_dispositivo()
-    celular1.central.mostrar_dispositivos()
-    celular1.aplicaciones["Configuracion"].set_servicio(True)
-    celular2.aplicaciones["Configuracion"].set_servicio(True)
-    celular1.central.mostrar_dispositivos()
-    celular1.apagar_dispositivo()
-    celular1.central.mostrar_dispositivos()
+    #celular1.aplicaciones["AppStore"].desinstalar_app("Wasap")
+    celular1.aplicaciones["Configuracion"].listar_aplicaciones()
+    
+    # celular1.encencer_dispositivo()
+    # celular1.central.mostrar_dispositivos()
+    # celular1.aplicaciones["Configuracion"].set_servicio(True)
+    # celular2.aplicaciones["Configuracion"].set_servicio(True)
+    # celular1.central.mostrar_dispositivos()
+    # celular1.apagar_dispositivo()
+    # celular1.central.mostrar_dispositivos()
 
     # celular1.aplicaciones["AppStore"].mostrar_apps_disponibles()
     # print("\n") 

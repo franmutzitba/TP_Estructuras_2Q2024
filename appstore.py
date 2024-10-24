@@ -41,6 +41,8 @@ class AppStore(Aplicacion):
     def desinstalar_app(self, nombre):
         if nombre not in self.aplicaciones_celular:
             raise ValueError(f"La aplicación {nombre} no se encuentra instalada")
+        elif self.aplicaciones_celular[nombre].es_esencial():
+            raise ValueError(f"La aplicación {nombre} es esencial y no se puede desinstalar")
         else:
             self.aplicaciones_celular.pop(nombre)
             nuevo_almacenamiento = self.configuracion.almacenamiento_disponible + self.consultar_tamanio(nombre)
