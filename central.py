@@ -96,9 +96,7 @@ class Central:
             raise ValueError(f"No se puede realizar la llamada por el celular {emisor} al no estar activo el servicio")
         elif not self.esta_activo(receptor):
             raise ValueError(f"No se puede realizar la llamada al celular {receptor} al no estar activo el servicio")
-
             
-    
     def manejar_mensaje(self, emisor, receptor):
         if self.esta_registrado(emisor):
             if self.esta_activo(emisor):
@@ -110,7 +108,6 @@ class Central:
                 raise ValueError(f"El celular {emisor} se encuentra sin servicio e incapaz de mandar mensajes")
         else:
             raise ValueError(f"El celular {emisor} no se encuentra registrado en la Central")
-            
     
     def mostrar_dispositivos(self):
         for dispositivo in self.registro_dispositivos:
