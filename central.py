@@ -57,14 +57,14 @@ class Central:
         except KeyError:
             raise ValueError
         
-        if mensajes:
-            mensaje = mensajes.popleft()
-            while not(mensaje.get_sincronizado()):
-                self.registro_dispositivos[numero_cel].aplicaciones["Mensajes"].recibir_sms(mensaje)
-                try:
-                    mensaje = mensajes.popleft()
-                except IndexError:
-                    print("Error aca cabron")
+        # if mensajes:
+        #     mensaje = mensajes.popleft()
+        #     while not(mensaje.get_sincronizado()):
+        #         self.registro_dispositivos[numero_cel].aplicaciones["Mensajes"].recibir_sms(mensaje)
+        #         try:
+        #             mensaje = mensajes.popleft()
+        #         except IndexError:
+        #             print("Error aca cabron")
         else:
             raise ValueError(f"No hay Mensajes nuevos para el numero {numero_cel}")
             

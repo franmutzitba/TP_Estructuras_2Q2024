@@ -1,5 +1,11 @@
 from configuracion import Configuracion
 from central import Central
+from configuracion import ConfigApp
+from appstore import AppStore
+from telefono import TelefonoApp
+from mensajeriaSMS import MensajesApp
+from mail import MailApp
+from contactos import ContactosApp
 import csv
 import uuid
 
@@ -22,12 +28,6 @@ class Celular:
         self.descargar_apps_basicas(nombre, almacenamiento_gb, numero, self.aplicaciones)
  
     def descargar_apps_basicas(self, nombre, almacenamiento_gb, numero, aplicaciones):
-        from configuracion import ConfigApp
-        from appstore import AppStore
-        from telefono import TelefonoApp
-        from mensajeriaSMS import MensajesApp
-        from mail import MailApp
-        from contactos import ContactosApp
         self.aplicaciones["Configuracion"] = ConfigApp(Configuracion(nombre, almacenamiento_gb, Celular.central, numero, aplicaciones))
         self.aplicaciones["Contactos"] = ContactosApp()
         self.aplicaciones["Mensajes"] = MensajesApp(numero, Celular.central)

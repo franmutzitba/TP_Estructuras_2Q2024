@@ -84,12 +84,13 @@ class TelefonoApp(Aplicacion):
 
         self.historial_llamadas.append(f"Llamada no realizada, emisor: {emisor}, receptor: {receptor}, tipo: {llamada.tipo}")
 '''
-'''
- def mostrar_historial_llamadas(self):
-     historial = []
-     for receptor, historial_receptor in self.central.registro_llamadas.values():
-        for emisor, historial_emisor_receptor in self.central.registro_llamadas[receptor].values()
+
+    def mostrar_historial_llamadas(self):
+        historial = []
+        for receptor, historial_receptor in self.central.registro_llamadas.values():
+            for emisor, historial_emisor_receptor in self.central.registro_llamadas[receptor].values():          #historial_emisor_receptor es una lista
+                for llamada in historial_emisor_receptor:
+                    
             
         
     
-'''
