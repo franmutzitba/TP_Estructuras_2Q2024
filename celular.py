@@ -4,6 +4,7 @@ from appstore import AppStore
 from telefono import TelefonoApp
 from central import Central
 from mensajeriaSMS import MensajesApp
+from mail import MailApp
 import csv
 import uuid
 
@@ -29,7 +30,7 @@ class Celular:
         self.aplicaciones["Configuracion"] = ConfigApp(Configuracion(nombre, almacenamiento_gb, Celular.central, numero, aplicaciones))
         self.aplicaciones["Telefono"] = TelefonoApp(numero, Celular.central)
         self.aplicaciones["Mensajes"] = MensajesApp(numero, Celular.central)
-        self.aplicaciones["Mail"] = None
+        self.aplicaciones["Mail"] = MailApp(numero, Celular.central)
         self.aplicaciones["AppStore"] = AppStore(self.aplicaciones, self.aplicaciones["Configuracion"])
         
     def encencer_dispositivo(self):
