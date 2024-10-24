@@ -48,48 +48,12 @@ class TelefonoApp(Aplicacion):
         duracion = datetime.timedelta(0, 0, 0, 0, duracion)
         self.central.manejar_llamada(self.numero, numero_receptor, hora_inicio, duracion)
     
-'''
-    def actualizar_historial_aceptada(self, llamada:Llamada):
-        if llamada.emisor == self.numero:
-            emisor = "su celular"
-            if self.numero_en_contactos(llamada.receptor):
-                receptor = self.nombre_contacto(llamada.receptor)
-            else:
-                receptor = llamada.receptor
-
-        else:
-            receptor = "su celular"
-            if self.numero_en_contactos(llamada.emisor):
-                emisor = self.nombre_contacto(llamada.emisor)
-            else:
-                emisor = llamada.emisor
-
-        self.historial_llamadas.append(f"Llamada realizada, emisor: {emisor}, receptor: {receptor}, duracion: {llamada.duracion}")
-
-    def actualizar_historial_perdida(self, llamada:Llamada_perdida):
-         
-        if llamada.emisor == self.numero:
-            emisor = "su celular"
-            if self.numero_en_contactos(llamada.receptor):
-                receptor = self.nombre_contacto(llamada.receptor)
-            else:
-                receptor = llamada.receptor
-
-        else:
-            receptor = "su celular"
-            if self.numero_en_contactos(llamada.emisor):
-                emisor = self.nombre_contacto(llamada.emisor)
-            else:
-                emisor = llamada.emisor
-
-        self.historial_llamadas.append(f"Llamada no realizada, emisor: {emisor}, receptor: {receptor}, tipo: {llamada.tipo}")
-'''
-
     def mostrar_historial_llamadas(self):
         historial = []
         for receptor, historial_receptor in self.central.registro_llamadas.values():
             for emisor, historial_emisor_receptor in self.central.registro_llamadas[receptor].values():          #historial_emisor_receptor es una lista
                 for llamada in historial_emisor_receptor:
+                    historial.append(llamada)
                     
             
         
