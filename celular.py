@@ -51,16 +51,20 @@ class Celular:
     def bloquear_dispositivo(self):
         if self.bloqueado:
             raise ValueError(f" El dispositivo {self.aplicaciones['Configuracion'].get_nombre()} ya se encuentra bloqueado ")
+        elif not(self.encendido):
+            raise ValueError(f" El dispositivo {self.aplicaciones['Configuracion'].get_nombre()} se encuentra apagado")
         else:
             self.bloqueado = True
             print(f"Se ha bloqueado el dispositivo - {self.aplicaciones['Configuracion'].get_nombre()} -")
     
     def desbloquear_dispositivo(self, contrasenia = None):
-        if self.bloqueado and (contrasenia == self.aplicaciones['Configuracion'].get_contrasenia() or contrasenia == None):
+        if self.bloqueado and (contrasenia == self.aplicaciones['Configuracion'].get_contrasenia() or contrasenia == None) and self.encendido:
             self.bloqueado = False
             print(f"Se ha desbloqueado el dispositivo - {self.aplicaciones['Configuracion'].get_nombre()} -")
         elif not(self.bloqueado):
             raise ValueError(f"El dispositivo {self.aplicaciones['Configuracion'].get_nombre()} ya se encuentra desbloqueado")
+        elif not(self.encendido):
+            raise ValueError(f"El dispositivo {self.aplicaciones['Configuracion'].get_nombre()} se encuentra apagado")
         else:
             raise ValueError("La contraseña ingresada es incorrecta")
     
@@ -99,6 +103,16 @@ class Celular:
                 celulares.append(celular)
         return celulares
 
+    def lanzar_app(self,nombre_app):
+        if nombre_app not in self.aplicaciones:
+            raise ValueError(f"La aplicación {nombre_app} no se encuentra instalada")
+        elif self.bloqueado:
+            raise ValueError("El dispositivo se encuentra bloqueado")
+        elif self.encendido:
+            return self.aplicaciones[nombre_app]
+        else:
+            raise ValueError("El dispositivo se encuentra apagado")
+        
 if __name__== "__main__":
     celular1 = Celular("Samsung", "Galaxy", "123456789", "Android", "2GB", "16")
     celular2 = Celular("iPhone", "11", "987654321", "iOS", "4GB", "64")
