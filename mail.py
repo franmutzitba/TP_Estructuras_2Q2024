@@ -1,35 +1,33 @@
 from aplicacion import Aplicacion
-from central import Central
+from collections import deque
 
 class MailApp(Aplicacion):
-    def __init__(self, numero, central:Central):
+    def __init__(self):
         super().__init__("Mail", 100, True)
-        self.numero = numero
-        self.central = central
-        self.mensajes = ListaMail()
-        
-    def enviar_mail(self, receptor, mensaje):
-        #Le consulta a la central si el emisor tiene LTE
-        pass
-        
-class NodoMail():
-    def __init__(self, mensaje):
-        self.mensaje = mensaje
-        self.siguiente = None
-        
-    def __str__(self):
-        return f"El nodo contiene el mensaje: {self.mensaje}"
-        
-class ListaMail():
-    def __init__(self, inicio = None):
-        self.inicio = inicio
-    
-    def agregar_mail(self, mensaje):
-        nodo = NodoMail(mensaje)
-        if self.inicio == None:
-            self.inicio = nodo
+        self.bandeja_de_entrada = deque()
+
+    def importar_mail(self, mail): #hay que ver como guardar los mails de cada celular en un archivo
+        self.bandeja_de_entrada.append(mail)
+
+    def ver_mails(self, criterio):
+        if (criterio == "no leídos primeros"):
+            no_leidos = deque(mail for mail in self.bandeja_de_entrada if not mail.leido)
+            while no_leidos:
+                print(no_leidos.popleft())
+        elif (criterio == "por fecha"):
+            pila = self.bandeja_de_entrada.copy()
+            while pila:
+                print(pila.pop())
         else:
-            actual = self.inicio
-            while actual.siguiente != None:
-                actual = actual.siguiente
-            actual.siguiente = nodo
+            raise ValueError("Criterio no válido")
+
+class Mail:
+    def __init__(self, cuerpo, email_emisor, encabezado, leido=False):
+        self.cuerpo = cuerpo
+        self.email_emisor = email_emisor
+        self.encabezado = encabezado
+        self.leido = leido
+
+    def __str__(self):
+        return f"Encabezado: {self.encabezado}, Emisor: {self.email_emisor}, Leído: {self.leido}, Cuerpo: {self.cuerpo}"
+    
