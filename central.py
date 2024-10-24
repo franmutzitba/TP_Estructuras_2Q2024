@@ -1,7 +1,7 @@
 from comunicacion import Llamada, Mensaje
 from datetime import datetime, timedelta
 #from celular import Celular
-from configuracion import ModoRed
+from Apps.configuracion import ModoRed
 from collections import deque 
 #La primera vez que se activa el servicio del celular se da de alta en la central
 #Luego la central chequea que tenga servicio o LTE segun corresponda para realizar la comunicacion

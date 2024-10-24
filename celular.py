@@ -1,11 +1,11 @@
-from configuracion import Configuracion
+from Apps.configuracion import Configuracion
 from central import Central
-from configuracion import ConfigApp
-from appstore import AppStore
-from telefono import TelefonoApp
-from mensajeriaSMS import MensajesApp
-from mail import MailApp
-from contactos import ContactosApp
+from Apps.configuracion import ConfigApp
+from Apps.appstore import AppStore
+from Apps.telefono import TelefonoApp
+from Apps.mensajeriaSMS import MensajesApp
+from Apps.mail import MailApp
+from Apps.contactos import ContactosApp
 import csv
 import uuid
 
@@ -91,10 +91,6 @@ class Celular:
 
     @staticmethod
     def cargar_datos(filename):
-        from configuracion import ConfigApp
-        from appstore import AppStore
-        from telefono import TelefonoApp
-        from mensajeriaSMS import MensajesApp
         celulares = []
         with open(filename, mode='r') as file:
             reader = csv.DictReader(file)
@@ -126,8 +122,8 @@ class Celular:
             raise ValueError("El dispositivo se encuentra apagado")
         
 if __name__ =="__main__":
-    from mail import *
-    from mail import CriterioLectura
+    from Apps.mail import *
+    from Apps.mail import CriterioLectura
     celular1 = Celular("iPhone de Franco", "iPhone 13", "123456789", "iOS", "4GB", "64")
     celular2 = Celular("Samsung de Juan", "Samsung Galaxy S21", "987654321", "Android", "6GB", "128")
     celular2.encencer_dispositivo()
