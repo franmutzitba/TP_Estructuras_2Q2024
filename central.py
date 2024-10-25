@@ -72,42 +72,42 @@ class Central:
     def esta_ocupado(self, numero, fecha_inicio_llamada_nueva:datetime):
         fecha_fin_llamada_anterior = self.telefonos_ocupados[numero]
         return fecha_fin_llamada_anterior > fecha_inicio_llamada_nueva
-    
         
     def manejar_llamada(self, emisor, receptor, fecha_inicio:datetime, duracion:timedelta):
-        llamada= Llamada(emisor, receptor, duracion, fecha_inicio)
-        if self.esta_registrado(emisor) and self.esta_registrado(receptor) and not self.esta_ocupado(emisor, fecha_inicio) and self.esta_activo(emisor) and self.esta_activo(receptor):
-            print(f"{emisor} llamando a {receptor}")
-            if not self.esta_ocupado(receptor, fecha_inicio):
-                self.registrar_llamada(llamada)
-                self.telefonos_ocupados[emisor] = fecha_inicio + duracion
-                self.telefonos_ocupados[receptor] = fecha_inicio + duracion
-            else:
-                print(f'El dispositivo de numero {receptor} esta ocupado')
-                llamada.set_perdida(True)
-                llamada.set_duracion(0)
-                self.registrar_llamada
-            return True
-        elif not self.esta_registrado(emisor):
+        if not self.esta_registrado(emisor):
             raise ValueError(f"No se puede realizar la llamada por el celular {emisor} al no estar registrado en la central")
-        elif not self.esta_registrado(receptor):
+        if not self.esta_registrado(receptor):
             raise ValueError(f"No se puede realizar la llamada al celular {receptor} al no estar registrado en la central")
-        elif not self.esta_activo(emisor):
+        if not self.esta_activo(emisor):
             raise ValueError(f"No se puede realizar la llamada por el celular {emisor} al no estar activo el servicio")
-        elif not self.esta_activo(receptor):
+        if not self.esta_activo(receptor):
             raise ValueError(f"No se puede realizar la llamada al celular {receptor} al no estar activo el servicio")
-            
-    def manejar_mensaje(self, emisor, receptor):
-        if self.esta_registrado(emisor):
-            if self.esta_activo(emisor):
-                if self.esta_registrado(receptor):
-                    print(f"Enviando mensaje de {emisor} a {receptor}\n")
-                else:
-                    raise ValueError(f"El celular {receptor} no esta registrado en la Central")
-            else:
-                raise ValueError(f"El celular {emisor} se encuentra sin servicio e incapaz de mandar mensajes")
+        if self.esta_ocupado(receptor, fecha_inicio):
+            raise ValueError(f"El celular {emisor} se encuentra ocupado")
+        
+        llamada= Llamada(emisor, receptor, duracion, fecha_inicio)
+        print(f"{emisor} llamando a {receptor}")
+        if not self.esta_ocupado(receptor, fecha_inicio):
+            self.registrar_llamada(llamada)
+            self.telefonos_ocupados[emisor] = fecha_inicio + duracion
+            self.telefonos_ocupados[receptor] = fecha_inicio + duracion
         else:
+            print(f'El dispositivo de numero {receptor} esta ocupado')
+            llamada.set_perdida(True)
+            llamada.set_duracion(0)
+            self.registrar_llamada
+        return True
+           
+    def manejar_mensaje(self, emisor, receptor):
+        if not self.esta_registrado(emisor):
             raise ValueError(f"El celular {emisor} no se encuentra registrado en la Central")
+        if not self.esta_activo(emisor):
+            raise ValueError(f"El celular {emisor} se encuentra sin servicio e incapaz de mandar mensajes")
+        if not self.esta_registrado(receptor):
+            raise ValueError(f"El celular {receptor} no esta registrado en la Central")
+        print(f"Enviando mensaje de {emisor} a {receptor}\n")
+        return True
+            
     
     def mostrar_dispositivos(self):
         for dispositivo in self.registro_dispositivos:
