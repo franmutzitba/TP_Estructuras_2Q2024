@@ -40,7 +40,6 @@ class Central:
             self.registro_llamadas[receptor][emisor].append(llamada)  # Agregar el llamada a la lista
         print(f"Se a registrado la llamada recibida por el numero - {receptor} - enviada por - {emisor} - en la central")
         
-        
     def registrar_mensaje_nuevo(self, mensaje: Mensaje):
         receptor = mensaje.get_receptor()
         emisor = mensaje.get_emisor()
