@@ -22,7 +22,7 @@ class AppStore(Aplicacion):
     mostrar_apps_disponibles(self):
         Muestra las aplicaciones disponibles en la tienda, indicando si ya están instaladas en el celular.
     descargar_app(self, nombre):
-        Descarga una aplicación de la tienda al celular, si hay suficiente espacio y no está ya instalada.
+        Descarga una aplicación de la tienda al celular, si hay suficiente espacio y no está ya instalada. Para descargarla se agrega a las aplicaciones del celular y se resta el espacio de almacenamiento disponible.
     desinstalar_app(self, nombre):
         Desinstala una aplicación del celular, si no es esencial y está instalada.
     agregar_descarga(self, nombre):
@@ -60,6 +60,18 @@ class AppStore(Aplicacion):
                 print(f"Nombre: {app[0]} - Tamaño: {app[1]}mb - INSTALADA")
         
     def descargar_app(self, nombre):
+        """Descarga una aplicación de la tienda al celular, si hay suficiente espacio y no está ya instalada. 
+        Para descargarla se agrega al diccionario de las aplicaciones del celular y se resta el espacio de almacenamiento disponible.
+        
+        Args:
+            nombre (str): Nombre de la aplicación a descargar.
+        
+        Returns:
+            None
+            
+        Raises:
+            ValueError: Si la aplicación ya está instalada, no hay suficiente espacio o no se encuentra en la tienda.
+        """
         if nombre in self.aplicaciones_celular:
             raise ValueError(f"La aplicación {nombre} ya se encuentra instalada")
         
@@ -80,6 +92,18 @@ class AppStore(Aplicacion):
             raise ValueError(f"La aplicación {nombre} no se encuentra en la AppStore")
     
     def desinstalar_app(self, nombre):
+        """Desinstala una aplicación del celular, si no es esencial y está instalada. Para desinstalarla la
+        elimina del diccionario de aplicaciones del celular y suma el espacio de almacenamiento disponible.
+    
+        Args:
+            nombre (str): Nombre de la aplicación a desinstalar.
+        
+        Returns:
+            None
+            
+        Raises:
+            ValueError: Si la aplicación no está instalada o si es una aplicación esencial.
+        """
         if nombre not in self.aplicaciones_celular:
             raise ValueError(f"La aplicación {nombre} no se encuentra instalada")
         if self.aplicaciones_celular[nombre].es_esencial():
@@ -91,6 +115,14 @@ class AppStore(Aplicacion):
         print(f"La aplicación {nombre} se ha desinstalado correctamente")
     
     def agregar_descarga(self, nombre):
+        """Incrementa el contador de descargas de una aplicación específica y actualiza el CSV.
+
+        Args:
+            nombre (str): El nombre de la aplicación cuya descarga se va a incrementar.
+
+        Returns:
+            None
+        """
         aplicaciones_disponibles = self.aplicaciones_disponibles()
         for app in aplicaciones_disponibles:
             if app[0] == nombre:
@@ -99,12 +131,25 @@ class AppStore(Aplicacion):
         AppStore.exportador.exportar(aplicaciones_disponibles)
     
     def consultar_tamanio(self, nombre):
+        """Consulta el tamaño de una aplicación específica de la tienda por su nombre.
+
+        Args:
+            nombre (str): El nombre de la aplicación cuyo tamaño se desea consultar.
+
+        Returns:
+            int: El tamaño de la aplicación en MB si se encuentra, de lo contrario None.
+        """
         aplicaciones_disponibles = self.aplicaciones_disponibles()
         for app in aplicaciones_disponibles:
             if app[0] == nombre:
                 return int(app[1])
      
     def aplicaciones_disponibles(self):
+        """Obtiene la lista de aplicaciones disponibles en la appstore desde el archivo CSV.
+        
+        Returns:
+            list: Una lista de aplicaciones disponibles. Si el archivo no se encuentra, retorna una lista vacía.
+        """
         try:
             return AppStore.exportador.leer_archivo(True)
         except FileNotFoundError:
