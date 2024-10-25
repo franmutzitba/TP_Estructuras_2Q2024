@@ -43,7 +43,7 @@ class Celular:
         self.aplicaciones["Configuracion"].set_servicio(True)
         self.central.registrar_dispositivo(self.numero, self)
         print(f"Se ha encencido el dispositivo - {self.aplicaciones['Configuracion'].get_nombre()} -")
-        try :
+        try:
             self.aplicaciones["Mensajes"].registrar_mensajes()    
         except ValueError as e:
             print(e)
@@ -147,8 +147,13 @@ if __name__ =="__main__":
     celular2.apagar_dispositivo()
     celular1.lanzar_app("Mensajes").enviar_sms("987654321", "MEssi")
     # print(celular1.central.registro_mensajes["987654321"].popleft())
+    print(celular2.central.registro_mensajes["987654321"][0].get_sincronizado())
+    # #print(celular2.aplicaciones["Mensajes"].mensajes[0].get_sincronizado())
     celular2.encencer_dispositivo()
-    
+    print(celular2.central.registro_mensajes["987654321"][0].get_sincronizado())
+    print(celular2.aplicaciones["Mensajes"].mensajes[0].get_sincronizado())
+    celular2.lanzar_app("Mensajes").ver_bandeja_de_entrada()
+    print()
 
     
     # celular1.encencer_dispositivo()

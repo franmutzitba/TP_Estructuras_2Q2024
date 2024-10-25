@@ -1,3 +1,4 @@
+from datetime import datetime
 class Comunicacion:
     def __init__(self, emisor, receptor, tipo):
         self.emisor = emisor
@@ -50,5 +51,6 @@ class Mensaje(Comunicacion):
         self.sincronizado = True
 
     def __str__(self):
-        return f"Emisor: {self.emisor}, Receptor: {self.receptor}, Texto: {self.mensaje}, Fecha: {self.fecha}"
+        fecha_min = self.fecha.strftime("%Y-%m-%d %H:%M")
+        return f"Emisor: {self.emisor}, Receptor: {self.receptor}, Texto: {self.mensaje}, Fecha: {fecha_min}"
 

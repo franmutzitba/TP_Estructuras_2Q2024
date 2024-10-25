@@ -13,8 +13,7 @@ class Central:
         self.registro_llamadas = {} #registro de llamadas_perdidas_o_realizadas
         self.registro_dispositivos = {} #diccionario que contiene el numero en la key y el objeto celular en el valor
         self.telefonos_ocupados = {} #guarda la fecha en el que el telefono se libera.
-        self.registro_mensajes =  {} #registro de mensajes (es un diccionario de diccionarios, cada numero es una key 
-        #y tiene un diccionario con todos los numeros emisores que guardan el valor de una lista con todos los mensajes enviados)
+        self.registro_mensajes =  {} 
         
     def registrar_dispositivo(self, numero, celular):
         self.registro_dispositivos[numero]=celular
@@ -40,33 +39,38 @@ class Central:
             self.registro_llamadas[receptor][emisor].append(llamada)  # Agregar el llamada a la lista
         print(f"Se a registrado la llamada recibida por el numero - {receptor} - enviada por - {emisor} - en la central")
         
-        
     def registrar_mensaje_nuevo(self, mensaje: Mensaje):
         receptor = mensaje.get_receptor()
-        emisor = mensaje.get_emisor()
+        
         if receptor not in self.registro_mensajes:
             self.registro_mensajes[receptor] = deque()  # Crear una pila para el receptor
+            
         self.registro_mensajes[receptor].appendleft(mensaje)
-        print(f"Se a registrado el mensaje recibido por el numero - {receptor} - enviado por - {emisor} - en la central")
+        
         if self.esta_activo(receptor):
             self.registro_dispositivos[receptor].aplicaciones["Mensajes"].recibir_sms(mensaje)
     
     def registrar_mensajes(self, numero_cel):
         try:
-            mensajes = self.registro_mensajes[numero_cel]
+            if self.esta_registrado(numero_cel): 
+                if self.esta_activo(numero_cel):
+                    mensajes = self.registro_mensajes[numero_cel]
+                    for mensaje in mensajes:
+                        if mensaje.get_sincronizado():
+                            break
+                        else:
+                            self.registro_dispositivos[numero_cel].lanzar_app("Mensajes").recibir_sms(mensaje)                        
+                else:
+                    raise ValueError
+            else:
+                raise ValueError
+            
         except KeyError:
-            raise ValueError
-        
-        # if mensajes:
-        #     mensaje = mensajes.popleft()
-        #     while not(mensaje.get_sincronizado()):
-        #         self.registro_dispositivos[numero_cel].aplicaciones["Mensajes"].recibir_sms(mensaje)
-        #         try:
-        #             mensaje = mensajes.popleft()
-        #         except IndexError:
-        #             print("Error aca cabron")
-        else:
-            raise ValueError(f"No hay Mensajes nuevos para el numero {numero_cel}")
+            raise ValueError (f"No hay Mensajes nuevos para el numero {numero_cel}")
+        except ValueError:
+            raise ValueError 
+        except IndexError:
+            raise ValueError (f"No hay Mensajes nuevos para el numero {numero_cel}")
             
 
     def esta_ocupado(self, numero, fecha_inicio_llamada_nueva:datetime):
@@ -101,7 +105,8 @@ class Central:
         if self.esta_registrado(emisor):
             if self.esta_activo(emisor):
                 if self.esta_registrado(receptor):
-                    print(f"Enviando mensaje de {emisor} a {receptor}\n")
+                    #return True
+                    pass
                 else:
                     raise ValueError(f"El celular {receptor} no esta registrado en la Central")
             else:
