@@ -1,4 +1,4 @@
-class Comunicacion():
+class Comunicacion:
     def __init__(self, emisor, receptor, tipo):
         self.emisor = emisor
         self.receptor = receptor

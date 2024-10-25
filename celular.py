@@ -38,35 +38,36 @@ class Celular:
     def encencer_dispositivo(self):
         if self.encendido:
             raise ValueError(f" El dispositivo {self.aplicaciones['Configuracion'].get_nombre()} ya se encuentra encendido ")
-        else:
-            self.encendido = True
-            self.aplicaciones["Configuracion"].set_servicio(True)
-            self.central.registrar_dispositivo(self.numero, self)
-            print(f"Se ha encencido el dispositivo - {self.aplicaciones['Configuracion'].get_nombre()} -")
-            try :
-                self.aplicaciones["Mensajes"].registrar_mensajes()    
-            except ValueError as e:
-                print(e)
+    
+        self.encendido = True
+        self.aplicaciones["Configuracion"].set_servicio(True)
+        self.central.registrar_dispositivo(self.numero, self)
+        print(f"Se ha encencido el dispositivo - {self.aplicaciones['Configuracion'].get_nombre()} -")
+        try :
+            self.aplicaciones["Mensajes"].registrar_mensajes()    
+        except ValueError as e:
+            print(e)
             
     def apagar_dispositivo(self):
-        if self.encendido:
-            self.encendido = False
-            self.aplicaciones["Configuracion"].set_servicio(False)
-            print(f"Se ha apagado el dispositivo - {self.aplicaciones['Configuracion'].get_nombre()} -")
-        else:
+        if not self.encendido:
             raise ValueError(f" El dispositivo {self.aplicaciones['Configuracion'].get_nombre()} ya se encuentra apagado ")
+        
+        self.encendido = False
+        self.aplicaciones["Configuracion"].set_servicio(False)
+        print(f"Se ha apagado el dispositivo - {self.aplicaciones['Configuracion'].get_nombre()} -")
+            
     
     def bloquear_dispositivo(self):
         if self.bloqueado:
             raise ValueError(f" El dispositivo {self.aplicaciones['Configuracion'].get_nombre()} ya se encuentra bloqueado ")
-        elif not(self.encendido):
+        if not(self.encendido):
             raise ValueError(f" El dispositivo {self.aplicaciones['Configuracion'].get_nombre()} se encuentra apagado")
-        else:
-            self.bloqueado = True
-            print(f"Se ha bloqueado el dispositivo - {self.aplicaciones['Configuracion'].get_nombre()} -")
+        
+        self.bloqueado = True
+        print(f"Se ha bloqueado el dispositivo - {self.aplicaciones['Configuracion'].get_nombre()} -")
     
     def desbloquear_dispositivo(self, contrasenia = None):
-        if self.bloqueado and (contrasenia == self.aplicaciones['Configuracion'].get_contrasenia() or contrasenia == None) and self.encendido:
+        if self.bloqueado and (contrasenia == self.aplicaciones['Configuracion'].get_contrasenia() or contrasenia is None) and self.encendido:
             self.bloqueado = False
             print(f"Se ha desbloqueado el dispositivo - {self.aplicaciones['Configuracion'].get_nombre()} -")
         elif not(self.bloqueado):

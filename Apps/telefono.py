@@ -22,28 +22,29 @@ class TelefonoApp(Aplicacion):
         
         if not nombre_receptor in self.contactos.values():
             raise ValueError("No tiene ningun contacto con ese nombre")
-        else: 
-            for clave, valor in self.contactos.items():
-                #puede haber dos contactos con el mismo nombre? si los hay a quien llamo?
-                contactos_con_ese_nombre = []           # guarda los numeros telefonicos de los contactos con ese nombre
-                if valor == nombre_receptor:
-                    contactos_con_ese_nombre.append(clave)
+        
+        for clave, valor in self.contactos.items():
+            #puede haber dos contactos con el mismo nombre? si los hay a quien llamo?
+            contactos_con_ese_nombre = []           # guarda los numeros telefonicos de los contactos con ese nombre
+            if valor == nombre_receptor:
+                contactos_con_ese_nombre.append(clave)
 
-            if len(contactos_con_ese_nombre)>1:
-                print("Tiene mas de un contacto con ese nombre, a cual desea llamar?")
-                i = 0
-                while contactos_con_ese_nombre[i]:
-                    i+=1
-                    print(f"Contacto {i}: Numero: {contactos_con_ese_nombre[i-1]}")
-                j = 1                                       # aca hay que hacer un input creo para decidir a que contacto llamar
-                self.iniciar_llamada(self.numero, contactos_con_ese_nombre[j-1], hora_inicio, duracion,)
-            else:
-                self.iniciar_llamada(self.numero, contactos_con_ese_nombre[1], hora_inicio, duracion)
+        if len(contactos_con_ese_nombre)>1:
+            print("Tiene mas de un contacto con ese nombre, a cual desea llamar?")
+            i = 0
+            while contactos_con_ese_nombre[i]:
+                i+=1
+                print(f"Contacto {i}: Numero: {contactos_con_ese_nombre[i-1]}")
+            j = 1                                       # aca hay que hacer un input creo para decidir a que contacto llamar
+            self.iniciar_llamada(self.numero, contactos_con_ese_nombre[j-1], hora_inicio, duracion,)
+        else:
+            self.iniciar_llamada(self.numero, contactos_con_ese_nombre[1], hora_inicio, duracion)
 
 
     def iniciar_llamada(self, numero_receptor, duracion=5): #duracion en minutos
         if duracion > 60:
             raise ValueError("La duracion no puede ser mayor a una hora")
+        
         hora_inicio = datetime.now()
         duracion = datetime.timedelta(0, 0, 0, 0, duracion)
         self.central.manejar_llamada(self.numero, numero_receptor, hora_inicio, duracion)

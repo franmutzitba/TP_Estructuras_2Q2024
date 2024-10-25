@@ -81,7 +81,7 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
     def crear_mail(cuerpo, email_emisor, email_receptor, encabezado):
         return Mail(cuerpo, email_emisor, email_receptor, encabezado)
  
-class CuentaMail():
+class CuentaMail:
     cuentas = {}
     
     def __init__(self, mail, contrasenia):
