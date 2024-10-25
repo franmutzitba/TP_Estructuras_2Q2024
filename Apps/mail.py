@@ -5,10 +5,25 @@ import re
 from enum import Enum
 
 class CriterioLectura(Enum):
+    """Enum para los criterios de lectura de los emails"""
     NO_LEIDOS_PRIMEROS = 1
     POR_FECHA = 2
 
 class Mail:
+    """Clase que instancia un mail con los atributos cuerpo, email_emisor, email_receptor, encabezado y leido
+    Atributos:
+    ----------
+    cuerpo : str
+        Cuerpo del mail.
+    email_emisor : str
+        Email del emisor del mail.
+    email_receptor : str
+        Email del receptor del mail.
+    encabezado : str
+        Encabezado del mail.
+    leido : bool
+        Indica si el mail fue leído o no.
+    """
     def __init__(self, cuerpo, email_emisor, email_receptor, encabezado, leido=False):
         self.cuerpo = cuerpo
         self.email_emisor = email_emisor
@@ -20,6 +35,7 @@ class Mail:
         return f"Encabezado: {self.encabezado}, Emisor: {self.email_emisor}, Leído: {self.leido}, Cuerpo: {self.cuerpo}"
     
 class MailApp(Aplicacion): #Pertenece a cada telefono
+    """Clase que instancia la aplicación de mail de un celular"""
     def __init__(self, numero, central:Central):
         super().__init__("Mail", 100, True)
         self.numero = numero
@@ -82,6 +98,25 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
         return Mail(cuerpo, email_emisor, email_receptor, encabezado)
  
 class CuentaMail:
+    """
+    Clase para gestionar cuentas de correo electrónico. Representa una cuenta de correo electrónico con un mail y una contraseña.
+    
+    Atributos:
+    ----------
+    cuentas: dict
+        Diccionario que almacena todas las cuentas de correo creadas.
+        
+    Métodos:
+    --------
+    __init__(self, mail, contrasenia):
+        Inicializa una nueva cuenta de correo electrónico.
+    validar_mail(cls, mail):
+        Valida si un correo electrónico es válido y único.
+    validar_contrasenia(contrasenia):
+        Valida si una contraseña cumple con los requisitos de seguridad.
+    __str__(self):
+        Retorna una representación en cadena de la cuenta de correo.
+    """
     cuentas = {}
     
     def __init__(self, mail, contrasenia):
