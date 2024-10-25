@@ -1,9 +1,9 @@
 from Apps.aplicacion import Aplicacion
 from Apps.configuracion import Configuracion
-from exportador import Exportador
+from manejadorCSV import ManejadorCSV
 
 class AppStore(Aplicacion):
-    exportador = Exportador("appstore.csv")
+    exportador = ManejadorCSV("appstore.csv")
     
     def __init__(self, aplicaciones_celular, configuracion: Configuracion):
         super().__init__("AppStore", 200, True)
@@ -26,10 +26,10 @@ class AppStore(Aplicacion):
         aplicaciones_disponibles = self.aplicaciones_disponibles()
         for app in aplicaciones_disponibles:
             if app[0] == nombre and encontrada == False:
-                if int(app[1]) <= self.configuracion.get_almacenamiento_disponible():
+                if int(app[1]) <= int(self.configuracion.almacenamiento_disponible):
                     self.aplicaciones_celular[nombre] = None
-                    nuevo_almacenamiento = self.configuracion.get_almacenamiento_disponible() - int(app[1])
-                    self.configuracion.set_almacenamiento_disponible(nuevo_almacenamiento)
+                    nuevo_almacenamiento = int(self.configuracion.almacenamiento_disponible) - int(app[1])
+                    self.configuracion.almacenamiento_disponible = nuevo_almacenamiento
                     self.agregar_descarga(nombre)
                     print(f"La aplicación {nombre} se ha descargado correctamente")
                 else:
@@ -46,7 +46,7 @@ class AppStore(Aplicacion):
         
         self.aplicaciones_celular.pop(nombre)
         nuevo_almacenamiento = self.configuracion.almacenamiento_disponible + self.consultar_tamanio(nombre)
-        self.configuracion.set_almacenamiento_disponible(nuevo_almacenamiento)
+        self.configuracion.almacenamiento_disponible = nuevo_almacenamiento
         print(f"La aplicación {nombre} se ha desinstalado correctamente")
     
     def agregar_descarga(self, nombre):
@@ -64,7 +64,10 @@ class AppStore(Aplicacion):
                 return int(app[1])
      
     def aplicaciones_disponibles(self):
-        return AppStore.exportador.leer_archivo(True)
+        try:
+            return AppStore.exportador.leer_archivo(True)
+        except FileNotFoundError:
+            return []
 
     def __str__(self):
         return super().__str__()

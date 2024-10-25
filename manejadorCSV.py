@@ -2,22 +2,13 @@ import csv
 import numpy as np
 from io import FileIO
 
-class Exportador:
+class ManejadorCSV:
     def __init__(self, nombre_archivo):
         self.nombre_archivo = nombre_archivo
 
-    def exportar(self, lista):
+    def exportar(self, lista: list, modo = "w"): #Por default escribe un archivo nuevo. Se puede cambiar a "a" para agregar al final
         try:
-            with open(self.nombre_archivo, "w",newline="", encoding='utf-8') as archivo_csv:
-                escritor = csv.writer(archivo_csv)
-                escritor.writerows(lista)
-        except IOError:
-            print("Error al exportar archivo")
-            raise FileIO
-    
-    def agregar(self, lista:list):
-        try:
-            with open(self.nombre_archivo, mode='a', newline='', encoding='utf-8') as archivo_csv:
+            with open(self.nombre_archivo, mode = modo, newline="", encoding='utf-8') as archivo_csv:
                 escritor = csv.writer(archivo_csv)
                 escritor.writerows(lista)
         except FileNotFoundError:

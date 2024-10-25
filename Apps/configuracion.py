@@ -75,9 +75,9 @@ class ConfigApp(Aplicacion):
             raise ValueError(f"El modo avion ya se encuentra {'encendido' if valor==True else 'apagado'}")
 
         if valor:
-            self.modo_red = ModoRed.SIN_RED
+            self.configuracion.modo_red = ModoRed.SIN_RED
         else:
-            self.modo_red = ModoRed.SOLO_VOZ_Y_SMS
+            self.configuracion.modo_red = ModoRed.SOLO_VOZ_Y_SMS
         self.configuracion.modo_avion = valor
         print(f"El modo avion se ha {'encendido' if valor==True else 'apagado'}")
             
