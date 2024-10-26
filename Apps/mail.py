@@ -11,6 +11,7 @@ class CriterioLectura(Enum):
 
 class Mail:
     """Clase que instancia un mail con los atributos cuerpo, email_emisor, email_receptor, encabezado y leido
+    
     Atributos:
     ----------
     cuerpo : str
