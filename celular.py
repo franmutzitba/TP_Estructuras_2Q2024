@@ -29,7 +29,7 @@ class Celular:
     def descargar_apps_basicas(self, nombre, almacenamiento, numero, aplicaciones):
         self.aplicaciones["Configuracion"] = ConfigApp(Configuracion(nombre, almacenamiento, Celular.central, numero, aplicaciones))
         self.aplicaciones["Contactos"] = ContactosApp()
-        self.aplicaciones["Mensajes"] = MensajesApp(numero, Celular.central)
+        self.aplicaciones["Mensajes"] = MensajesApp(numero, self.aplicaciones["Contactos"], Celular.central)
         self.aplicaciones["Mail"] = MailApp(numero, Celular.central)
         self.aplicaciones["AppStore"] = AppStore(self.aplicaciones, self.aplicaciones["Configuracion"])
         self.aplicaciones["Telefono"] = TelefonoApp(numero, Celular.central, self.aplicaciones["Contactos"])
@@ -156,9 +156,12 @@ if __name__ =="__main__":
     print(celular2.aplicaciones["Configuracion"].configuracion.modo_red)
     print(celular2.central.registro_mensajes["987654321"][0].get_sincronizado())
     print(celular2.aplicaciones["Mensajes"].mensajes[0].get_sincronizado())
+    celular2.lanzar_app("Contactos").agregar_contacto("123456789","Juan")
     celular2.lanzar_app("Mensajes").ver_bandeja_de_entrada()
     print()
     celular2.lanzar_app("Mensajes").ver_bandeja_de_entrada()
+    for mensaje in (celular2.lanzar_app("Mensajes").mensajes):
+        print(mensaje)
     
 
     

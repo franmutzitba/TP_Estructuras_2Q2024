@@ -20,3 +20,7 @@ while pila2:
     print(pila2.popleft())
 
 print(pila)
+
+from comunicacion import Mensaje 
+mensaje = Mensaje("1","2","hola",datetime.now())
+print(mensaje)
