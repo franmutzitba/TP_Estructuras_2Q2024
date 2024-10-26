@@ -40,13 +40,10 @@ class Celular:
             raise ValueError(f" El dispositivo {self.aplicaciones['Configuracion'].get_nombre()} ya se encuentra encendido ")
     
         self.encendido = True
-        self.aplicaciones["Configuracion"].set_servicio(True)
         self.central.registrar_dispositivo(self.numero, self)
+        self.aplicaciones["Configuracion"].set_servicio(True)
+        
         print(f"Se ha encencido el dispositivo - {self.aplicaciones['Configuracion'].get_nombre()} -")
-        try:
-            self.aplicaciones["Mensajes"].registrar_mensajes()    
-        except ValueError as e:
-            print(e)
             
     def apagar_dispositivo(self):
         if not self.encendido:
@@ -150,6 +147,7 @@ if __name__ =="__main__":
     print(celular2.central.registro_mensajes["987654321"][0].get_sincronizado())
     # #print(celular2.aplicaciones["Mensajes"].mensajes[0].get_sincronizado())
     celular2.encencer_dispositivo()
+    print(celular2.aplicaciones["Configuracion"].configuracion.modo_red)
     print(celular2.central.registro_mensajes["987654321"][0].get_sincronizado())
     print(celular2.aplicaciones["Mensajes"].mensajes[0].get_sincronizado())
     celular2.lanzar_app("Mensajes").ver_bandeja_de_entrada()

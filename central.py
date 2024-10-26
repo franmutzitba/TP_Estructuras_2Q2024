@@ -13,7 +13,7 @@ class Central:
         self.registro_llamadas = {} #registro de llamadas_perdidas_o_realizadas
         self.registro_dispositivos = {} #diccionario que contiene el numero en la key y el objeto celular en el valor
         self.telefonos_ocupados = {} #guarda la fecha en el que el telefono se libera.
-        self.registro_mensajes =  {} 
+        self.registro_mensajes =  {} #Cola de mensajes
         
     def registrar_dispositivo(self, numero, celular):
         self.registro_dispositivos[numero]=celular
@@ -45,33 +45,26 @@ class Central:
         if receptor not in self.registro_mensajes:
             self.registro_mensajes[receptor] = deque()  # Crear una pila para el receptor
             
-        self.registro_mensajes[receptor].appendleft(mensaje)
+        self.registro_mensajes[receptor].append(mensaje)
         
         if self.esta_activo(receptor):
             self.registro_dispositivos[receptor].aplicaciones["Mensajes"].recibir_sms(mensaje)
     
-    def registrar_mensajes(self, numero_cel):
-        try:
-            if self.esta_registrado(numero_cel): 
-                if self.esta_activo(numero_cel):
-                    mensajes = self.registro_mensajes[numero_cel]
-                    for mensaje in mensajes:
-                        if mensaje.get_sincronizado():
-                            break
-                        else:
-                            self.registro_dispositivos[numero_cel].lanzar_app("Mensajes").recibir_sms(mensaje)                        
-                else:
-                    raise ValueError
-            else:
-                raise ValueError
-            
-        except KeyError:
-            raise ValueError (f"No hay Mensajes nuevos para el numero {numero_cel}")
-        except ValueError:
+    def registrar_mensajes(self, numero_cel):        
+        if not self.esta_registrado(numero_cel):
             raise ValueError 
-        except IndexError:
-            raise ValueError (f"No hay Mensajes nuevos para el numero {numero_cel}")
-            
+        if numero_cel not in self.registro_mensajes:
+            raise ValueError(f"No hay Mensajes nuevos para el numero {numero_cel}")
+        
+        mensajes = self.registro_mensajes[numero_cel]
+        if not(len(mensajes)):
+            raise ValueError(f"No hay Mensajes nuevos para el numero {numero_cel}")
+        
+        for mensaje in mensajes:
+            if mensaje.get_sincronizado():
+                break
+            else:
+                self.registro_dispositivos[numero_cel].lanzar_app("Mensajes").recibir_sms(mensaje) 
 
     def esta_ocupado(self, numero, fecha_inicio_llamada_nueva:datetime):
         fecha_fin_llamada_anterior = self.telefonos_ocupados[numero]

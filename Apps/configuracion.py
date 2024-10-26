@@ -56,6 +56,10 @@ class ConfigApp(Aplicacion):
         self.configuracion.modo_red = ModoRed.SOLO_VOZ_Y_SMS if valor else ModoRed.SIN_RED
         if valor: #HAY Q VER ESTO
             self.configuracion.modo_avion = False
+            try:
+                self.configuracion.central.registrar_mensajes(self.configuracion.numero)  
+            except ValueError as e:
+                print(e)
             #self.configuracion.central.registrar_dispositivo(self.configuracion.numero)
         else: pass
             #self.configuracion.central.eliminar_dispositivo(self.configuracion.numero)
