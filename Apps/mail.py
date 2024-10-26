@@ -59,6 +59,16 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
         else: 
             raise ValueError("No se pudo ver la bandeja de entrada. Inicie sesión para continuar")
         
+    def ver_bandeja_enviados(self):
+        if not self.central.consultar_LTE(self.numero):
+            raise ValueError("No se pudo ver la bandeja de enviados. Consulte su cobertura")
+        if not self.cuenta_iniciada:
+            raise ValueError("No se pudo ver la bandeja de enviados. Inicie sesión para continuar")
+        
+        pila = CuentaMail.cuentas[self.cuenta_mail].bandeja_enviados.copy()
+        while pila:
+            print(pila.pop())
+
     def enviar_mail(self, mensaje: Mail):
         #Le consulta a la central si el emisor tiene LTE
         if self.central.consultar_LTE(self.numero):
@@ -74,6 +84,9 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
             raise ValueError("No se pudo enviar el mensaje. No tiene cobertura LTE")
     
     def iniciar_sesion(self, mail, contrasenia):
+        if not self.central.consultar_LTE(self.numero):
+            raise ValueError("No se pudo iniciar sesión. Consulte su cobertura")
+        
         if mail in CuentaMail.cuentas and CuentaMail.cuentas[mail].contrasenia == contrasenia:
             self.cuenta_mail = mail
             self.cuenta_iniciada = True
@@ -82,11 +95,15 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
             print("No se pudo iniciar sesión. Verifique los datos ingresados")
     
     def cerrar_sesion(self):
+        if not self.central.consultar_LTE(self.numero):
+            raise ValueError("No se pudo realizar la acción. Consulte su cobertura")
         self.cuenta_mail = None
         self.cuenta_iniciada = False
         print("Sesión cerrada con éxito")
     
     def crear_cuenta(self, mail, contrasenia):
+        if not self.central.consultar_LTE(self.numero):
+            raise ValueError("No se pudo realizar la acción. Consulte su cobertura")
         try:
             CuentaMail(mail, contrasenia)
             print("Cuenta creada con éxito. Inicie sesión para comenzar a utilizarla")

@@ -14,4 +14,4 @@ class Aplicacion:
         return self.esencial
         
     def __str__(self) -> str:
-        return f"Nombre: {self.nombre}\nEsencial: {self.esencial}\nTamaño: {self.tamanio_mb}"
+        return f"Nombre: {self.nombre}\nEsencial: {self.esencial}\nTamaño: {self.tamanio} bytes"

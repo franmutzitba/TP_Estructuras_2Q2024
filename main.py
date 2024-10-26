@@ -12,13 +12,16 @@ if "__main__" == __name__:
     celular1.lanzar_app("Configuracion").set_datos(True)
     celular2.lanzar_app("Configuracion").set_datos(True)
     
-    print(celular1.nombre)
+    print(celular1.get_nombre())
     celular1.lanzar_app("Configuracion").configurar_nombre("Franco")
-    print(celular1.nombre)
+    print(celular1.get_nombre())
     
     print(celular1.aplicaciones)
+    print(celular1.get_almacenamiento_disponible())
     celular1.aplicaciones["AppStore"].descargar_app("WhatsApp")
+    print(celular1.get_almacenamiento_disponible())
     print(celular1.aplicaciones)
+    celular1.aplicaciones["AppStore"].descargar_app("Zoom") #No hay espacio suficiente
     
     # print(Celular.central.registro_dispositivos["987654321"])
     # print(Celular.central.registro_dispositivos["123456789"])
