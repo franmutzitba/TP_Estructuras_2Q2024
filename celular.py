@@ -73,6 +73,12 @@ class Celular:
         else:
             raise ValueError("La contraseña ingresada es incorrecta")
     
+    def get_nombre(self):
+        return self.aplicaciones['Configuracion'].get_nombre()
+    
+    def get_almacenamiento_disponible(self):
+        return self.aplicaciones['Configuracion'].get_almacenamiento_disponible()
+    
     def __str__(self) -> str:
         return f"ID: {self.id}\nNombre: {self.aplicaciones['Configuracion'].get_nombre()}\nModelo: {self.modelo}\nSistema operativo: {self.sistema_operativo}\nMemoria RAM: {self.memoria_ram}\nAlmacenamiento: {self.aplicaciones['Configuracion'].get_almacenamiento_disponible()}\n"
 

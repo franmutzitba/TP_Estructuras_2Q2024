@@ -108,10 +108,12 @@ class ConfigApp(Aplicacion):
         
     @staticmethod
     def validar_contrasenia(contrasenia:str): #la contraseña debe ser un número de 4 a 6 dígitos
+        """Valida si la contraseña del celular cumple con los requisitos de seguridad."""
         return len(contrasenia) <= 4 and len(contrasenia) <= 6 and contrasenia.isnumeric()
     
     @staticmethod
     def validar_nombre(nombre:str): #el nombre debe contener al menos 6 caracteres y no puede contener caracteres especiales. Ademas debe comenzar con una letra
+        """Valida si el nombre del celular cumple con los requisitos."""
         return len(nombre) >= 6 and nombre.isalnum() and nombre[0].isalpha()
 
     def __str__(self):
