@@ -45,7 +45,7 @@ class Central:
         if receptor not in self.registro_mensajes:
             self.registro_mensajes[receptor] = deque()  # Crear una pila para el receptor
             
-        self.registro_mensajes[receptor].append(mensaje)
+        self.registro_mensajes[receptor].appendleft(mensaje)
         
         if self.esta_activo(receptor):
             self.registro_dispositivos[receptor].aplicaciones["Mensajes"].recibir_sms(mensaje)
@@ -57,14 +57,18 @@ class Central:
             raise ValueError(f"No hay Mensajes nuevos para el numero {numero_cel}")
         
         mensajes = self.registro_mensajes[numero_cel]
-        if not(len(mensajes)):
-            raise ValueError(f"No hay Mensajes nuevos para el numero {numero_cel}")
-        
+        mensajes_no_sinc = deque() #cola de mensajes no sincronizados
         for mensaje in mensajes:
             if mensaje.get_sincronizado():
                 break
             else:
-                self.registro_dispositivos[numero_cel].lanzar_app("Mensajes").recibir_sms(mensaje) 
+                mensajes_no_sinc.append(mensaje)
+
+        if not(len(mensajes_no_sinc)):
+            raise ValueError(f"No hay Mensajes nuevos para el numero {numero_cel}")  
+        
+        for mensaje in mensajes_no_sinc: 
+            self.registro_dispositivos[numero_cel].lanzar_app("Mensajes").recibir_sms(mensaje) 
 
     def esta_ocupado(self, numero, fecha_inicio_llamada_nueva:datetime):
         fecha_fin_llamada_anterior = self.telefonos_ocupados[numero]

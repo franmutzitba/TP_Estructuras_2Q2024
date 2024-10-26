@@ -100,6 +100,9 @@ class ConfigApp(Aplicacion):
     def get_nombre(self):
         return self.configuracion.nombre
     
+    def get_numero(self):
+        return self.configuracion.numero
+    
     def get_almacenamiento_disponible(self):
         return self.configuracion.almacenamiento_disponible
         

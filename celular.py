@@ -17,17 +17,14 @@ class Celular:
         #Almaceno los parámetros no modificables por Configuración
         self.id = uuid.uuid4() #Genera un UUID (Universal Unique Identifier) para el dispositivo
         self.modelo = modelo
-        self.numero = numero
         self.sistema_operativo = sistema_operativo
         self.memoria_ram = memoria_ram
-        self.almacenamiento = tamanio_a_bytes(almacenamiento)
-        self.nombre = nombre
         
         self.encendido = False
         self.bloqueado = False
         
         self.aplicaciones = {}
-        self.descargar_apps_basicas(self.nombre, self.almacenamiento, self.numero, self.aplicaciones)
+        self.descargar_apps_basicas(nombre, tamanio_a_bytes(almacenamiento), numero, self.aplicaciones)
  
     def descargar_apps_basicas(self, nombre, almacenamiento, numero, aplicaciones):
         self.aplicaciones["Configuracion"] = ConfigApp(Configuracion(nombre, almacenamiento, Celular.central, numero, aplicaciones))
@@ -42,7 +39,7 @@ class Celular:
             raise ValueError(f" El dispositivo {self.aplicaciones['Configuracion'].get_nombre()} ya se encuentra encendido ")
     
         self.encendido = True
-        self.central.registrar_dispositivo(self.numero, self)
+        self.central.registrar_dispositivo(self.aplicaciones["Configuracion"].get_numero(), self)
         self.aplicaciones["Configuracion"].set_servicio(True)
         
         print(f"Se ha encencido el dispositivo - {self.aplicaciones['Configuracion'].get_nombre()} -")
@@ -76,40 +73,38 @@ class Celular:
         else:
             raise ValueError("La contraseña ingresada es incorrecta")
     
-    def get_numero(self) -> str:
-        return self.numero
-    
     def __str__(self) -> str:
-        return f"ID: {self.id}\nNombre: {self.aplicaciones['Configuracion'].get_nombre()}\nModelo: {self.modelo}\nSistema operativo: {self.sistema_operativo}\nMemoria RAM: {self.memoria_ram}\nAlmacenamiento: {self.almacenamiento}"
+        return f"ID: {self.id}\nNombre: {self.aplicaciones['Configuracion'].get_nombre()}\nModelo: {self.modelo}\nSistema operativo: {self.sistema_operativo}\nMemoria RAM: {self.memoria_ram}\nAlmacenamiento: {self.aplicaciones['Configuracion'].get_almacenamiento_disponible()}\n"
 
-    def guardar_datos(self, filename): #ESTE METODO Y EL DE ABAJO HAY Q PASARLO AL EXPORTADOR Y HAY Q AGREGAR UNA VARIABLE CON TODOS LOS CELULARES
-        with open(filename, mode='w', newline='') as file:
-            writer = csv.writer(file)
-            writer.writerow(['id', 'nombre', 'modelo', 'numero', 'sistema_operativo', 'memoria_ram', 'almacenamiento', 'aplicaciones'])
-            aplicaciones = ','.join(self.aplicaciones.keys())
-            writer.writerow([self.id, self.nombre, self.modelo, self.numero, self.sistema_operativo, self.memoria_ram, self.almacenamiento, aplicaciones])
+    # Esta por verse si lo hacemos o no... Por ahora ignorar
+    # def guardar_datos(self, filename): #ESTE METODO Y EL DE ABAJO HAY Q PASARLO AL EXPORTADOR Y HAY Q AGREGAR UNA VARIABLE CON TODOS LOS CELULARES
+    #     with open(filename, mode='w', newline='') as file:
+    #         writer = csv.writer(file)
+    #         writer.writerow(['id', 'nombre', 'modelo', 'numero', 'sistema_operativo', 'memoria_ram', 'almacenamiento', 'aplicaciones'])
+    #         aplicaciones = ','.join(self.aplicaciones.keys())
+    #         writer.writerow([self.id, self.aplicaciones['Configuracion'].get_nombre(), self.modelo, self.numero, self.sistema_operativo, self.memoria_ram, self.almacenamiento, aplicaciones])
 
-    @staticmethod
-    def cargar_datos(filename):
-        celulares = []
-        with open(filename, mode='r') as file:
-            reader = csv.DictReader(file)
-            for row in reader:
-                celular = Celular(row['nombre'], row['modelo'], row['numero'], row['sistema_operativo'], row['memoria_ram'], row['almacenamiento'])
-                aplicaciones = row['aplicaciones'].split(',')
-                for app in aplicaciones:
-                    if app == "Configuracion":
-                        celular.aplicaciones[app] = ConfigApp(Configuracion(celular.nombre, celular.almacenamiento, Celular.central, celular.numero))
-                    elif app == "Telefono":
-                        celular.aplicaciones[app] = TelefonoApp(celular.numero, Celular.central)
-                    elif app == "Mensajes":
-                        celular.aplicaciones[app] = MensajesApp(celular.numero, Celular.central)
-                    elif app == "AppStore":
-                        celular.aplicaciones[app] = AppStore(celular.aplicaciones, celular.aplicaciones["Configuracion"])
-                    else:
-                        celular.aplicaciones[app] = None
-                celulares.append(celular)
-        return celulares
+    # @staticmethod
+    # def cargar_datos(filename):
+    #     celulares = []
+    #     with open(filename, mode='r') as file:
+    #         reader = csv.DictReader(file)
+    #         for row in reader:
+    #             celular = Celular(row['nombre'], row['modelo'], row['numero'], row['sistema_operativo'], row['memoria_ram'], row['almacenamiento'])
+    #             aplicaciones = row['aplicaciones'].split(',')
+    #             for app in aplicaciones:
+    #                 if app == "Configuracion":
+    #                     celular.aplicaciones[app] = ConfigApp(Configuracion(aplicaciones['Configuracion'].get_nombre(), celular.almacenamiento, Celular.central, celular.numero))
+    #                 elif app == "Telefono":
+    #                     celular.aplicaciones[app] = TelefonoApp(celular.numero, Celular.central)
+    #                 elif app == "Mensajes":
+    #                     celular.aplicaciones[app] = MensajesApp(celular.numero, Celular.central)
+    #                 elif app == "AppStore":
+    #                     celular.aplicaciones[app] = AppStore(celular.aplicaciones, celular.aplicaciones["Configuracion"])
+    #                 else:
+    #                     celular.aplicaciones[app] = None
+    #             celulares.append(celular)
+    #     return celulares
 
     def lanzar_app(self,nombre_app):
         if nombre_app not in self.aplicaciones:
@@ -142,18 +137,22 @@ if __name__ =="__main__":
     
     celular1.lanzar_app("Mail").enviar_mail(Mail("Hola", "franco.mutz@gmail.com", "franco.mutz2@gmail.com", "Saludo"))
     celular2.lanzar_app("Mail").ver_bandeja_entrada(CriterioLectura.NO_LEIDOS_PRIMEROS)
-    
+    celular1.lanzar_app("Mensajes").enviar_sms("987654321", "mensaje 0")
     celular2.apagar_dispositivo()
     celular1.lanzar_app("Mensajes").enviar_sms("987654321", "MEssi")
+    celular1.lanzar_app("Mensajes").enviar_sms("987654321", "mensaje 2")
+    celular1.lanzar_app("Mensajes").enviar_sms("987654321", "mensaje 3")
     # print(celular1.central.registro_mensajes["987654321"].popleft())
     print(celular2.central.registro_mensajes["987654321"][0].get_sincronizado())
     # #print(celular2.aplicaciones["Mensajes"].mensajes[0].get_sincronizado())
     celular2.encencer_dispositivo()
+    celular1.lanzar_app("Mensajes").enviar_sms("987654321", "mensaje 4") 
     print(celular2.aplicaciones["Configuracion"].configuracion.modo_red)
     print(celular2.central.registro_mensajes["987654321"][0].get_sincronizado())
     print(celular2.aplicaciones["Mensajes"].mensajes[0].get_sincronizado())
     celular2.lanzar_app("Mensajes").ver_bandeja_de_entrada()
     print()
+    
 
     
     # celular1.encencer_dispositivo()

@@ -12,9 +12,9 @@ if "__main__" == __name__:
     celular1.lanzar_app("Configuracion").set_datos(True)
     celular2.lanzar_app("Configuracion").set_datos(True)
     
-    # print(celular1.nombre)
-    # celular1.lanzar_app("Configuracion").configurar_nombre("Franco")
-    # print(celular1.nombre)
+    print(celular1.nombre)
+    celular1.lanzar_app("Configuracion").configurar_nombre("Franco")
+    print(celular1.nombre)
     
     print(celular1.aplicaciones)
     celular1.aplicaciones["AppStore"].descargar_app("WhatsApp")
