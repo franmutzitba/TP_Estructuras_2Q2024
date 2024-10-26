@@ -37,7 +37,7 @@ class Mail:
 class MailApp(Aplicacion): #Pertenece a cada telefono
     """Clase que instancia la aplicación de mail de un celular"""
     def __init__(self, numero, central:Central):
-        super().__init__("Mail", 100, True)
+        super().__init__(nombre = "Mail", tamanio = "100 MB", esencial = True)
         self.numero = numero
         self.central = central
         self.cuenta_mail = None

@@ -6,7 +6,7 @@ from collections import deque
 
 class MensajesApp(Aplicacion):
     def __init__(self, numero, central: Central):
-        super().__init__(nombre = "MensajeriaSMS", tamanio_mb = 100, esencial = True,)
+        super().__init__(nombre = "MensajeriaSMS", tamanio = "100 MB", esencial = True,)
         self.numero_cel = numero
         self.central = central
         self.mensajes = deque() 

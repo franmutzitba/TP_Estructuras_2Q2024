@@ -1,5 +1,6 @@
 from Apps.aplicacion import Aplicacion
 from enum import Enum
+from funciones_utiles import tamanio_a_bytes
 
 class ModoRed(Enum):
     SIN_RED = 0
@@ -7,9 +8,9 @@ class ModoRed(Enum):
     LTE = 2
     
 class Configuracion:
-    def __init__(self, nombre, almacenamiento_gb, central, numero, aplicaciones_instaladas, modo_red = ModoRed.LTE, modo_avion=False, contrasenia = None):
+    def __init__(self, nombre, almacenamiento, central, numero, aplicaciones_instaladas, modo_red = ModoRed.LTE, modo_avion=False, contrasenia = None):
         self.nombre = nombre
-        self.almacenamiento_disponible = int(almacenamiento_gb)*1024 #Trabajo en megas que es más sencillo pero dejo que se ingrese en gb que es mas común
+        self.almacenamiento_disponible = almacenamiento
         self.central = central
         self.numero = numero
         self.aplicaciones_instaladas = aplicaciones_instaladas 
@@ -23,7 +24,7 @@ class Configuracion:
         
 class ConfigApp(Aplicacion):
     def __init__(self, configuracion: Configuracion):
-        super().__init__(nombre = "Configuración", tamanio_mb = 100, esencial = True)
+        super().__init__(nombre = "Configuración", tamanio = "100 MB", esencial = True)
         self.configuracion = configuracion
         
     def configurar_contrasenia(self, contrasenia_nueva, contrasenia_vieja = None):
@@ -87,7 +88,7 @@ class ConfigApp(Aplicacion):
         
     def set_almacenamiento_disponible(self, almacenamiento):
         self.configuracion.almacenamiento_disponible = almacenamiento
-    
+
     ##getters  
     def get_contrasenia(self):
         return self.configuracion.contrasenia
@@ -96,7 +97,7 @@ class ConfigApp(Aplicacion):
         return self.configuracion.nombre
     
     def get_almacenamiento_disponible(self):
-        return int(self.configuracion.almacenamiento_disponible)
+        return self.configuracion.almacenamiento_disponible
         
     @staticmethod
     def validar_contrasenia(contrasenia:str): #la contraseña debe ser un número de 4 a 6 dígitos

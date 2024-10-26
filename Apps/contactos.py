@@ -2,7 +2,7 @@ from Apps.aplicacion import Aplicacion
 
 class ContactosApp(Aplicacion):
     def __init__(self):
-        super().__init__("Contacto", 800, True)
+        super().__init__(nombre = "Contacto", tamanio = "800 MB", esencial = True)
         self.agenda = {}
 
     def get_contactos(self):

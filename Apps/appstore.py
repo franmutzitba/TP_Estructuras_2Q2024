@@ -1,6 +1,7 @@
 from Apps.aplicacion import Aplicacion
-from Apps.configuracion import Configuracion
+from Apps.configuracion import ConfigApp
 from manejadorCSV import ManejadorCSV
+from funciones_utiles import tamanio_a_bytes
 
 class AppStore(Aplicacion):
     """
@@ -36,13 +37,13 @@ class AppStore(Aplicacion):
     """
     exportador = ManejadorCSV("appstore.csv")
     
-    def __init__(self, aplicaciones_celular, configuracion: Configuracion):
+    def __init__(self, aplicaciones_celular, configuracion: ConfigApp):
         """
         Args:
             aplicaciones_celular (list): Lista de aplicaciones instaladas en el celular.
             configuracion (Configuracion): Objeto de configuración que contiene las configuraciones del celular
         """
-        super().__init__("AppStore", 200, True)
+        super().__init__(nombre = "AppStore", tamanio = "200 MB", esencial = True)
         self.aplicaciones_celular = aplicaciones_celular
         self.configuracion = configuracion
     
@@ -55,9 +56,9 @@ class AppStore(Aplicacion):
         aplicaciones_disponibles = self.aplicaciones_disponibles()
         for app in aplicaciones_disponibles:
             if app[0] not in self.aplicaciones_celular:
-                print(f"Nombre: {app[0]} - Tamaño: {app[1]}mb")
+                print(f"Nombre: {app[0]} - Tamaño: {app[1]}")
             else:
-                print(f"Nombre: {app[0]} - Tamaño: {app[1]}mb - INSTALADA")
+                print(f"Nombre: {app[0]} - Tamaño: {app[1]} - INSTALADA")
         
     def descargar_app(self, nombre):
         """Descarga una aplicación de la tienda al celular, si hay suficiente espacio y no está ya instalada. 
@@ -79,10 +80,10 @@ class AppStore(Aplicacion):
         aplicaciones_disponibles = self.aplicaciones_disponibles()
         for app in aplicaciones_disponibles:
             if app[0] == nombre and encontrada == False:
-                if int(app[1]) <= int(self.configuracion.almacenamiento_disponible):
+                if tamanio_a_bytes(app[1]) <= self.configuracion.get_almacenamiento_disponible():
                     self.aplicaciones_celular[nombre] = None
-                    nuevo_almacenamiento = int(self.configuracion.almacenamiento_disponible) - int(app[1])
-                    self.configuracion.almacenamiento_disponible = nuevo_almacenamiento
+                    nuevo_almacenamiento = self.configuracion.get_almacenamiento_disponible() - tamanio_a_bytes(app[1])
+                    self.configuracion.set_almacenamiento_disponible(nuevo_almacenamiento)
                     self.agregar_descarga(nombre)
                     print(f"La aplicación {nombre} se ha descargado correctamente")
                 else:
@@ -110,8 +111,8 @@ class AppStore(Aplicacion):
             raise ValueError(f"La aplicación {nombre} es esencial y no se puede desinstalar")
         
         self.aplicaciones_celular.pop(nombre)
-        nuevo_almacenamiento = self.configuracion.almacenamiento_disponible + self.consultar_tamanio(nombre)
-        self.configuracion.almacenamiento_disponible = nuevo_almacenamiento
+        nuevo_almacenamiento = self.configuracion.get_almacenamiento_disponible() + self.consultar_tamanio(nombre)
+        self.configuracion.set_almacenamiento_disponible(nuevo_almacenamiento)
         print(f"La aplicación {nombre} se ha desinstalado correctamente")
     
     def agregar_descarga(self, nombre):
@@ -142,7 +143,7 @@ class AppStore(Aplicacion):
         aplicaciones_disponibles = self.aplicaciones_disponibles()
         for app in aplicaciones_disponibles:
             if app[0] == nombre:
-                return int(app[1])
+                return tamanio_a_bytes(app[1])
      
     def aplicaciones_disponibles(self):
         """Obtiene la lista de aplicaciones disponibles en la appstore desde el archivo CSV.
