@@ -50,19 +50,25 @@ class Central:
         if self.esta_activo(receptor):
             self.registro_dispositivos[receptor].aplicaciones["Mensajes"].recibir_sms(mensaje)
     
-    def registrar_mensajes(self, numero_cel):        
+    def registrar_mensajes(self, numero_cel):
+        # el metodo sirve para recibir los mensajes aun no sincronizados al momento de encender de vuelta el servicio del dispositivo         
         if not self.esta_registrado(numero_cel):
             raise ValueError 
         if numero_cel not in self.registro_mensajes:
             raise ValueError(f"No hay Mensajes nuevos para el numero {numero_cel}")
         
+        # el diccionario registro_mensajes tiene por nro celular una pila de los mensajes recibidos
+        # necesito generar una lista en este caso pila que almacene los mensajes no sincronizados, es decir los primeros de la lista
+        # esta pila se recorre y se reciben los sms del mas antiguo al mas reciente en la bandeja de entrada del numero, el cual encendio el servico
+        # sincronizando los mensajes  
+        
         mensajes = self.registro_mensajes[numero_cel]
-        mensajes_no_sinc = deque() #cola de mensajes no sincronizados
+        mensajes_no_sinc = deque() #pila de mensajes no sincronizados
         for mensaje in mensajes:
             if mensaje.get_sincronizado():
                 break
             else:
-                mensajes_no_sinc.append(mensaje)
+                mensajes_no_sinc.appendleft(mensaje)
 
         if not(len(mensajes_no_sinc)):
             raise ValueError(f"No hay Mensajes nuevos para el numero {numero_cel}")  

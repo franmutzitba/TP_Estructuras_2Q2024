@@ -16,10 +16,10 @@ class MensajesApp(Aplicacion):
     
     def enviar_sms(self, receptor, texto):
         try:
-            self.central.manejar_mensaje(self.numero_cel, receptor)
-            mensaje = self.crear_mensaje(receptor, texto)
-            self.central.registrar_mensaje_nuevo(mensaje)
-            print(f"Mensaje enviado correctamente al numero {receptor}") 
+            if self.central.manejar_mensaje(self.numero_cel, receptor):
+                mensaje = self.crear_mensaje(receptor, texto)
+                self.central.registrar_mensaje_nuevo(mensaje)
+                print(f"Mensaje enviado correctamente al numero {receptor}") 
         except ValueError as e: 
             print(e)
 
@@ -29,10 +29,7 @@ class MensajesApp(Aplicacion):
             self.mensajes.appendleft(mensaje)
         else:
             print("El mensaje ya ha sido recibido")
-    
-    def registrar_mensajes(self):
-        self.central.registrar_mensajes(self.numero_cel)
-        
+
     def ver_bandeja_de_entrada(self):
         bandeja_de_entrada = self.mensajes
         i=1
@@ -40,7 +37,7 @@ class MensajesApp(Aplicacion):
             raise ValueError(f"El numero -{self.numero_cel}- no tiene mensajes en la bandeja de entrada")
         print(f"Bandeja de Entrada del numero: {self.numero_cel}")
         # ??? Hago un raise o un print??
-        while bandeja_de_entrada:
+        for mensaje in bandeja_de_entrada:
             print(f"- {i} - ", end="")
-            print(bandeja_de_entrada.popleft())
+            print(mensaje)
             i+=1

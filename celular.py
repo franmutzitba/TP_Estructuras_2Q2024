@@ -158,6 +158,7 @@ if __name__ =="__main__":
     print(celular2.aplicaciones["Mensajes"].mensajes[0].get_sincronizado())
     celular2.lanzar_app("Mensajes").ver_bandeja_de_entrada()
     print()
+    celular2.lanzar_app("Mensajes").ver_bandeja_de_entrada()
     
 
     
