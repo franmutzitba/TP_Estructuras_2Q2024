@@ -6,7 +6,7 @@ import datetime
 
 class TelefonoApp(Aplicacion):
     def __init__(self, numero, central, contactos):
-        super().__init__("Telefono", 200, True)
+        super().__init__(nombre = "Telefono", tamanio= "200 MB", esencial = True)
         self.numero = numero
         self.contactos = contactos.agenda                 #ver como poner los contactos en un diccionario aca. la calve debe ser el numero telefonico y el valor el nombre del contacto.
         self.central = central

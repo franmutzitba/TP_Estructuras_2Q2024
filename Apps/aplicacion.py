@@ -1,10 +1,12 @@
+from funciones_utiles import tamanio_a_bytes
+
 class Aplicacion:
     """Clase padre de todas las aplicaciones del celular. Agrupa todos los atributos y métodos comunes a las aplicaciones.
     El propósito principal por el cual fue creada esta clase fue para poder distinguir entre apps esenciales y no esenciales.
     """
-    def __init__(self, nombre, tamanio_mb, esencial = False):
+    def __init__(self, nombre, tamanio, esencial = False):
         self.nombre = nombre
-        self.tamanio_mb = tamanio_mb
+        self.tamanio = tamanio_a_bytes(tamanio)
         self.esencial = esencial
     
     def es_esencial(self):
