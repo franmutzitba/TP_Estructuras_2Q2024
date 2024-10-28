@@ -155,6 +155,15 @@ class AppStore(Aplicacion):
             return AppStore.exportador.leer_archivo(True)
         except FileNotFoundError:
             return []
+        
+    def listar_apps_instaladas(self):
+        """Imprime las aplicaciones instaladas en el celular.
+        
+        Returns:
+            None
+        """
+        for app in self.aplicaciones_celular:
+            print(app)
 
     def __str__(self):
         return super().__str__()

@@ -115,7 +115,6 @@ class Central:
         print(f"Enviando mensaje de {emisor} a {receptor}\n")
         return True
             
-    
     def mostrar_dispositivos(self):
         for dispositivo in self.registro_dispositivos:
             print(dispositivo)
