@@ -9,6 +9,7 @@ from Apps.contactos import ContactosApp
 from funciones_utiles import tamanio_a_bytes
 import csv
 import uuid
+import os
 
 class Celular:
     central = Central()
@@ -122,6 +123,76 @@ class Celular:
             return self.aplicaciones[nombre_app]
         else:
             raise ValueError("El dispositivo se encuentra apagado")
+        
+    def menu_navegacion(self):
+        print("Bienvenido al celular")
+        salir = False
+        while not salir:
+            print("Menu del celular:")
+            print("1. Encender/Apagar dispositivo")
+            print("2. Desbloquear/Bloquear dispositivo")
+            print("3. Ver/Lanzar aplicaciones")
+            print("4. Mostrar datos del dispositivo")
+            print("5. Salir")
+            opcion = input("Seleccione una opción: ")
+            if opcion == "1":
+                os.system('cls')
+                print("Encender/Apagar dispositivo")
+                valor = input("Encender (1) / Apagar (0): ")
+                try:
+                    if valor == "1":
+                        self.encencer_dispositivo()
+                    elif valor == "0":
+                        self.apagar_dispositivo()
+                    else:
+                        raise ValueError("Opción no válida, intente nuevamente")
+                except ValueError as e:
+                    print(e)
+                input("Presione cualquier tecla para volver al menú del celular...")
+                os.system('cls')
+            elif opcion == "2":
+                os.system('cls')
+                print("Desbloquear/Bloquear dispositivo")
+                valor = input("Desbloquear (1) / Bloquear (0): ")
+                try:
+                    if valor == "1":
+                        contrasenia = input("Ingrese la contraseña (o presione Enter si no tiene): ")
+                        self.desbloquear_dispositivo(contrasenia if contrasenia else None)
+                    elif valor == "0":
+                        self.bloquear_dispositivo()
+                    else:
+                        raise ValueError("Opción no válida, intente nuevamente")
+                except ValueError as e:
+                    print(e)
+                input("Presione cualquier tecla para volver al menú del celular...")
+                os.system('cls')
+            elif opcion == "3":
+                os.system('cls')
+                print("Ver/Lanzar aplicaciones")
+                print("Aplicaciones instaladas:")
+                for app in self.aplicaciones.keys():
+                    print(f"- {app}")
+                nombre_app = input("Ingrese el nombre de la aplicación que desea lanzar: ")
+                try:
+                    print(f"Lanzando {nombre_app}...")
+                    self.lanzar_app(nombre_app).menu_navegacion()
+                except ValueError as e:
+                    print(e)
+                input("Presione cualquier tecla para volver al menú del celular...")
+                os.system('cls')
+            elif opcion == "4":
+                os.system('cls')
+                print("Mostrar datos del dispositivo")
+                print(self)
+                input("Presione cualquier tecla para volver al menú del celular...")
+                os.system('cls')
+            elif opcion == "5":
+                salir = True
+            else:
+                print("Opción no válida, intente nuevamente")
+                input("Presione cualquier tecla para volver al menú del celular...")
+                os.system('cls')
+        
         
 if __name__ =="__main__":
     from Apps.mail import *
