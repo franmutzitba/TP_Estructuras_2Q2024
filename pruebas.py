@@ -24,3 +24,6 @@ print(pila)
 from comunicacion import Mensaje 
 mensaje = Mensaje("1","2","hola",datetime.now())
 print(mensaje)
+
+cadena = "Hola"
+print("ol" in cadena)

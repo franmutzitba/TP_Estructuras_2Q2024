@@ -150,9 +150,6 @@ class ConfigApp(Aplicacion):
                 self.configuracion.central.registrar_mensajes(self.configuracion.numero)  
             except ValueError as e:
                 print(e)
-            #self.configuracion.central.registrar_dispositivo(self.configuracion.numero)
-        else: pass
-            #self.configuracion.central.eliminar_dispositivo(self.configuracion.numero)
         print(f"El servicio se ha {'encendido' if valor==True else 'apagado'}")
              
     def set_datos(self,valor:bool):
@@ -226,6 +223,9 @@ class ConfigApp(Aplicacion):
     
     def get_almacenamiento_disponible(self):
         return self.configuracion.almacenamiento_disponible
+    
+    def get_modo_red(self):
+        return self.configuracion.modo_red
         
     @staticmethod
     def validar_contrasenia(contrasenia:str): #la contraseña debe ser un número de 4 a 6 dígitos

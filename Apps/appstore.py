@@ -1,5 +1,5 @@
 from Apps.aplicacion import Aplicacion
-from Apps.configuracion import ConfigApp
+from Apps.configuracion import ConfigApp, ModoRed
 from manejadorCSV import ManejadorCSV
 from funciones_utiles import tamanio_a_bytes
 
@@ -53,6 +53,9 @@ class AppStore(Aplicacion):
         Returns:
             None
         """
+        if self.configuracion.get_modo_red() != ModoRed.LTE:
+            raise ValueError("No es posible mostrar las aplicaciones disponibles en este momento. Consulte su conexión a internet")
+        
         aplicaciones_disponibles = self.aplicaciones_disponibles()
         for app in aplicaciones_disponibles:
             if app[0] not in self.aplicaciones_celular:
@@ -75,13 +78,15 @@ class AppStore(Aplicacion):
         """
         if nombre in self.aplicaciones_celular:
             raise ValueError(f"La aplicación {nombre} ya se encuentra instalada")
+        if self.configuracion.get_modo_red() != ModoRed.LTE:
+            raise ValueError("No es posible descargar aplicaciones en este momento. Consulte su conexión a internet")
         
         encontrada = False
         aplicaciones_disponibles = self.aplicaciones_disponibles()
         for app in aplicaciones_disponibles:
             if app[0] == nombre and encontrada == False:
                 if tamanio_a_bytes(app[1]) <= self.configuracion.get_almacenamiento_disponible():
-                    self.aplicaciones_celular[nombre] = None
+                    self.aplicaciones_celular[nombre] = Aplicacion(nombre=nombre, tamanio=app[1], esencial=False) # Instancia de la clase Aplicacion. Se asume que las apps descargadas del appstore no son esenciales.
                     nuevo_almacenamiento = self.configuracion.get_almacenamiento_disponible() - tamanio_a_bytes(app[1])
                     self.configuracion.set_almacenamiento_disponible(nuevo_almacenamiento)
                     self.agregar_descarga(nombre)
@@ -164,6 +169,20 @@ class AppStore(Aplicacion):
         """
         for app in self.aplicaciones_celular:
             print(app)
+          
+    def buscar_app(self, nombre):
+        """Lista todas las aplicaciones disponibles en la tienda que contienen el nombre ingresado.
+                
+        Returns:
+            None
+        """
+        if self.configuracion.get_modo_red() != ModoRed.LTE:
+            raise ValueError("No es posible buscar aplicaciones en este momento. Consulte su conexión a internet")
+        
+        aplicaciones_disponibles = self.aplicaciones_disponibles()
+        for app in aplicaciones_disponibles:
+            if nombre.lower() in app[0].lower():
+                print(f"Nombre: {app[0]} - Tamaño: {app[1]}")
 
     def __str__(self):
         return super().__str__()

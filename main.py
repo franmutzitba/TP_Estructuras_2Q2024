@@ -9,8 +9,16 @@ if "__main__" == __name__:
     #celular2.desbloquear_dispositivo()
     celular1.encencer_dispositivo()
     #celular1.desbloquear_dispositivo()
-    celular1.lanzar_app("Configuracion").set_datos(True)
-    celular2.lanzar_app("Configuracion").set_datos(True)
+    # celular1.lanzar_app("Configuracion").set_datos(True)
+    # celular2.lanzar_app("Configuracion").set_datos(F)
+    
+    # salir = input("Presione 's' para salir: ")
+    # while salir != "s":
+    #     try:
+    #         datos = input("Ingrese 1 para activar datos, 0 para desactivar: ")
+    #         celular1.lanzar_app("Configuracion").set_datos(bool(int(datos)))
+    #     except ValueError as e:
+    #         print(e)
     
     print(celular1.get_nombre())
     celular1.lanzar_app("Configuracion").configurar_nombre("Franco")
@@ -21,7 +29,10 @@ if "__main__" == __name__:
     celular1.aplicaciones["AppStore"].descargar_app("WhatsApp")
     print(celular1.get_almacenamiento_disponible())
     print(celular1.aplicaciones)
-    celular1.aplicaciones["AppStore"].descargar_app("Zoom") #No hay espacio suficiente
+    #celular1.aplicaciones["AppStore"].descargar_app("Zoom") #No hay espacio suficiente
+    celular1.lanzar_app("AppStore").buscar_app("oK")
+    #celular1.lanzar_app("AppStore").desinstalar_app("WhatsApp")
+    celular1.lanzar_app("AppStore").listar_apps_instaladas()
     
     # print(Celular.central.registro_dispositivos["987654321"])
     # print(Celular.central.registro_dispositivos["123456789"])
