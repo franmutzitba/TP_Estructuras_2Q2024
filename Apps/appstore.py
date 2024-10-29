@@ -2,6 +2,7 @@ from Apps.aplicacion import Aplicacion
 from Apps.configuracion import ConfigApp, ModoRed
 from manejadorCSV import ManejadorCSV
 from funciones_utiles import tamanio_a_bytes
+import os
 
 class AppStore(Aplicacion):
     """
@@ -178,11 +179,75 @@ class AppStore(Aplicacion):
         """
         if self.configuracion.get_modo_red() != ModoRed.LTE:
             raise ValueError("No es posible buscar aplicaciones en este momento. Consulte su conexión a internet")
-        
+        encontrado = False
         aplicaciones_disponibles = self.aplicaciones_disponibles()
         for app in aplicaciones_disponibles:
             if nombre.lower() in app[0].lower():
                 print(f"Nombre: {app[0]} - Tamaño: {app[1]}")
+                encontrado = True
+        if encontrado == False:
+            raise ValueError(f"No se encontraron aplicaciones con el nombre {nombre}")
+                
+    def menu_navegacion(self):
+        """Menú de navegación de la AppStore.
+        
+        Returns:
+            None
+        """
+        os.system('cls')
+        print("\nBienvenido a la AppStore")
+        salir = False
+        while not salir:
+            print("\nBienvenido a la AppStore")
+            print("1. Listar todas las aplicaciones disponibles en la AppStore")
+            print("2. Descargar aplicación")
+            print("3. Desinstalar aplicación")
+            print("4. Buscar aplicación por nombre")
+            print("5. Salir")
+            opcion = input("Seleccione una opción: ")
+            if opcion == "1":
+                os.system('cls')
+                self.mostrar_apps_disponibles()
+                input("Presione cualquier tecla para volver al menu de AppStore...")
+                os.system('cls')
+            elif opcion == "2":
+                os.system('cls')
+                nombre = input("Ingrese el nombre de la aplicación a descargar: ")
+                try:
+                    self.descargar_app(nombre)
+                except ValueError as e:
+                    print(e)
+                input("Presione cualquier tecla para volver al menu de AppStore...")
+                os.system('cls')
+            elif opcion == "3":
+                os.system('cls')
+                nombre = input("Ingrese el nombre de la aplicación a desinstalar: ")
+                try:
+                    self.desinstalar_app(nombre)
+                except ValueError as e:
+                    print(e)
+                input("Presione cualquier tecla para volver al menu de AppStore...")
+                os.system('cls')
+            elif opcion == "4":
+                os.system('cls')
+                nombre = input("Ingrese el nombre de la aplicación a buscar: ")
+                try:
+                    self.buscar_app(nombre)
+                except ValueError as e:
+                    print(e)
+                input("Presione cualquier tecla para volver al menu de AppStore...")
+                os.system('cls')
+            elif opcion == "5":
+                os.system('cls')
+                print("Saliendo de la AppStore")
+                salir = True
+                input("Presione cualquier tecla para volver al menu del celular...")
+                os.system('cls')
+            else:
+                os.system('cls')
+                print("Opción inválida, intente nuevamente")
+                input("Presione cualquier tecla para volver al menu de AppStore...")
+                os.system('cls')
 
     def __str__(self):
         return super().__str__()

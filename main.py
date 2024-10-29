@@ -4,10 +4,16 @@ if "__main__" == __name__:
     from Apps.mail import *
     from Apps.mail import CriterioLectura
     celular1 = Celular("iPhone de Franco", "iPhone 13", "123456789", "iOS", "4GB", "64GB")
+
     celular2 = Celular("Samsung de Juan", "Samsung Galaxy S21", "987654321", "Android", "6GB", "128GB")
     celular2.encencer_dispositivo()
     #celular2.desbloquear_dispositivo()
     celular1.encencer_dispositivo()
+    celular1.lanzar_app("Configuracion").set_datos(True)
+    try:
+        celular1.lanzar_app("AppStore").menu_navegacion()
+    except ValueError as e:
+        print(e)
     #celular1.desbloquear_dispositivo()
     # celular1.lanzar_app("Configuracion").set_datos(True)
     # celular2.lanzar_app("Configuracion").set_datos(F)

@@ -1,6 +1,7 @@
 from Apps.aplicacion import Aplicacion
 from enum import Enum
 from funciones_utiles import tamanio_a_bytes
+import os
 
 class ModoRed(Enum):
     SIN_RED = 0
@@ -120,7 +121,8 @@ class ConfigApp(Aplicacion):
         for app in self.configuracion.aplicaciones_instaladas.keys():
             print(app)
     
-    ##setters          
+    ##setters
+    #############################     
     def set_servicio(self,valor:bool):
         """Configura el estado del servicio de red del dispositivo.
         Este método ajusta el modo de red del dispositivo entre SOLO_VOZ_Y_SMS y SIN_RED
@@ -210,8 +212,10 @@ class ConfigApp(Aplicacion):
         
     def set_almacenamiento_disponible(self, almacenamiento):
         self.configuracion.almacenamiento_disponible = almacenamiento
-
+    #############################
+    
     ##getters  
+    #############################
     def get_contrasenia(self):
         return self.configuracion.contrasenia
     
@@ -226,6 +230,7 @@ class ConfigApp(Aplicacion):
     
     def get_modo_red(self):
         return self.configuracion.modo_red
+    #############################
         
     @staticmethod
     def validar_contrasenia(contrasenia:str): #la contraseña debe ser un número de 4 a 6 dígitos
@@ -236,6 +241,103 @@ class ConfigApp(Aplicacion):
     def validar_nombre(nombre:str): #el nombre debe contener al menos 6 caracteres y no puede contener caracteres especiales. Ademas debe comenzar con una letra
         """Valida si el nombre del celular cumple con los requisitos."""
         return len(nombre) >= 6 and nombre.isalnum() and nombre[0].isalpha()
+    
+    def menu_navegacion(self):
+        """Muestra un menú de navegación para la aplicación de configuración."""
+        os.system('cls')
+        print("Bienvenido a la aplicación de Configuración")
+        salir = False
+        while not salir:
+            print("Menú de Configuración:")
+            print("1. Configurar nombre")
+            print("2. Configurar contraseña")
+            print("3. Listar aplicaciones descargadas")
+            print("4. Activar/desactivar servicio de red")
+            print("5. Activar/desactivar datos móviles")
+            print("6. Activar/desactivar modo avión")
+            print("7. Ver configuración actual del dispositivo")
+            print("8. Salir")
+            opcion = input("Seleccione una opción: ")
+            if opcion == "1":
+                os.system('cls')
+                print("Configuración de nombre")
+                print("El nombre debe contener al menos 6 caracteres y no puede contener caracteres especiales. Ademas debe comenzar con una letra")
+                nombre = input("Ingrese el nuevo nombre que desea ponerle al dispositivo: ")
+                try:
+                    self.configurar_nombre(nombre)
+                except ValueError as e:
+                    print(e)
+                input("Presione cualquier tecla para volver al menu de Configuración...")
+                os.system('cls')
+            elif opcion == "2":
+                os.system('cls')
+                print("Configuración de contraseña")
+                print("La contraseña debe ser un número de 4 a 6 dígitos")
+                contrasenia = input("Ingrese la nueva contraseña: ")
+                contrasenia_vieja = input("Ingrese la contraseña actual: ")
+                try:
+                    self.configurar_contrasenia(contrasenia, contrasenia_vieja)
+                except ValueError as e:
+                    print(e)
+                input("Presione cualquier tecla para volver al menu de Configuración...")
+                os.system('cls')
+            elif opcion == "3":
+                os.system('cls')
+                try:
+                    self.listar_aplicaciones()
+                except ValueError as e:
+                    print(e)
+                input("Presione cualquier tecla para volver al menu de Configuración...")
+                os.system('cls')
+            elif opcion == "4":
+                os.system('cls')
+                valor = input("Desea encender el servicio? (s/n): ")
+                while valor.lower() != "s" and valor.lower() != "n":
+                    valor = input("Opción inválida, intente nuevamente: ")
+                    
+                try:    
+                    self.set_servicio(valor.lower() == "s")
+                except ValueError as e:
+                    print(e)
+                input("Presione cualquier tecla para volver al menu de Configuración...")
+                os.system('cls')
+            elif opcion == "5":
+                os.system('cls')
+                valor = input("Desea encender los datos móviles? (s/n): ")
+                while valor.lower() != "s" and valor.lower() != "n":
+                    valor = input("Opción inválida, intente nuevamente: ")
+                try:
+                    self.set_datos(valor.lower() == "s")
+                except ValueError as e:
+                    print(e)
+                input("Presione cualquier tecla para volver al menu de Configuración...")
+                os.system('cls')
+            elif opcion == "6":
+                os.system('cls')
+                valor = input("Desea activar el modo avión? (s/n): ")
+                while valor.lower() != "s" and valor.lower() != "n":
+                    valor = input("Opción inválida, intente nuevamente: ")
+                try:
+                    self.set_modo_avion(valor.lower() == "s")
+                except ValueError as e:
+                    print(e)
+                input("Presione cualquier tecla para volver al menu de Configuración...")
+                os.system('cls')
+            elif opcion == "7":
+                os.system('cls')
+                print(self)
+                input("Presione cualquier tecla para volver al menu de Configuración...")
+                os.system('cls')
+            elif opcion == "8":
+                os.system('cls')
+                print("Saliendo de la aplicación de Configuración...")
+                salir = True
+                input("Presione cualquier tecla para volver al menu del celular...")
+                os.system('cls')
+            else:
+                print("Opción inválida, intente nuevamente")
+                input("Presione cualquier tecla para volver al menu de Configuración...")
+                os.system('cls')
 
     def __str__(self):
         return f"Configuración: {self.configuracion}"
