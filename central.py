@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 #from celular import Celular
 from Apps.configuracion import ModoRed
 from collections import deque 
+from manejadorCSV import ManejadorSMS
 #La primera vez que se activa el servicio del celular se da de alta en la central
 #Luego la central chequea que tenga servicio o LTE segun corresponda para realizar la comunicacion
 #
@@ -14,6 +15,7 @@ class Central:
         self.registro_dispositivos = {} #diccionario que contiene el numero en la key y el objeto celular en el valor
         self.registro_mensajes =  {} #Colas de mensajes
         self.ultima_llamada_por_persona = {}  #guarda la persona como clave y como valor a la llamada
+        self.manejador_sms = ManejadorSMS("archivo_sms.csv")
         
     def registrar_dispositivo(self, numero, celular):
         self.registro_dispositivos[numero]=celular
@@ -47,7 +49,7 @@ class Central:
             
         self.registro_mensajes[receptor].appendleft(mensaje)
         
-        if self.esta_activo(receptor):
+        if  self.esta_registrado(receptor) and self.esta_activo(receptor):
             self.registro_dispositivos[receptor].aplicaciones["Mensajes"].recibir_sms(mensaje)
     
     def registrar_mensajes(self, numero_cel):
@@ -140,6 +142,12 @@ class Central:
     def mostrar_dispositivos(self):
         for dispositivo in self.registro_dispositivos:
             print(dispositivo)
+    
+    def cargar_mensajes(self):
+        self.manejador_sms.cargar_mensajes(self)
+    
+    def exportar_mensajes(self):
+        self.manejador_sms.exportar_mensajes(self.registro_mensajes)
             
     def __str__(self) -> str:
         return f"Registro de llamdas: {self.registrar_llamada}\nRegistro de dispositivos: {self.registro_dispositivos}\n Registro de mensajes: {self.registro_mensajes}"

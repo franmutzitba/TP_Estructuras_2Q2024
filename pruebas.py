@@ -33,3 +33,19 @@ print("ol" in cadena)
 
 contacto = 1 if 1==1 else 0
 print(contacto)
+
+class Messi:
+    def __init__(self, hola):
+        self.hola = hola
+        
+    def validar(numero):
+        return numero is 0
+    
+    def hola(self, numero):
+        return Messi.validar(numero)
+    
+messi = Messi("lol")
+
+if False and True:
+    print("messi")
+

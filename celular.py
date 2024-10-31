@@ -240,10 +240,16 @@ if __name__ =="__main__":
     print()
     celular2.lanzar_app("Mensajes").ver_bandeja_de_entrada()
     celular2.lanzar_app("Mensajes").ver_chats_recientes()
-    celular2.lanzar_app("Mensajes").menu_navegacion()
-    
+    #celular2.lanzar_app("Mensajes").menu_navegacion()
+    #celular2.menu_navegacion()
+    Celular.central.exportar_mensajes()
 
-    
+    central2 = Central()
+    central2.cargar_mensajes()
+    for cola in (central2.registro_mensajes.values()):
+        for mensaje in cola:
+            print(mensaje)
+        
     # celular1.encencer_dispositivo()
     # celular1.central.mostrar_dispositivos()
     # celular1.aplicaciones["Configuracion"].set_servicio(True)
