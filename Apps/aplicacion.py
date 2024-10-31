@@ -6,6 +6,10 @@ class Aplicacion:
     El propósito principal por el cual fue creada esta clase fue para poder distinguir entre apps esenciales y no esenciales.
     """
     def __init__(self, nombre, tamanio, esencial = False):
+        if nombre == "" or tamanio == "":
+            raise ValueError("Los campos nombre y tamanio no pueden estar vacíos.")
+        if not isinstance(esencial, bool):
+            raise ValueError("El campo esencial debe ser un booleano.")
         self.nombre = nombre
         self.tamanio = tamanio_a_bytes(tamanio)
         self.esencial = esencial

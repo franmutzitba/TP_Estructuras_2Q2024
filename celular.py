@@ -1,22 +1,29 @@
-from Apps.configuracion import Configuracion
-from central import Central
-from Apps.configuracion import ConfigApp
+"""
+Modulo de celular
+"""
+
+import os
+import uuid
+import re
+from Apps.configuracion import Configuracion, ConfigApp
 from Apps.appstore import AppStore
 from Apps.telefono import TelefonoApp
 from Apps.mensajeriaSMS import MensajesApp
 from Apps.mail import MailApp
 from Apps.contactos import ContactosApp
 from funciones_utiles import tamanio_a_bytes
-import csv
-import uuid
-import os
+from central import Central
 
 class Celular:
     central = Central()
-    
-    def __init__(self, nombre, modelo, numero, sistema_operativo, memoria_ram, almacenamiento):
+
+    def __init__(self, nombre, modelo, numero, sistema_operativo, memoria_ram, almacenamiento, id_celular = uuid.uuid4()):
+        if not nombre or not modelo or not numero or not sistema_operativo or not memoria_ram or not almacenamiento:
+            raise ValueError("Los campos no pueden estar vacíos")
+        if not bool(re.match(r"^\d+(\.\d+)?\s*[KMGTP]?B?$", almacenamiento)):
+            raise ValueError("El campo almacenamiento debe ser un número seguido de un espacio y una unidad de medida válida")
         #Almaceno los parámetros no modificables por Configuración
-        self.id = uuid.uuid4() #Genera un UUID (Universal Unique Identifier) para el dispositivo
+        self.id_celular = id_celular #Genera un UUID (Universal Unique Identifier) para el dispositivo
         self.modelo = modelo
         self.sistema_operativo = sistema_operativo
         self.memoria_ram = memoria_ram
@@ -82,7 +89,7 @@ class Celular:
         return self.aplicaciones['Configuracion'].get_almacenamiento_disponible()
     
     def __str__(self) -> str:
-        return f"ID: {self.id}\nNombre: {self.aplicaciones['Configuracion'].get_nombre()}\nModelo: {self.modelo}\nSistema operativo: {self.sistema_operativo}\nMemoria RAM: {self.memoria_ram}\nAlmacenamiento: {self.aplicaciones['Configuracion'].get_almacenamiento_disponible()}\n"
+        return f"ID: {self.id_celular}\nNombre: {self.aplicaciones['Configuracion'].get_nombre()}\nModelo: {self.modelo}\nSistema operativo: {self.sistema_operativo}\nMemoria RAM: {self.memoria_ram}\nAlmacenamiento: {self.aplicaciones['Configuracion'].get_almacenamiento_disponible()}\n"
 
     # Esta por verse si lo hacemos o no... Por ahora ignorar
     # def guardar_datos(self, filename): #ESTE METODO Y EL DE ABAJO HAY Q PASARLO AL EXPORTADOR Y HAY Q AGREGAR UNA VARIABLE CON TODOS LOS CELULARES

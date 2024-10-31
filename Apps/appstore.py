@@ -1,8 +1,8 @@
+import os
 from Apps.aplicacion import Aplicacion
 from Apps.configuracion import ConfigApp, ModoRed
 from manejadorCSV import ManejadorCSV
 from funciones_utiles import tamanio_a_bytes
-import os
 
 class AppStore(Aplicacion):
     """
@@ -173,7 +173,10 @@ class AppStore(Aplicacion):
           
     def buscar_app(self, nombre):
         """Lista todas las aplicaciones disponibles en la tienda que contienen el nombre ingresado.
-                
+        
+        Args:
+            nombre (str): Nombre de la aplicación a buscar.
+               
         Returns:
             None
         """
@@ -195,10 +198,10 @@ class AppStore(Aplicacion):
             None
         """
         os.system('cls')
-        #print("\nBienvenido a la AppStore") (se imprime en el while)
+        print("\nBienvenido a la AppStore")
         salir = False
         while not salir:
-            print("\nBienvenido a la AppStore")
+            print("\nMenu de AppStore")
             print("1. Listar todas las aplicaciones disponibles en la AppStore")
             print("2. Descargar aplicación")
             print("3. Desinstalar aplicación")
@@ -248,6 +251,3 @@ class AppStore(Aplicacion):
                 print("Opción inválida, intente nuevamente")
                 input("Presione cualquier tecla para volver al menu de AppStore...")
                 os.system('cls')
-
-    def __str__(self):
-        return super().__str__()

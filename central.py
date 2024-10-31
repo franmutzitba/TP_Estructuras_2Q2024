@@ -12,12 +12,12 @@ class Central:
     def __init__(self):
         self.registro_llamadas = {} #registro de llamadas_perdidas_o_realizadas
         self.registro_dispositivos = {} #diccionario que contiene el numero en la key y el objeto celular en el valor
-        self.telefonos_ocupados = {} #guarda la fecha en el que el telefono se libera.
-        self.registro_mensajes =  {} #Cola de mensajes
+        self.registro_mensajes =  {} #Colas de mensajes
+        self.ultima_llamada_por_persona = {}  #guarda la persona como clave y como valor a la llamada
         
     def registrar_dispositivo(self, numero, celular):
         self.registro_dispositivos[numero]=celular
-        print(f"Dispositivo {numero} registrado correctamente")
+        print(f"Dispositivo {numero} registrado correctamente en la central")
     
     def consultar_LTE(self, numero):
         return self.registro_dispositivos[numero].aplicaciones["Configuracion"].configuracion.modo_red == ModoRed.LTE
@@ -77,8 +77,24 @@ class Central:
             self.registro_dispositivos[numero_cel].aplicaciones["Mensajes"].recibir_sms(mensaje) 
 
     def esta_ocupado(self, numero, fecha_inicio_llamada_nueva:datetime):
-        fecha_fin_llamada_anterior = self.telefonos_ocupados[numero]
+        llamada = self.ultima_llamada_por_persona[numero]
+        fecha_inicio_anterior = datetime(llamada.fecha)
+        duracion = timedelta(llamada.duracion)
+        fecha_fin_llamada_anterior = fecha_inicio_anterior + duracion
         return fecha_fin_llamada_anterior > fecha_inicio_llamada_nueva
+    
+    def terminar_llamada(self, numero):
+        if not self.esta_ocupado(numero, datetime.now()):
+            raise ValueError ("No hay llamada en curso")
+        else:
+            llamada = self.ultima_llamada_por_persona[numero]
+            fecha_inicio = datetime(llamada.fecha)
+            fecha_fin = datetime.now()
+
+            duracion_nueva = timedelta(fecha_fin - fecha_inicio)                  #cambio la duracion a el tiempo entre el inicio y fin.
+            llamada.set_duracion(duracion_nueva)
+            print(f"Se termino la llamada en curso entre {llamada.emisor} y {llamada.receptor}")
+    
         
     def manejar_llamada(self, emisor, receptor, fecha_inicio:datetime, duracion:timedelta):
         if not self.esta_registrado(emisor):
@@ -96,13 +112,14 @@ class Central:
         print(f"{emisor} llamando a {receptor}")
         if not self.esta_ocupado(receptor, fecha_inicio):
             self.registrar_llamada(llamada)
-            self.telefonos_ocupados[emisor] = fecha_inicio + duracion
-            self.telefonos_ocupados[receptor] = fecha_inicio + duracion
+
+            self.ultima_llamada_por_persona[emisor] = llamada
+            self.ultima_llamada_por_persona[receptor] = llamada
         else:
             print(f'El dispositivo de numero {receptor} esta ocupado')
             llamada.set_perdida(True)
             llamada.set_duracion(0)
-            self.registrar_llamada
+            self.registrar_llamada(llamada)
         return True
            
     def manejar_mensaje(self, emisor, receptor):
@@ -114,6 +131,10 @@ class Central:
             raise ValueError(f"El celular {receptor} no esta registrado en la Central")
         print(f"Enviando mensaje de {emisor} a {receptor}\n")
         return True
+
+    def eliminar_mensaje(self, mensaje, numero):
+        self.registro_mensajes[numero].remove(mensaje)
+        print("Mensaje eliminado correctamente")
             
     
     def mostrar_dispositivos(self):
@@ -121,17 +142,11 @@ class Central:
             print(dispositivo)
             
     def __str__(self) -> str:
-        return f"Registro de comunicaciones: {self.registro_comunicaciones}\nRegistro de dispositivos: {self.registro_dispositivos}"
+        return f"Registro de llamdas: {self.registrar_llamada}\nRegistro de dispositivos: {self.registro_dispositivos}\n Registro de mensajes: {self.registro_mensajes}"
     
 
 
-if __name__ == "__main__":
-    central1 = Central()
-    central1.registrar_dispositivo("123456789")
-    central1.registrar_dispositivo("987654321")
-    print(central1)
-    central1.manejar_llamada("123456789", "987654321", 10)
-    
+
 
     
     

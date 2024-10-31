@@ -126,6 +126,8 @@ class TelefonoApp(Aplicacion):
         for llamada in historial_en_orden:
             print(f"Fecha: {llamada[0]}, emisor: {llamada[1]}, receptor: {llamada[2]}, tipo de llamada: {llamada[3]}, duracion: {llamada[4]} minutos")
 
+    def terminar_llamada_en_curso(self):
+        self.central.terminar_llamada(self.numero)
 
     @staticmethod
     def fecha_en_tupla(tupla):

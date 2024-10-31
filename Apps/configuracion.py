@@ -248,6 +248,7 @@ class ConfigApp(Aplicacion):
         print("Bienvenido a la aplicación de Configuración")
         salir = False
         while not salir:
+            os.system('cls')
             print("Menú de Configuración:")
             print("1. Configurar nombre")
             print("2. Configurar contraseña")

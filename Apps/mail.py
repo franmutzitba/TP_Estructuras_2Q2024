@@ -26,6 +26,8 @@ class Mail:
         Indica si el mail fue leído o no.
     """
     def __init__(self, cuerpo, email_emisor, email_receptor, encabezado, leido=False):
+        if not isinstance(cuerpo, str) or not isinstance(email_emisor, str) or not isinstance(email_receptor, str) or not isinstance(encabezado, str) or not isinstance(leido, bool):
+            raise ValueError("Los atributos del Mail deben ser del tipo correcto")
         self.cuerpo = cuerpo
         self.email_emisor = email_emisor
         self.email_receptor = email_receptor
@@ -50,7 +52,7 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
                 no_leidos = deque(mail for mail in CuentaMail.cuentas[self.cuenta_mail].bandeja_entrada if not mail.leido)
                 while no_leidos:
                     print(no_leidos.popleft())
-            elif (criterio == CriterioLectura.POR_FECHA):
+            elif criterio == CriterioLectura.POR_FECHA:
                 pila = CuentaMail.cuentas[self.cuenta_mail].bandeja_entrada.copy()
                 while pila:
                     print(pila.pop())
@@ -109,7 +111,6 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
             print("Cuenta creada con éxito. Inicie sesión para comenzar a utilizarla")
         except ValueError as e:
             print(e)
-        pass
     
     @staticmethod
     def crear_mail(cuerpo, email_emisor, email_receptor, encabezado):
@@ -117,8 +118,9 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
     
     def menu_navegacion(self):
         salir = False
+        print("Bienvenido a la aplicacion de Mail")
         while not salir:
-            print("Menú de navegación de la aplicación Mail")
+            print("Menú de Mail:")
             print("1. Ver bandeja de entrada")
             print("2. Ver bandeja de enviados")
             print("3. Enviar mail")
@@ -130,38 +132,61 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
             if opcion == "1":
                 os.system("cls")
                 try:
-                    criterio = int(input("Ingrese el criterio de lectura (1: No leídos primeros, 2: Por fecha): "))
-                    self.ver_bandeja_entrada(CriterioLectura(criterio))
+                    criterio = input("Ingrese el criterio de lectura (1: No leídos primeros, 2: Por fecha): ")
+                    while criterio not in ["1", "2"]:
+                        criterio = input("Criterio no válido. Ingrese el criterio de lectura (1: No leídos primeros, 2: Por fecha): ")
+                    self.ver_bandeja_entrada(CriterioLectura(int(criterio)))
                 except ValueError as e:
                     print(e)
+                input("Presione cualquier tecla para volver al menu de Mail...")
+                os.system('cls')
             elif opcion == "2":
                 os.system("cls")
                 try:
                     self.ver_bandeja_enviados()
                 except ValueError as e:
                     print(e)
+                input("Presione cualquier tecla para volver al menu de Mail...")
+                os.system('cls')
             elif opcion == "3":
                 os.system("cls")
                 email_emisor = input("Ingrese el email del emisor: ")
                 email_receptor = input("Ingrese el email del receptor: ")
                 encabezado = input("Ingrese el encabezado: ")
                 cuerpo = input("Ingrese el cuerpo: ")
-                mensaje = self.crear_mail(cuerpo, email_emisor, email_receptor, encabezado)
                 try:
+                    mensaje = self.crear_mail(cuerpo, email_emisor, email_receptor, encabezado)
                     self.enviar_mail(mensaje)
                 except ValueError as e:
                     print(e)
+                input("Presione cualquier tecla para volver al menu de Mail...")
+                os.system('cls')
             elif opcion == "4":
                 os.system("cls")
                 mail = input("Ingrese la direccion de mail: ")
                 contrasenia = input("Ingrese la contraseña: ")
-                self.iniciar_sesion(mail, contrasenia)
+                try:
+                    self.iniciar_sesion(mail, contrasenia)
+                except ValueError as e:
+                    print(e)
+                input("Presione cualquier tecla para volver al menu de Mail...")
+                os.system('cls')
             elif opcion == "5":
-                self.cerrar_sesion()
+                try:
+                    self.cerrar_sesion()
+                except ValueError as e:
+                    print(e)
+                input("Presione cualquier tecla para volver al menu de Mail...")
+                os.system('cls')
             elif opcion == "6":
                 mail = input("Ingrese el mail: ")
                 contrasenia = input("Ingrese la contraseña: ")
-                self.crear_cuenta(mail, contrasenia)
+                try:
+                    self.crear_cuenta(mail, contrasenia)
+                except ValueError as e:
+                    print(e)
+                input("Presione cualquier tecla para volver al menu de Mail...")
+                os.system('cls')
             elif opcion == "7":
                 os.system('cls')
                 print("Saliendo del Mail..")
@@ -173,7 +198,7 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
                 print("Opción inválida, intente nuevamente")
                 input("Presione cualquier tecla para volver al menu del mail...")
                 os.system('cls')
- 
+
 class CuentaMail:
     """
     Clase para gestionar cuentas de correo electrónico. Representa una cuenta de correo electrónico con un mail y una contraseña.
@@ -221,5 +246,5 @@ class CuentaMail:
         return re.match(regex, contrasenia) is not None
     
     def __str__(self):
-            return f"La cuenta es: {self.mail} y la contrasenia es: {self.contrasenia}"
+        return f"La cuenta es: {self.mail} y la contrasenia es: {self.contrasenia}"
 

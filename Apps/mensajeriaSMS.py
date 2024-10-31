@@ -18,13 +18,12 @@ class MensajesApp(Aplicacion):
         return Mensaje(self.numero_cel, receptor, mensaje,datetime.now())
     
     def enviar_sms(self, receptor, texto):
-        try:
-            if self.central.manejar_mensaje(self.numero_cel, receptor):
-                mensaje = self.crear_mensaje(receptor, texto)
-                self.central.registrar_mensaje_nuevo(mensaje)
-                print(f"Mensaje enviado correctamente al numero {receptor}") 
-        except ValueError as e: 
-            print(e)
+        
+        if self.central.manejar_mensaje(self.numero_cel, receptor):
+            mensaje = self.crear_mensaje(receptor, texto)
+            self.central.registrar_mensaje_nuevo(mensaje)
+            print(f"Mensaje enviado correctamente al numero {receptor}") 
+ 
 
     def recibir_sms(self, mensaje: Mensaje):
         if not(mensaje.get_sincronizado()):
@@ -40,39 +39,50 @@ class MensajesApp(Aplicacion):
         return self.contactos.get_contactos()[numero]
 
     def ver_bandeja_de_entrada(self):
-        bandeja_de_entrada = self.mensajes
+        bandeja_de_entrada = self.mensajes.copy()
         i=1
         if not(bandeja_de_entrada):
             raise ValueError(f"El numero -{self.numero_cel}- no tiene mensajes en la bandeja de entrada")
         print(f"Bandeja de Entrada del numero: {self.numero_cel}")
-        # ??? Hago un raise o un print??
-        for mensaje in bandeja_de_entrada:
+        
+        while bandeja_de_entrada:
             print(f"- {i} - ", end="")
+            mensaje = bandeja_de_entrada.popleft()
             if self.numero_en_contactos(mensaje.get_emisor()) :
-                # Invente roman invente
-                # Polemico
-                # aux = mensaje.get_emisor()
-                # mensaje.emisor = self.nombre_contacto(aux)
-                # print(mensaje)
-                # mensaje.emisor = aux
                 fecha_min = mensaje.fecha.strftime("%Y-%m-%d %H:%M")
                 print(f"Emisor: {self.nombre_contacto(mensaje.get_emisor())}, Receptor: {mensaje.receptor}, Texto: {mensaje.mensaje}, Fecha: {fecha_min}")
             else:
                 print(mensaje)
-            i+=1
+            i += 1
+
+        # for mensaje in bandeja_de_entrada:
+        #     print(f"- {i} - ", end="")
+        #     if self.numero_en_contactos(mensaje.get_emisor()) :
+        #         # Invente roman invente
+        #         # Polemico
+        #         # aux = mensaje.get_emisor()
+        #         # mensaje.emisor = self.nombre_contacto(aux)
+        #         # print(mensaje)
+        #         # mensaje.emisor = aux
+        #         fecha_min = mensaje.fecha.strftime("%Y-%m-%d %H:%M")
+        #         print(f"Emisor: {self.nombre_contacto(mensaje.get_emisor())}, Receptor: {mensaje.receptor}, Texto: {mensaje.mensaje}, Fecha: {fecha_min}")
+        #     else:
+        #         print(mensaje)
+        #     i+=1
         
     def ver_bandeja_de_entrada_x_numero(self, numero, contacto):
-        #Ya deberia de estar validado que este numero tenga mensajes
         mensajes = self.mensajes.copy()
-        
+        i=1
         while mensajes:
             mensaje = mensajes.popleft()
             if mensaje.get_emisor() == numero:
+                print(f"- {i} - ", end="")
                 if contacto:
                     fecha_min = mensaje.fecha.strftime("%Y-%m-%d %H:%M")
                     print(f"Emisor: {contacto}, Receptor: {mensaje.receptor}, Texto: {mensaje.mensaje}, Fecha: {fecha_min}")
                 else:
-                    print(mensaje)   
+                    print(mensaje) 
+                i += 1
     
     def ver_chats_recientes(self):
         if not self.mensajes:
@@ -81,7 +91,6 @@ class MensajesApp(Aplicacion):
         mensajes = self.mensajes.copy()
         i=1
         while mensajes:
-            
             mensaje = mensajes.popleft()
             if mensaje.get_emisor() not in recientes:
                 recientes.append(mensaje.get_emisor())
@@ -89,6 +98,11 @@ class MensajesApp(Aplicacion):
                 i +=1
         return recientes 
     
+    def eliminar_mensaje(self, indice):
+        mensaje = self.mensajes[indice-1]
+        self.mensajes.remove(mensaje)
+        self.central.eliminar_mensaje(mensaje, self.numero_cel)
+
     def __str__(self):
         return f"Aplicacion Mensajeria del numero: {self.numero_cel}"
     
@@ -99,31 +113,57 @@ class MensajesApp(Aplicacion):
             print("1. Enviar mensaje")
             print("2. Ver bandeja de entrada")
             print("3. Ver bandeja de entrada por numero/contacto")
-            print("4. Salir")
+            print("4. Eliminar Mensaje")
+            print("5. Salir")
             opcion = input("Ingrese el número de la opción deseada: ")
             if opcion == "1":
                 os.system("cls")
-                receptor = input("Ingrese el número de teléfono del receptor: ")
-                texto = input("Ingrese el mensaje a enviar: ")
-                self.enviar_sms(receptor, texto)
+                try:
+                    receptor = input("Ingrese el número de teléfono del receptor: ")
+                    texto = input("Ingrese el mensaje a enviar: ")
+                    if not texto:
+                        raise ValueError("No se pueden enviar mensajes vacios")
+                    self.enviar_sms(receptor, texto)
+                except ValueError as e:
+                    print(e)
+                finally:
+                    input("Presione cualquier tecla para volver al menu de la Mensajeria...")
             elif opcion == "2":
                 os.system("cls")
                 try:
                     self.ver_bandeja_de_entrada()
+                    input("Presione cualquier tecla para volver al menu de la Mensajeria...")
                 except ValueError as e:
                     print(e)
             elif opcion == "3":
                 os.system('cls')
                 try:
                     recientes = self.ver_chats_recientes()
-                    indice = int(input("Ingrese el número del chat deseado: "))
-                    #Verificar que sea posible
-                    emisor = recientes[indice-1]
+                    indice = input("Ingrese el número del chat deseado: ")
+                    while not indice.isdigit() or int(indice) < 1 or int(indice) > len(recientes):
+                        indice = input("Entrada incorrecta. Ingrese el número del chat deseado: ")
+                    emisor = recientes[int(indice)-1]
                     contacto = self.nombre_contacto(emisor) if self.numero_en_contactos(emisor) else None
-                    self.ver_bandeja_de_entrada_x_numero(emisor,contacto)
+                    self.ver_bandeja_de_entrada_x_numero(emisor,contacto)    
                 except ValueError as e:
-                    print(e)        
+                    print(e)
+                finally:
+                    input("Presione cualquier tecla para volver al menu de Mensajes...") 
             elif opcion == "4":
+                os.system('cls')
+                try:
+                    self.ver_bandeja_de_entrada()
+                    indice = input("Ingrese el número del mensaje a eliminar: ")
+                    while not indice.isdigit() or int(indice) < 1 or int(indice) > len(self.mensajes):
+                        indice = input("Entrada incorrecta. Ingrese el número del mensaje a eliminar: ")
+                    self.eliminar_mensaje(int(indice))
+                except ValueError as e:
+                    print(e)
+                except IndexError:
+                    print("Error al eliminar mensaje intente nuevamente")
+                finally:
+                    input("Presione cualquier tecla para volver al menu del celular...")
+            elif opcion == "5":
                 os.system('cls')
                 print("Saliendo de la aplicacion de Mensajes...")
                 salir = True

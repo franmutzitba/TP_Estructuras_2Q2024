@@ -49,6 +49,12 @@ class Mensaje(Comunicacion):
     
     def set_sincronizado(self):
         self.sincronizado = True
+    
+    def get_mensaje(self):
+        return self.mensaje
+    
+    def get_fecha(self):
+        return self.fecha
 
     def __str__(self):
         fecha_min = self.fecha.strftime("%Y-%m-%d %H:%M")

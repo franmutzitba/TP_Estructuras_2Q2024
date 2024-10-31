@@ -1,6 +1,8 @@
 import csv
+
 import numpy as np
 from io import FileIO
+from collections import deque
 
 class ManejadorCSV:
     def __init__(self, nombre_archivo):
@@ -13,10 +15,8 @@ class ManejadorCSV:
                 escritor.writerows(lista)
         except FileNotFoundError:
             print("Archivo no encontrado")
-            raise FileNotFoundError
         except IOError:
             print("Error al exportar archivo")
-            raise FileIO
         
     def leer_archivo(self, skip_first = False):
         try:
@@ -27,10 +27,10 @@ class ManejadorCSV:
                 return list(lector)
         except FileNotFoundError:
             print("Archivo no encontrado")
-            raise FileNotFoundError
+            
         except IOError:
             print("Error al leer archivo")
-            raise FileIO
+            
         
     def leer_matriz(self):
         try:
@@ -38,3 +38,29 @@ class ManejadorCSV:
             return matriz
         except FileNotFoundError:
             print("Archivo no encontrado")
+
+class ManejadorSMS(ManejadorCSV):
+    def __init__(self, nombre_archivo):
+        super().__init__(nombre_archivo)
+    
+    def exportar_mensajes(self, mensajes: dict):
+        colas = mensajes.values()
+        lista_a_exportar = []
+        titulo = ["Emisor","Receptor","Texto","Fecha","Sincronizado"]
+        lista_a_exportar.append(titulo)
+        for cola in colas:
+            cola_2 = cola.copy() #??
+            while cola_2:
+                mensaje = cola_2.pop()
+                lista_a_exportar.append([mensaje.get_emisor(), mensaje.get_receptor(), mensaje.get_mensaje(), mensaje.get_fecha(), mensaje.get_sincronizado()])
+
+        self.exportar(lista_a_exportar)
+    
+    def cargar_mensajes(self):
+        lista_mensajes = self.leer_archivo(True)
+
+
+
+
+
+

@@ -32,6 +32,10 @@ class ContactosApp(Aplicacion):
             numero (str): El número de teléfono del contacto.
             nombre (str): El nombre del contacto.
         """
+        if not numero.isdigit():
+            raise ValueError("El número de teléfono debe contener solo dígitos")
+        if not nombre:
+            raise ValueError("El nombre del contacto no puede estar vacío")
         self.agenda[numero] = nombre
     
     def __str__(self):
@@ -57,46 +61,87 @@ class ContactosApp(Aplicacion):
         Args:
             numero (str): El número de teléfono del contacto a eliminar.
         """
-        if numero in self.agenda:
-            del self.agenda[numero]
-            print(f"Contacto con número {numero} eliminado con éxito")
-        else:
-            print("Número no encontrado en la agenda")
+        if numero not in self.agenda:
+            raise ValueError("Número no encontrado en la agenda")
+        del self.agenda[numero]
+        print(f"Contacto con número {numero} eliminado con éxito")
+ 
     
     def menu_navegacion(self):
         """
         Muestra el menú de navegación de la aplicación de Contactos.
         Permite al usuario agregar, ver y eliminar contactos, o salir de la aplicación.
         """
+        
+        os.system('cls')
+        print("Bienvenido a tus Contactos")
         salir = False
         while not salir:
             os.system('cls')
-            print("Bienvenido a tus Contactos")
-            print("1. Agregar contacto")
+            print("Menu de Contactos:")
+            print("1. Agendar contacto")
             print("2. Ver contactos")
             print("3. Eliminar contacto")
-            print("4. Salir")
-            opcion = input("Ingrese una opción: ")
-            os.system('cls')
+            print("4. Actualizar contacto")
+            print("5. Salir")
+            opcion = input("Seleccione una opción: ")
             if opcion == "1":
                 os.system("cls")
-                numero = input("Ingrese el número de teléfono: ")
+                print("Agendar contacto")
                 nombre = input("Ingrese el nombre del contacto: ")
-                self.agregar_contacto(numero, nombre)
-                print(f"Contacto de {nombre} agregado con éxito")
+                numero = input("Ingrese el número de teléfono: ")
+                try:
+                    self.agregar_contacto(numero, nombre)
+                    print(f"Contacto de {nombre} agregado con éxito")
+                except ValueError as e:
+                    print(e)
+                input("Presione cualquier tecla para volver al menu de Contactos...")
+                os.system('cls')
             elif opcion == "2":
                 os.system("cls")
-                print(self)
+                print("Contactos:")
+                if not self.agenda:
+                    print("No hay contactos en la agenda")
+                else:
+                    for numero, nombre in self.agenda.items():
+                        print(f"Nombre: {nombre}       Número: {numero}")
+                input("Presione cualquier tecla para volver al menu de Contactos...")
+                os.system('cls')
             elif opcion == "3":
                 os.system("cls")
+                print("Eliminar contacto:")
                 contacto = input("Ingrese el número de teléfono del contacto a eliminar: ")
-                self.eliminar_contacto(contacto)
+                try:
+                    self.eliminar_contacto(contacto)
+                except ValueError as e:
+                    print(e)
+                input("Presione cualquier tecla para volver al menu de Contactos...")
+                os.system('cls')
             elif opcion == "4":
                 os.system('cls')
-                print("Saliendo de Contactos...")
+                print("Actualizar contacto:")
+                contacto = input("Ingrese el nombre del contacto que desea actualizar: ")
+                try:
+                    for numero, nombre in self.agenda.items():
+                        if nombre == contacto:
+                            nuevo_nombre = input("Ingrese el nuevo nombre del contacto: ")
+                            nuevo_numero = input("Ingrese el nuevo número de teléfono: ")
+                            self.agregar_contacto(nuevo_numero, nuevo_nombre)
+                            self.eliminar_contacto(numero)
+                            print("Contacto actualizado con éxito")
+                            break
+                except ValueError as e:
+                    print(e)
+                input("Presione cualquier tecla para volver al menú del celular...")
+                os.system('cls')
+            elif opcion == "5":
+                os.system('cls')
+                print("Saliendo de la aplicación de Contactos...")
                 salir = True
                 input("Presione cualquier tecla para volver al menú del celular...")
                 os.system('cls')
             else:
+                os.system('cls')
                 print("Opción inválida")
-            input("Presione cualquier tecla para volver al menú del celular...")
+                input("Presione cualquier tecla para volver al menú del celular...")
+                os.system('cls')
