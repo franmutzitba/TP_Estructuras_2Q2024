@@ -195,7 +195,7 @@ class AppStore(Aplicacion):
             None
         """
         os.system('cls')
-        print("\nBienvenido a la AppStore")
+        #print("\nBienvenido a la AppStore") (se imprime en el while)
         salir = False
         while not salir:
             print("\nBienvenido a la AppStore")
