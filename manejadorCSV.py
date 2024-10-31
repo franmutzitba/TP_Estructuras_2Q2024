@@ -3,6 +3,7 @@ import csv
 import numpy as np
 from io import FileIO
 from collections import deque
+from Apps.comunicacion import Mensaje
 
 class ManejadorCSV:
     def __init__(self, nombre_archivo):
@@ -52,12 +53,19 @@ class ManejadorSMS(ManejadorCSV):
             cola_2 = cola.copy() #??
             while cola_2:
                 mensaje = cola_2.pop()
-                lista_a_exportar.append([mensaje.get_emisor(), mensaje.get_receptor(), mensaje.get_mensaje(), mensaje.get_fecha(), mensaje.get_sincronizado()])
+                lista_a_exportar.append([mensaje.get_emisor(), mensaje.get_receptor(), mensaje.get_mensaje(), mensaje.get_fecha()])
 
         self.exportar(lista_a_exportar)
     
-    def cargar_mensajes(self):
+    def cargar_mensajes(self, central):
         lista_mensajes = self.leer_archivo(True)
+        for lista in lista_mensajes:
+            mensaje = 
+    
+    def crear_mensaje(emisor, receptor, texto, fecha):
+        return Mensaje(emisor, receptor, texto, fecha)
+
+
 
 
 

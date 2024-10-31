@@ -15,4 +15,6 @@ if "__main__" == __name__:
     except ValueError as e:
         print(e)
 
-    
+    telefono1 = celular1.aplicaciones["Telefono"]
+    telefono2 = celular2.aplicaciones["Telefono"]
+    nro 

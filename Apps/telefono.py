@@ -138,14 +138,15 @@ class TelefonoApp(Aplicacion):
         Muestra el menú de navegación de la aplicación de teléfono.
         Permite al usuario iniciar llamadas, ver contactos y salir de la aplicación.
         """
+        print(f"Bienvenido a la aplicación de Teléfono del número {self.numero}")
         salir = False
         while not salir:
             print("Menu de navegacion de la aplicacion Telefono")
             print("1. Iniciar llamada")
             print("2. Iniciar llamada a contacto")
             print("3. Mostrar historial de llamadas")
-            print("4. Salir de la aplicacion")
-            opcion = int(input("Ingrese el numero de la opcion deseada: "))
+            print("4. Salir")
+            opcion = int(input("Seleccione una opción: "))
             if opcion == "1":
                 os.system("cls")
                 receptor = input("Ingrese el numero del receptor: ")

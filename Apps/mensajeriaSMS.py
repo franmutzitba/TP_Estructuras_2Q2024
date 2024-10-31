@@ -70,7 +70,7 @@ class MensajesApp(Aplicacion):
         #         print(mensaje)
         #     i+=1
         
-    def ver_bandeja_de_entrada_x_numero(self, numero, contacto):
+    def ver_mensajes_de(self, numero, contacto):
         mensajes = self.mensajes.copy()
         i=1
         while mensajes:
@@ -107,9 +107,11 @@ class MensajesApp(Aplicacion):
         return f"Aplicacion Mensajeria del numero: {self.numero_cel}"
     
     def menu_navegacion(self):
+        print(f"\nBienvenido a la aplicacion de Mensajes SMS del numero {self.numero_cel}")
         salir = False
         while not salir:
-            print(f"\nBienvenido a la aplicacion de Mensajes SMS del numero {self.numero_cel}")
+            os.system('cls')
+            print(f"\nAplicacion de Mensajes SMS del numero {self.numero_cel}:")
             print("1. Enviar mensaje")
             print("2. Ver bandeja de entrada")
             print("3. Ver bandeja de entrada por numero/contacto")
@@ -126,15 +128,16 @@ class MensajesApp(Aplicacion):
                     self.enviar_sms(receptor, texto)
                 except ValueError as e:
                     print(e)
-                finally:
-                    input("Presione cualquier tecla para volver al menu de la Mensajeria...")
+                input("Presione cualquier tecla para volver al menu de la Mensajeria...")
+                os.system('cls')
             elif opcion == "2":
                 os.system("cls")
                 try:
                     self.ver_bandeja_de_entrada()
-                    input("Presione cualquier tecla para volver al menu de la Mensajeria...")
                 except ValueError as e:
                     print(e)
+                input("Presione cualquier tecla para volver al menu de la Mensajeria...")
+                os.system('cls')
             elif opcion == "3":
                 os.system('cls')
                 try:
@@ -144,11 +147,11 @@ class MensajesApp(Aplicacion):
                         indice = input("Entrada incorrecta. Ingrese el número del chat deseado: ")
                     emisor = recientes[int(indice)-1]
                     contacto = self.nombre_contacto(emisor) if self.numero_en_contactos(emisor) else None
-                    self.ver_bandeja_de_entrada_x_numero(emisor,contacto)    
+                    self.ver_mensajes_de(emisor,contacto)    
                 except ValueError as e:
                     print(e)
-                finally:
-                    input("Presione cualquier tecla para volver al menu de Mensajes...") 
+                input("Presione cualquier tecla para volver al menu de la Mensajeria...")
+                os.system('cls')
             elif opcion == "4":
                 os.system('cls')
                 try:
@@ -161,8 +164,8 @@ class MensajesApp(Aplicacion):
                     print(e)
                 except IndexError:
                     print("Error al eliminar mensaje intente nuevamente")
-                finally:
-                    input("Presione cualquier tecla para volver al menu del celular...")
+                input("Presione cualquier tecla para volver al menu de la Mensajeria...")
+                os.system('cls')
             elif opcion == "5":
                 os.system('cls')
                 print("Saliendo de la aplicacion de Mensajes...")
