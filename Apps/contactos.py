@@ -79,18 +79,21 @@ class ContactosApp(Aplicacion):
             opcion = input("Ingrese una opción: ")
             os.system('cls')
             if opcion == "1":
+                os.system("cls")
                 numero = input("Ingrese el número de teléfono: ")
                 nombre = input("Ingrese el nombre del contacto: ")
                 self.agregar_contacto(numero, nombre)
                 print(f"Contacto de {nombre} agregado con éxito")
             elif opcion == "2":
+                os.system("cls")
                 print(self)
             elif opcion == "3":
+                os.system("cls")
                 contacto = input("Ingrese el número de teléfono del contacto a eliminar: ")
                 self.eliminar_contacto(contacto)
             elif opcion == "4":
                 os.system('cls')
-                print("Saliendo de la AppStore")
+                print("Saliendo de Contactos...")
                 salir = True
                 input("Presione cualquier tecla para volver al menú del celular...")
                 os.system('cls')

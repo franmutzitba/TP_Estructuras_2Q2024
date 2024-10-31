@@ -109,20 +109,23 @@ class TelefonoApp(Aplicacion):
             print("3. Mostrar historial de llamadas")
             print("4. Salir de la aplicacion")
             opcion = int(input("Ingrese el numero de la opcion deseada: "))
-            os.system("cls")
             if opcion == "1":
+                os.system("cls")
                 receptor = input("Ingrese el numero del receptor: ")
                 duracion = int(input("Ingrese la duracion de la llamada en minutos: "))
                 self.iniciar_llamada(receptor, duracion)
             elif opcion == "2":
+                os.system("cls")
                 print(self.contactos)
                 item_receptor = input("Ingrese el indice del contacto al que desea llamar: ")
                 duracion = int(input("Ingrese la duracion de la llamada en minutos: "))
                 hora_inicio = datetime.datetime.now()
                 self.iniciar_llamada_contacto(item_receptor, duracion, hora_inicio)
             elif opcion == "3":
+                os.system("cls")
                 self.mostrar_historial_llamadas()
             elif opcion == "4":
+                os.system("cls")
                 print("Saliendo de la aplicacion Telefono...")
                 salir = True
                 input("Presione cualquier tecla para volver al menú del celular...")

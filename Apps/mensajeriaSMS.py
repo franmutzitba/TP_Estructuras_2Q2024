@@ -4,6 +4,7 @@ from datetime import datetime
 from central import Central
 from collections import deque
 from Apps.contactos import ContactosApp
+import os
 
 class MensajesApp(Aplicacion):
     def __init__(self, numero ,contactos: ContactosApp, central: Central):
@@ -60,3 +61,29 @@ class MensajesApp(Aplicacion):
     
     def __str__(self):
         return f"Aplicacion Mensajeria del numero: {self.numero_cel}"
+    
+    def menu_navegacion(self):
+        salir = False
+        while not salir:
+            print(f"\nBienvenido a la aplicacion de Mensajes SMS del numero {self.numero_cel}")
+            print("1. Enviar mensaje")
+            print("2. Ver bandeja de entrada")
+            print("3. Salir")
+            opcion = input("Ingrese el número de la opción deseada: ")
+            if opcion == "1":
+                os.system("cls")
+                receptor = input("Ingrese el número de teléfono del receptor: ")
+                texto = input("Ingrese el mensaje a enviar: ")
+                self.enviar_sms(receptor, texto)
+            elif opcion == "2":
+                os.system("cls")
+                try:
+                    self.ver_bandeja_de_entrada()
+                except ValueError as e:
+                    print(e)
+            elif opcion == "3":
+                os.system("cls")
+                salir = True
+            else:
+                print("Opción inválida, intente de nuevo")
+    
