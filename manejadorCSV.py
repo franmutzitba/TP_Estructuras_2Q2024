@@ -60,7 +60,7 @@ class ManejadorSMS(ManejadorCSV):
     def cargar_mensajes(self, central):
         lista_mensajes = self.leer_archivo(True)
         for lista in lista_mensajes:
-            mensaje = 
+            mensaje = #
     
     def crear_mensaje(emisor, receptor, texto, fecha):
         return Mensaje(emisor, receptor, texto, fecha)
