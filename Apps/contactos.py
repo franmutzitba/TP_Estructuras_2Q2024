@@ -77,7 +77,6 @@ class ContactosApp(Aplicacion):
         print("Bienvenido a tus Contactos")
         salir = False
         while not salir:
-            os.system('cls')
             print("Menu de Contactos:")
             print("1. Agendar contacto")
             print("2. Ver contactos")

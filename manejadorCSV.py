@@ -1,7 +1,10 @@
+"""
+Módulo para manejar la importación y exportación de la data a 
+archivos CSV
+"""
 import csv
 
 import numpy as np
-from io import FileIO
 from collections import deque
 from comunicacion import Mensaje
 from datetime import datetime

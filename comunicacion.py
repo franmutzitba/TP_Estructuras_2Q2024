@@ -1,4 +1,5 @@
 from datetime import datetime
+
 class Comunicacion:
     def __init__(self, emisor, receptor, tipo):
         self.emisor = emisor

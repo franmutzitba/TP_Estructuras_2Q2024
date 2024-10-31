@@ -107,10 +107,10 @@ class MensajesApp(Aplicacion):
         return f"Aplicacion Mensajeria del numero: {self.numero_cel}"
     
     def menu_navegacion(self):
+        os.system('cls')
         print(f"\nBienvenido a la aplicacion de Mensajes SMS del numero {self.numero_cel}")
         salir = False
         while not salir:
-            os.system('cls')
             print(f"\nAplicacion de Mensajes SMS del numero {self.numero_cel}:")
             print("1. Enviar mensaje")
             print("2. Ver bandeja de entrada")

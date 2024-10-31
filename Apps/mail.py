@@ -117,6 +117,7 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
         return Mail(cuerpo, email_emisor, email_receptor, encabezado)
     
     def menu_navegacion(self):
+        os.system('cls')
         salir = False
         print("Bienvenido a la aplicacion de Mail")
         while not salir:

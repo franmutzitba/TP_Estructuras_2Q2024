@@ -1,9 +1,6 @@
-from Apps.aplicacion import Aplicacion
-from central import Central
-from comunicacion import Llamada
-from Apps.contactos import ContactosApp
 import datetime
 import os
+from Apps.aplicacion import Aplicacion
 
 class TelefonoApp(Aplicacion):
     """
@@ -61,6 +58,10 @@ class TelefonoApp(Aplicacion):
         Raises:
             ValueError: Si el índice del contacto es inválido.
         """
+        if not item.isdigit():
+            raise ValueError("El índice del contacto debe ser un número entero")
+        if not duracion.isdigit():
+            raise ValueError("La duración de la llamada debe ser un número entero")
         indice = int(item) - 1
         if indice < 0 or indice >= len(self.contactos.agenda):
             raise ValueError("El contacto seleccionado no existe")
@@ -78,12 +79,14 @@ class TelefonoApp(Aplicacion):
         Raises:
             ValueError: Si la duración de la llamada es mayor a 1440 minutos (24 horas).
         """
-        if duracion > 1440:
+        if not duracion.isdigit():
+            raise ValueError("La duracion debe ser un número entero")
+        if int(duracion) > 1440:
             raise ValueError("La duracion no puede ser mayor a 24hs (1440 minutos)")
 
         hora_inicio = datetime.datetime.now()
-        duracion = datetime.timedelta(minutes=duracion)
-        self.central.manejar_llamada(self.numero, numero_receptor, hora_inicio, duracion)
+        duracion = datetime.timedelta(minutes=int(duracion))
+        self.central.manejar_llamada(self.numero, numero_receptor, hora_inicio, int(duracion))
 
     def mostrar_historial_llamadas(self):
         """
@@ -96,9 +99,9 @@ class TelefonoApp(Aplicacion):
                 for llamada in historial_emisor_receptor:
                     if llamada.emisor == self.numero or llamada.receptor == self.numero:
                         historial_personal.append(llamada)  # falta terminar pero no lo entiendo
-        
-        
-        historial_organizado = []                                   #cambia los numeros por contactos cuando corresponde
+       
+       
+        historial_organizado = []               #cambia los numeros por contactos cuando corresponde
         for llamada in historial_personal:
             if llamada.perdida:
                 tipo = "Llamada perdida"
@@ -138,30 +141,48 @@ class TelefonoApp(Aplicacion):
         Muestra el menú de navegación de la aplicación de teléfono.
         Permite al usuario iniciar llamadas, ver contactos y salir de la aplicación.
         """
+        os.system('cls')
         print(f"Bienvenido a la aplicación de Teléfono del número {self.numero}")
         salir = False
         while not salir:
-            print("Menu de navegacion de la aplicacion Telefono")
-            print("1. Iniciar llamada")
+            print("Menu de navegacion de la aplicacion Telefono:")
+            print("1. Marcar número y llamar")
             print("2. Iniciar llamada a contacto")
             print("3. Mostrar historial de llamadas")
             print("4. Salir")
-            opcion = int(input("Seleccione una opción: "))
+            opcion = input("Seleccione una opción: ")
             if opcion == "1":
                 os.system("cls")
-                receptor = input("Ingrese el numero del receptor: ")
+                print("Marcar número y llamar")
+                receptor = input("Ingrese el número al que desea llamar: ")
                 duracion = int(input("Ingrese la duracion de la llamada en minutos: "))
-                self.iniciar_llamada(receptor, duracion)
+                try:
+                    self.iniciar_llamada(receptor, duracion)
+                except ValueError as e:
+                    print(e)
+                input("Presione cualquier tecla para volver al menú de Teléfono...")
+                os.system('cls')
             elif opcion == "2":
                 os.system("cls")
+                print("Iniciar llamada a contacto")
                 print(self.contactos)
                 item_receptor = input("Ingrese el indice del contacto al que desea llamar: ")
-                duracion = int(input("Ingrese la duracion de la llamada en minutos: "))
-                # hora_inicio = datetime.datetime.now()    no se quien lo puso pero ya se hace en iniciar_llamada
-                self.iniciar_llamada_contacto(item_receptor, duracion)
+                duracion = input("Ingrese la duracion de la llamada en minutos: ")
+                try:
+                    self.iniciar_llamada_contacto(item_receptor, duracion)
+                except ValueError as e:
+                    print(e)
+                input("Presione cualquier tecla para volver al menú de Teléfono...")
+                os.system('cls')
             elif opcion == "3":
                 os.system("cls")
-                self.mostrar_historial_llamadas()
+                print("Mostrar historial de llamadas")
+                try:
+                    self.mostrar_historial_llamadas()
+                except ValueError as e:
+                    print(e)
+                input("Presione cualquier tecla para volver al menú de Teléfono...")
+                os.system('cls')
             elif opcion == "4":
                 os.system("cls")
                 print("Saliendo de la aplicacion Telefono...")
@@ -170,4 +191,4 @@ class TelefonoApp(Aplicacion):
                 os.system('cls')
             else:
                 print("Opción inválida")
-            input("Presione cualquier tecla para volver al menú del celular...")
+                input("Presione cualquier tecla para volver al menú de Teléfono...")
