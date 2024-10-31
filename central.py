@@ -74,7 +74,7 @@ class Central:
             raise ValueError(f"No hay Mensajes nuevos para el numero {numero_cel}")  
         
         for mensaje in mensajes_no_sinc: 
-            self.registro_dispositivos[numero_cel].lanzar_app("Mensajes").recibir_sms(mensaje) 
+            self.registro_dispositivos[numero_cel].aplicaciones["Mensajes"].recibir_sms(mensaje) 
 
     def esta_ocupado(self, numero, fecha_inicio_llamada_nueva:datetime):
         fecha_fin_llamada_anterior = self.telefonos_ocupados[numero]
@@ -115,6 +115,7 @@ class Central:
         print(f"Enviando mensaje de {emisor} a {receptor}\n")
         return True
             
+    
     def mostrar_dispositivos(self):
         for dispositivo in self.registro_dispositivos:
             print(dispositivo)

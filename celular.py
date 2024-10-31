@@ -232,8 +232,8 @@ if __name__ =="__main__":
     celular2.lanzar_app("Mensajes").ver_bandeja_de_entrada()
     print()
     celular2.lanzar_app("Mensajes").ver_bandeja_de_entrada()
-    for mensaje in (celular2.lanzar_app("Mensajes").mensajes):
-        print(mensaje)
+    celular2.lanzar_app("Mensajes").ver_chats_recientes()
+    celular2.lanzar_app("Mensajes").menu_navegacion()
     
 
     
