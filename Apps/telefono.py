@@ -49,7 +49,7 @@ class TelefonoApp(Aplicacion):
         """
         return self.contactos.get(numero)
 
-    def iniciar_llamada_contacto(self, item, duracion, hora_inicio):
+    def iniciar_llamada_contacto(self, item, duracion):
         """
         Inicia una llamada a un contacto por su índice en la lista de contactos.
 
@@ -65,7 +65,7 @@ class TelefonoApp(Aplicacion):
         if indice < 0 or indice >= len(self.contactos.agenda):
             raise ValueError("El contacto seleccionado no existe")
         numero_receptor = list(self.contactos.agenda.keys())[indice]
-        self.iniciar_llamada(numero_receptor, duracion, hora_inicio)
+        self.iniciar_llamada(numero_receptor, duracion)
 
     def iniciar_llamada(self, numero_receptor, duracion=5):
         """
@@ -90,11 +90,46 @@ class TelefonoApp(Aplicacion):
         Muestra el historial de llamadas.
         """
         #cuando se termine lo comentamos bien
-        historial = []
-        for receptor, historial_receptor in self.central.registro_llamadas.values():
+        historial_personal = []
+        for receptor, historial_receptor in self.central.registro_llamadas.values():                 #guarda todas las llamadas en la lista
             for emisor, historial_emisor_receptor in self.central.registro_llamadas[receptor].values():
                 for llamada in historial_emisor_receptor:
-                    historial.append(llamada)  # falta terminar pero no lo entiendo
+                    if llamada.emisor == self.numero or llamada.receptor == self.numero:
+                        historial_personal.append(llamada)  # falta terminar pero no lo entiendo
+        
+        
+        historial_organizado = []                                   #cambia los numeros por contactos cuando corresponde
+        for llamada in historial_personal:
+            if llamada.perdida:
+                tipo = "Llamada perdida"
+            else:
+                tipo = "Llamada realizada"
+            
+            if llamada.emisor == self.numero:
+                emisor = "Usted"
+                if llamada.receptor in self.contactos:
+                    receptor = self.contactos[llamada.receptor]     #busca el nombre del contacto
+                else:
+                    receptor = llamada.receptor
+            elif llamada.receptor == self.numero:
+                receptor = "Usted"
+                if llamada.emisor in self.contactos:
+                    emisor = self.contactos[llamada.emisor]
+                else:
+                    emisor = llamada.emisor
+
+                datos_llamada = (llamada.fecha, emisor, receptor, tipo, llamada.duracion)
+                historial_organizado.append(datos_llamada)
+        
+        historial_en_orden = sorted(historial_organizado, key=self.fecha_en_tupla)
+        print("Historial de llamadas:")
+        for llamada in historial_en_orden:
+            print(f"Fecha: {llamada[0]}, emisor: {llamada[1]}, receptor: {llamada[2]}, tipo de llamada: {llamada[3]}, duracion: {llamada[4]} minutos")
+
+
+    @staticmethod
+    def fecha_en_tupla(tupla):
+        return tupla[0]
 
     def menu_navegacion(self):
         """
@@ -119,8 +154,8 @@ class TelefonoApp(Aplicacion):
                 print(self.contactos)
                 item_receptor = input("Ingrese el indice del contacto al que desea llamar: ")
                 duracion = int(input("Ingrese la duracion de la llamada en minutos: "))
-                hora_inicio = datetime.datetime.now()
-                self.iniciar_llamada_contacto(item_receptor, duracion, hora_inicio)
+                # hora_inicio = datetime.datetime.now()    no se quien lo puso pero ya se hace en iniciar_llamada
+                self.iniciar_llamada_contacto(item_receptor, duracion)
             elif opcion == "3":
                 os.system("cls")
                 self.mostrar_historial_llamadas()
