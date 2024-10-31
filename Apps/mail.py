@@ -3,7 +3,7 @@ from central import Central
 from collections import deque
 import re
 from enum import Enum
-
+import os
 class CriterioLectura(Enum):
     """Enum para los criterios de lectura de los emails"""
     NO_LEIDOS_PRIMEROS = 1
@@ -114,6 +114,65 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
     @staticmethod
     def crear_mail(cuerpo, email_emisor, email_receptor, encabezado):
         return Mail(cuerpo, email_emisor, email_receptor, encabezado)
+    
+    def menu_navegacion(self):
+        salir = False
+        while not salir:
+            print("Menú de navegación de la aplicación Mail")
+            print("1. Ver bandeja de entrada")
+            print("2. Ver bandeja de enviados")
+            print("3. Enviar mail")
+            print("4. Iniciar sesión")
+            print("5. Cerrar sesión")
+            print("6. Crear cuenta")
+            print("7. Salir de la aplicación")
+            opcion = input("Ingrese una opción: ")
+            if opcion == "1":
+                os.system("cls")
+                try:
+                    criterio = int(input("Ingrese el criterio de lectura (1: No leídos primeros, 2: Por fecha): "))
+                    self.ver_bandeja_entrada(CriterioLectura(criterio))
+                except ValueError as e:
+                    print(e)
+            elif opcion == "2":
+                os.system("cls")
+                try:
+                    self.ver_bandeja_enviados()
+                except ValueError as e:
+                    print(e)
+            elif opcion == "3":
+                os.system("cls")
+                email_emisor = input("Ingrese el email del emisor: ")
+                email_receptor = input("Ingrese el email del receptor: ")
+                encabezado = input("Ingrese el encabezado: ")
+                cuerpo = input("Ingrese el cuerpo: ")
+                mensaje = self.crear_mail(cuerpo, email_emisor, email_receptor, encabezado)
+                try:
+                    self.enviar_mail(mensaje)
+                except ValueError as e:
+                    print(e)
+            elif opcion == "4":
+                os.system("cls")
+                mail = input("Ingrese la direccion de mail: ")
+                contrasenia = input("Ingrese la contraseña: ")
+                self.iniciar_sesion(mail, contrasenia)
+            elif opcion == "5":
+                self.cerrar_sesion()
+            elif opcion == "6":
+                mail = input("Ingrese el mail: ")
+                contrasenia = input("Ingrese la contraseña: ")
+                self.crear_cuenta(mail, contrasenia)
+            elif opcion == "7":
+                os.system('cls')
+                print("Saliendo del Mail..")
+                salir = True
+                input("Presione cualquier tecla para volver al menu del celular...")
+                os.system('cls')
+            else:
+                os.system('cls')
+                print("Opción inválida, intente nuevamente")
+                input("Presione cualquier tecla para volver al menu del mail...")
+                os.system('cls')
  
 class CuentaMail:
     """

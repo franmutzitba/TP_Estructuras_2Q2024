@@ -82,8 +82,15 @@ class MensajesApp(Aplicacion):
                 except ValueError as e:
                     print(e)
             elif opcion == "3":
-                os.system("cls")
+                os.system('cls')
+                print("Saliendo de la aplicacion de Mensajes...")
                 salir = True
+                input("Presione cualquier tecla para volver al menu del celular...")
+                os.system('cls')
             else:
-                print("Opción inválida, intente de nuevo")
+                os.system('cls')
+                print("Opción inválida, intente nuevamente")
+                input("Presione cualquier tecla para volver al menu de Mensajes...")
+                os.system('cls')
     
+#creo q faltan validar muchas cosas
