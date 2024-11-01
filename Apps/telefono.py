@@ -137,8 +137,8 @@ class TelefonoApp(Aplicacion):
         """
         #cuando se termine lo comentamos bien
         historial_personal = []
-        for receptor, historial_receptor in self.central.registro_llamadas.values():                 #guarda todas las llamadas en la lista
-            for emisor, historial_emisor_receptor in self.central.registro_llamadas[receptor].values():
+        for historial_receptor in self.central.registro_llamadas.values():                 #guarda todas las llamadas en la lista
+            for historial_emisor_receptor in historial_receptor.values():
                 for llamada in historial_emisor_receptor:
                     if llamada.emisor == self.numero or llamada.receptor == self.numero:
                         historial_personal.append(llamada)  # falta terminar pero no lo entiendo
@@ -149,7 +149,7 @@ class TelefonoApp(Aplicacion):
                 tipo = "Llamada perdida"
             else:
                 tipo = "Llamada realizada"
-
+                
             if llamada.emisor == self.numero:
                 emisor = "Usted"
                 if llamada.receptor in self.contactos:
@@ -163,13 +163,15 @@ class TelefonoApp(Aplicacion):
                 else:
                     emisor = llamada.emisor
 
-                datos_llamada = (llamada.fecha, emisor, receptor, tipo, llamada.duracion)
-                historial_organizado.append(datos_llamada)
 
+            datos_llamada = (llamada.fecha, emisor, receptor, tipo, llamada.duracion)
+            historial_organizado.append(datos_llamada)
+        
         historial_en_orden = sorted(historial_organizado, key=self.fecha_en_tupla)
-        print("Historial de llamadas:")
+        
+        print(f"Historial de llamadas del telefono {self.numero}:")
         for llamada in historial_en_orden:
-            print(f"Fecha: {llamada[0]}, emisor: {llamada[1]}, receptor: {llamada[2]}, tipo de llamada: {llamada[3]}, duracion: {llamada[4]} minutos")
+            print(f"Fecha: {llamada[0]}, Emisor: {llamada[1]}, Receptor: {llamada[2]}, Tipo de llamada: {llamada[3]}, Duracion: {llamada[4]}")
 
     def terminar_llamada_en_curso(self):
         """Termina la llamada en curso."""

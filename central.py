@@ -94,10 +94,10 @@ class Central:
             raise ValueError ("No hay llamada en curso")
         else:
             llamada = self.ultima_llamada_por_persona[numero]
-            fecha_inicio = datetime(llamada.fecha)
+            fecha_inicio = llamada.fecha
             fecha_fin = datetime.now()
 
-            duracion_nueva = timedelta(fecha_fin - fecha_inicio)                  #cambio la duracion a el tiempo entre el inicio y fin.
+            duracion_nueva = fecha_fin - fecha_inicio               #cambio la duracion a el tiempo entre el inicio y fin.
             llamada.set_duracion(duracion_nueva)
             print(f"Se termino la llamada en curso entre {llamada.emisor} y {llamada.receptor}")
     
