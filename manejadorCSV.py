@@ -3,11 +3,12 @@ Módulo para manejar la importación y exportación de la data a
 archivos CSV
 """
 import csv
+from collections import deque
+from datetime import datetime
 import numpy as np
 from Apps.mail import Mail #nose q esta pasando
-from collections import deque
 from comunicacion import Mensaje
-from datetime import datetime
+
 from celular import Celular
 
 class ManejadorCSV:
@@ -46,7 +47,8 @@ class ManejadorCSV:
         Lee el archivo CSV y devuelve su contenido.
 
         Args:
-            skip_header (bool): Indica si se debe omitir la primera fila del archivo. Por defecto es False.
+            skip_header (bool): Indica si se debe omitir la primera fila del archivo. 
+            Por defecto es False.
 
         Returns:
             list: Una lista con el contenido del archivo CSV.
@@ -80,16 +82,8 @@ class ManejadorSMS(ManejadorCSV):
     Clase para manejar archivos CSV específicos de mensajes SMS.
     Hereda de ManejadorCSV.
     """
+    #El init no hace falta pq hereda de la clase padre
 
-    def __init__(self, nombre_archivo):
-        """
-        Inicializa la clase ManejadorSMS con el nombre del archivo.
-
-        Args:
-            nombre_archivo (str): El nombre del archivo CSV.
-        """
-        super().__init__(nombre_archivo)
-    
     def exportar_mensajes(self, mensajes: dict):
         """
         Exporta los mensajes a un archivo CSV.
@@ -107,7 +101,7 @@ class ManejadorSMS(ManejadorCSV):
                 mensaje = cola_2.popleft()
                 lista_a_exportar.append([mensaje.get_emisor(), mensaje.get_receptor(), mensaje.get_mensaje(), mensaje.get_fecha(), mensaje.get_sincronizado()])
         self.exportar(lista_a_exportar)
-    
+
     def cargar_mensajes(self, central):
         """
         Carga los mensajes desde un archivo CSV y los registra en la central.
@@ -120,7 +114,7 @@ class ManejadorSMS(ManejadorCSV):
             lista = lista_mensajes.popleft()
             mensaje = Mensaje(lista[0], lista[1], lista[2], datetime.fromisoformat(lista[3]))
             central.registrar_mensaje_nuevo(mensaje)
-        
+
 class ManejadorLlamadas(ManejadorCSV):
     """
     Clase para manejar archivos CSV específicos de llamadas.
@@ -137,7 +131,7 @@ class ManejadorLlamadas(ManejadorCSV):
         """
         super().__init__(nombre_archivo)
         self.central = central
-        
+
     def exportar_llamadas(self):
         """
         Exporta las llamadas a un archivo CSV.
@@ -147,7 +141,7 @@ class ManejadorLlamadas(ManejadorCSV):
             for emisor, llamadas in emisores.items():
                 for llamada in llamadas:
                     self.exportar([receptor, emisor, llamada.get_duracion(), llamada.get_fecha_inicio()], "a")
-            
+
     def cargar_llamadas(self):
         """
         Carga las llamadas desde un archivo CSV y las registra en la central.
@@ -155,7 +149,7 @@ class ManejadorLlamadas(ManejadorCSV):
         lista_llamadas = self.leer_archivo(True)
         for llamada in lista_llamadas:
             self.central.registrar_llamada(llamada[0], llamada[1], int(llamada[2]), datetime.fromisoformat(llamada[3]))     
-   
+
 class ManejadorContactos(ManejadorCSV):
     """
     Clase para manejar archivos CSV específicos de contactos.
@@ -164,7 +158,8 @@ class ManejadorContactos(ManejadorCSV):
 
     def __init__(self, nombre_archivo, contactos_app):
         """
-        Inicializa la clase ManejadorContactos con el nombre del archivo y la aplicación de contactos.
+        Inicializa la clase ManejadorContactos con el nombre del archivo y la aplicación 
+        de contactos.
 
         Args:
             nombre_archivo (str): El nombre del archivo CSV.
@@ -172,7 +167,7 @@ class ManejadorContactos(ManejadorCSV):
         """
         super().__init__(nombre_archivo)
         self.contactos_app = contactos_app
-    
+
     def exportar_contactos(self):
         """
         Exporta los contactos a un archivo CSV.
@@ -188,7 +183,7 @@ class ManejadorContactos(ManejadorCSV):
         lista_contactos = self.leer_archivo(True)
         for contacto in lista_contactos:
             self.contactos_app.agregar_contacto(contacto[1], contacto[0])
-    
+
 class ManejadorDispositivos(ManejadorCSV):
     """
     Clase para manejar archivos CSV específicos de dispositivos.
@@ -205,7 +200,7 @@ class ManejadorDispositivos(ManejadorCSV):
         """
         super().__init__(nombre_archivo)
         self.central = central
-    
+
     def exportar_dispositivos(self):
         """
         Exporta los dispositivos a un archivo CSV.
@@ -213,19 +208,19 @@ class ManejadorDispositivos(ManejadorCSV):
         self.exportar(['Nombre', 'Numero', 'Tamanio', 'Esencial'])
         for celular in self.central.registro_dispositivos:
             lista = [
-                celular.nombre, 
-                celular.modelo, 
-                celular.aplicaciones["Configuracion"].numero, 
-                celular.sistema_operativo, 
-                celular.memoria_ram, 
-                celular.almacenamiento, 
-                celular.id_celular, 
-                celular.encendido, 
+                celular.nombre,
+                celular.modelo,
+                celular.aplicaciones["Configuracion"].numero,
+                celular.sistema_operativo,
+                celular.memoria_ram,
+                celular.almacenamiento,
+                celular.id_celular,
+                celular.encendido,
                 celular.bloqueado
             ]
             lista.extend(celular.aplicaciones.keys())
             self.exportar(lista, "a")
-        
+
     def cargar_dispositivos(self):
         """
         Carga los dispositivos desde un archivo CSV y los registra en la central.
@@ -245,7 +240,7 @@ class ManejadorDispositivos(ManejadorCSV):
             celular.desbloquear_dispositivo() if dispositivo[8] == "True" else celular.bloquear_dispositivo()
             for aplicacion in dispositivo[14:]:  # nose si es 14 o 15 para q no instale las q se instalan solas
                 celular.instalar_aplicacion(aplicacion)
-    
+
 class ManejadorMails(ManejadorCSV):
     """
     Clase para manejar archivos CSV específicos de mails.
@@ -262,13 +257,14 @@ class ManejadorMails(ManejadorCSV):
         """
         super().__init__(nombre_archivo)
         self.cuenta_mail = cuenta_mail
-    
+
     def exportar_mails(self, entrada=True):
         """
         Exporta los mails a un archivo CSV.
 
         Args:
-            entrada (bool): Indica si se deben exportar los mails de la bandeja de entrada (True) o de la bandeja de enviados (False). Por defecto es True.
+            entrada (bool): Indica si se deben exportar los mails de la bandeja de entrada (True) 
+            o de la bandeja de enviados (False). Por defecto es True.
         """
         self.exportar(['Emisor', 'Receptor', 'Asunto', 'Texto', 'Fecha'])
         if entrada:
@@ -277,13 +273,14 @@ class ManejadorMails(ManejadorCSV):
         else:
             for mail in self.cuenta_mail.bandeja_enviados:
                 self.exportar([mail.cuerpo, mail.emisor, mail.receptor, mail.encabecado, mail.fecha, mail.leido], "a")
-    
+
     def cargar_mails(self, entrada=True):
         """
         Carga los mails desde un archivo CSV y los registra en la cuenta de mail.
 
         Args:
-            entrada (bool): Indica si se deben cargar los mails en la bandeja de entrada (True) o en la bandeja de enviados (False). Por defecto es True.
+            entrada (bool): Indica si se deben cargar los mails en la bandeja de entrada (True) 
+            o en la bandeja de enviados (False). Por defecto es True.
         """
         lista_mails = self.leer_archivo(True)
         for mail in lista_mails:
