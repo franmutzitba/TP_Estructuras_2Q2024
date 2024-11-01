@@ -1,23 +1,46 @@
-from Apps.aplicacion import Aplicacion
+"""
+Módulo que contiene la clase ContactosApp, que representa la aplicación de Contactos.
+"""
+
 import os
+from Apps.aplicacion import Aplicacion
 
 class ContactosApp(Aplicacion):
-    """
-    Clase que representa la aplicación de Contactos.
+    """ Clase que representa la aplicación de Contactos.
     Hereda de la clase Aplicacion.
+    
+    Atributos:
+    ----------
+    agenda (dict): 
+        Diccionario que almacena los contactos con el número de teléfono como clave y 
+        el nombre como valor.
+        
+    Métodos:
+    --------
+    __init__(): 
+        Inicializa la aplicación de Contactos con un nombre, tamaño y esencialidad.
+        También inicializa una agenda vacía.
+    get_contactos(): 
+        Devuelve la agenda de contactos.
+    agregar_contacto(numero, nombre): 
+        Agrega un contacto a la agenda.
+    eliminar_contacto(numero): 
+        Elimina un contacto de la agenda.
+    menu_navegacion(): 
+        Muestra el menú de navegación de la aplicación de Contactos.
+    __str__(): 
+        Devuelve una representación en cadena de la agenda de contactos.
     """
 
     def __init__(self):
-        """
-        Inicializa la aplicación de Contactos con un nombre, tamaño y esencialidad.
+        """Inicializa la aplicación de Contactos con un nombre, tamaño y esencialidad.
         También inicializa una agenda vacía.
         """
         super().__init__(nombre="Contactos", tamanio="800 MB", esencial=True)
         self.agenda = {}
 
     def get_contactos(self):
-        """
-        Devuelve la agenda de contactos.
+        """Devuelve la agenda de contactos.
 
         Returns:
             dict: La agenda de contactos.
@@ -25,8 +48,7 @@ class ContactosApp(Aplicacion):
         return self.agenda
 
     def agregar_contacto(self, numero, nombre):
-        """
-        Agrega un contacto a la agenda.
+        """Agrega un contacto a la agenda.
 
         Args:
             numero (str): El número de teléfono del contacto.
@@ -37,26 +59,9 @@ class ContactosApp(Aplicacion):
         if not nombre:
             raise ValueError("El nombre del contacto no puede estar vacío")
         self.agenda[numero] = nombre
-    
-    def __str__(self):
-        """
-        Devuelve una representación en cadena de la agenda de contactos.
 
-        Returns:
-            str: La representación en cadena de la agenda de contactos.
-        """
-        if not self.agenda:
-            return "Agenda de contactos vacía"
-        agenda = ""
-        item = 1
-        for numero, nombre in self.agenda.items():
-            agenda += f"\n {item} Nombre: {nombre}       Número: {numero}"
-            item += 1
-        return f"Agenda de contactos:{agenda}"
-    
     def eliminar_contacto(self, numero):
-        """
-        Elimina un contacto de la agenda.
+        """Elimina un contacto de la agenda.
 
         Args:
             numero (str): El número de teléfono del contacto a eliminar.
@@ -65,14 +70,12 @@ class ContactosApp(Aplicacion):
             raise ValueError("Número no encontrado en la agenda")
         del self.agenda[numero]
         print(f"Contacto con número {numero} eliminado con éxito")
- 
-    
+
     def menu_navegacion(self):
-        """
-        Muestra el menú de navegación de la aplicación de Contactos.
+        """Muestra el menú de navegación de la aplicación de Contactos.
         Permite al usuario agregar, ver y eliminar contactos, o salir de la aplicación.
         """
-        
+
         os.system('cls')
         print("Bienvenido a tus Contactos")
         salir = False
@@ -144,3 +147,18 @@ class ContactosApp(Aplicacion):
                 print("Opción inválida")
                 input("Presione cualquier tecla para volver al menú del celular...")
                 os.system('cls')
+
+    def __str__(self):
+        """Devuelve una representación en cadena de la agenda de contactos.
+
+        Returns:
+            str: La representación en cadena de la agenda de contactos.
+        """
+        if not self.agenda:
+            return "Agenda de contactos vacía"
+        agenda = ""
+        item = 1
+        for numero, nombre in self.agenda.items():
+            agenda += f"\n {item} Nombre: {nombre}       Número: {numero}"
+            item += 1
+        return f"Agenda de contactos:{agenda}"

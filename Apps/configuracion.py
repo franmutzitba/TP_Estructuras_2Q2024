@@ -16,7 +16,27 @@ class ModoRed(Enum):
 
 class Configuracion:
     """Clase que contiene todos los atributos de la configuración del celular. 
-    Son modificables a través de la clase ConfigApp."""
+    Son modificables a través de la clase ConfigApp.
+    
+    Atributos:
+    ----------
+    nombre (str): 
+        El nombre del dispositivo.
+    almacenamiento_disponible (int):
+        El almacenamiento disponible en el dispositivo.
+    central (Central):
+        La instancia de la central telefónica en la cual está registrado el dispositivo.
+    numero (str):
+        El número de teléfono del dispositivo.
+    aplicaciones_instaladas (dict):
+        Diccionario que contiene las aplicaciones instaladas en el dispositivo.
+    modo_red (ModoRed):
+        El modo de red actual del dispositivo.
+    modo_avion (bool):
+        Indica si el modo avión está activado.
+    contrasenia (str):
+        La contraseña del dispositivo.
+    """
     def __init__(self, nombre, almacenamiento, central, numero, aplicaciones_instaladas, modo_red = ModoRed.LTE, modo_avion=False, contrasenia = None):
         self.nombre = nombre
         self.almacenamiento_disponible = almacenamiento
@@ -30,7 +50,7 @@ class Configuracion:
 
     def __str__(self):
         return f"Nombre: {self.nombre}, Almacenamiento disponible: {self.almacenamiento_disponible} MB, Número: {self.numero}, Modo avión: {self.modo_avion}, Modo red: {self.modo_red}"
-        
+
 class ConfigApp(Aplicacion):
     """Esta clase representa la aplicación de configuración de cada celular que 
     permite gestionar diversas configuraciones del dispositivo.

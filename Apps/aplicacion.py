@@ -10,8 +10,34 @@ class Aplicacion:
     """Clase padre de todas las aplicaciones del celular. Agrupa todos los atributos y métodos 
     comunes a las aplicaciones.El propósito principal por el cual fue creada esta clase fue 
     para poder distinguir entre apps esenciales y no esenciales.
+    
+    Atributos:
+    ----------
+    nombre (str): 
+        El nombre de la aplicación.
+    tamanio (int):
+        El tamaño de la aplicación.
+    esencial (bool):
+        Indica si la aplicación es esencial o no. Es decir, si se puede eliminar o no.
+        
+    Métodos:
+    --------
+    __init__(nombre, tamanio, esencial = False)
+        Inicializa la aplicación con un nombre, tamaño y esencialidad.
+    es_esencial()
+        Devuelve True si la aplicación es esencial, False en caso contrario.
+    menu_navegacion()
+        Método que simula el menú de navegación de la aplicación.
+    __str__()
+        Devuelve una representación en cadena de la aplicación.
     """
     def __init__(self, nombre, tamanio, esencial = False):
+        """
+        Args:
+            nombre (str): El nombre de la aplicación.
+            tamanio (str): El tamaño de la aplicación.
+            esencial (bool): Indica si la aplicación es esencial o no. Por defecto es False.
+        """
         if nombre == "" or tamanio == "":
             raise ValueError("Los campos nombre y tamanio no pueden estar vacíos.")
         if not isinstance(esencial, bool):

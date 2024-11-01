@@ -14,11 +14,11 @@ class AppStore(Aplicacion):
     
     Atributos:
     ----------
-    exportador : ManejadorCSV
+    exportador (ManejadorCSV):
         Manejador para exportar datos a un archivo CSV.
-    aplicaciones_celular : dict
+    aplicaciones_celular (dict):
         Diccionario que contiene las aplicaciones instaladas en el celular.
-    configuracion : Configuracion
+    configuracion (Configuracion):
         Configuración del dispositivo, incluyendo almacenamiento disponible.
         
     Métodos:
