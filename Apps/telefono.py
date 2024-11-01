@@ -149,7 +149,7 @@ class TelefonoApp(Aplicacion):
                 tipo = "Llamada perdida"
             else:
                 tipo = "Llamada realizada"
-                
+
             if llamada.emisor == self.numero:
                 emisor = "Usted"
                 if llamada.receptor in self.contactos:
@@ -163,12 +163,11 @@ class TelefonoApp(Aplicacion):
                 else:
                     emisor = llamada.emisor
 
-
             datos_llamada = (llamada.fecha, emisor, receptor, tipo, llamada.duracion)
             historial_organizado.append(datos_llamada)
-        
+
         historial_en_orden = sorted(historial_organizado, key=self.fecha_en_tupla)
-        
+
         print(f"Historial de llamadas del telefono {self.numero}:")
         for llamada in historial_en_orden:
             print(f"Fecha: {llamada[0]}, Emisor: {llamada[1]}, Receptor: {llamada[2]}, Tipo de llamada: {llamada[3]}, Duracion: {llamada[4]}")
@@ -179,6 +178,7 @@ class TelefonoApp(Aplicacion):
 
     @staticmethod
     def fecha_en_tupla(tupla):
+        """Convierte la fecha de una tupla en un objeto datetime."""
         return tupla[0]
 
     def menu_navegacion(self):

@@ -1,32 +1,125 @@
-from Apps.aplicacion import Aplicacion
-from comunicacion import Mensaje
-from datetime import datetime
-from central import Central
-from collections import deque
-from Apps.contactos import ContactosApp
+"""
+Módulo que contiene la clase MensajesApp que representa una aplicación de mensajería SMS.
+"""
+
 import os
+from datetime import datetime
+from collections import deque
+from Apps.aplicacion import Aplicacion
+from Apps.contactos import ContactosApp
+from comunicacion import Mensaje
+from central import Central
 
 class MensajesApp(Aplicacion):
+    """
+    Clase MensajesApp que representa una aplicación de mensajería SMS.
+    
+    Atributos:
+    ----------
+    numero_cel (str):
+        Número de teléfono del usuario.
+    contactos (dict):
+        Diccionario de contactos de la aplicación.
+    central (Central):
+        Objeto central que maneja la comunicación de mensajes.
+    mensajes (deque):
+        Cola de mensajes recibidos.
+        
+    Métodos:
+    --------
+    __init__(self, numero, contactos: ContactosApp, central: Central):
+        Inicializa la aplicación de mensajería con el número de teléfono, contactos y central.
+    crear_mensaje(self, receptor: str, mensaje: str):
+        Crea un nuevo mensaje con el receptor y el texto del mensaje.
+    numero_en_contactos(self, numero):
+        Verifica si un número está en la lista de contactos.
+    nombre_en_contactos(self, nombre):
+        Verifica si un nombre está en la lista de contactos.
+    nombre_contacto(self, numero):
+        Obtiene el nombre del contacto dado un número de teléfono.
+    numeros_de_nombre(self, nombre):
+        Obtiene una lista de números asociados a un nombre de contacto.
+    enviar_sms(self, receptor, texto):
+        Envía un mensaje SMS al receptor con el texto proporcionado.
+    recibir_sms(self, mensaje: Mensaje):
+        Recibe un mensaje y lo agrega a la bandeja de entrada si no está sincronizado.
+    ver_bandeja_de_entrada(self):
+        Muestra la bandeja de entrada de mensajes recibidos.
+    ver_mensajes_de(self, numero, contacto):
+        Muestra los mensajes recibidos de un número o contacto específico.
+    ver_chats_recientes(self):
+        Muestra los chats recientes y devuelve una cola de números/contactos recientes.
+    eliminar_mensaje(self, indice):
+        Elimina un mensaje de la bandeja de entrada dado su índice.
+    validar_indice(indice, len):
+        Valida si un índice es un número entero dentro del rango permitido.
+    __str__(self):
+        Devuelve una representación en cadena de la aplicación de mensajería.
+    menu_navegacion(self):
+        Muestra el menú de navegación de la aplicación de mensajería.
+    """
     def __init__(self, numero ,contactos: ContactosApp, central: Central):
         super().__init__(nombre = "MensajeriaSMS", tamanio = "100 MB", esencial = True,)
         self.numero_cel = numero
         self.contactos = contactos.agenda
         self.central = central
-        self.mensajes = deque() 
-    
+        self.mensajes = deque()
+
     def crear_mensaje(self, receptor: str, mensaje: str):
+        """Crea un nuevo mensaje a partir de la clase Mensaje.
+        
+        Args:
+            receptor (str): Número de teléfono del receptor.
+            mensaje (str): Texto del mensaje.
+        
+        Returns:
+            Mensaje: Objeto de la clase Mensaje.
+        """
         return Mensaje(self.numero_cel, receptor, mensaje,datetime.now())
 
     def numero_en_contactos(self, numero):
+        """Verifica si un número está en la lista de contactos.
+        
+        Args:
+            numero (str): Número de teléfono a verificar.
+            
+        Returns:
+            bool: True si el número está en la lista de contactos, False en caso contrario.
+        """
         return numero in self.contactos
- 
+
     def nombre_en_contactos(self, nombre):
+        """Verifica si un nombre está en la lista de contactos.
+        
+        Args:
+            nombre (str): Nombre a verificar.
+            
+        Returns:
+            bool: True si el nombre está en la lista de contactos, False en caso contrario.
+        """
         return nombre in self.contactos.values()
-    
+
     def nombre_contacto(self, numero):
+        """Obtiene el nombre del contacto dado un número de tel
+        
+        Args:
+            numero (str): Número de teléfono del contacto.
+            
+        Returns:
+            str: Nombre del contacto.
+        """
         return self.contactos[numero]
 
     def numeros_de_nombre(self, nombre):
+        """Obtiene una lista de números asociados a un nombre de contacto.
+        
+        Args:
+            nombre (str): Nombre del contacto.
+            
+        Returns:
+            deque: Cola de números asociados al nombre del contacto.
+        """
+
         lista=deque()
         i=1
         for numero, nombre in self.contactos.items():
@@ -36,25 +129,58 @@ class MensajesApp(Aplicacion):
         return lista
 
     def enviar_sms(self, receptor, texto):
+        """
+        Envía un mensaje SMS al receptor con el texto proporcionado.
+        
+        Args:
+            receptor (str): Número de teléfono del receptor.
+            texto (str): Texto del mensaje.
+            
+        Returns:
+            None
+        """
         if self.central.manejar_mensaje(self.numero_cel, receptor):
             mensaje = self.crear_mensaje(receptor, texto)
             self.central.registrar_mensaje_nuevo(mensaje)
-            print(f"Mensaje enviado correctamente al numero {receptor}") 
+            print(f"Mensaje enviado correctamente al numero {receptor}")
 
     def recibir_sms(self, mensaje: Mensaje):
-        if not(mensaje.get_sincronizado()):
+        """Recibe un mensaje y lo agrega a la bandeja de entrada si no está sincronizado.
+        
+        Args:
+            mensaje (Mensaje): Objeto de la clase Mensaje.
+            
+        Returns:
+            None
+        """
+        if not mensaje.get_sincronizado():
             mensaje.set_sincronizado()
             self.mensajes.appendleft(mensaje)
         else:
             print("El mensaje ya ha sido recibido")
-    
+
     def ver_bandeja_de_entrada(self):
+        """
+        Muestra los mensajes en la bandeja de entrada del número de celular asociado.
+        Si la bandeja de entrada está vacía, lanza una excepción ValueError.
+        Recorre los mensajes en la bandeja de entrada y los imprime en la consola. 
+        Si el emisor del mensaje está en la lista de contactos, muestra el nombre del contacto; 
+        de lo contrario, muestra el número del emisor.
+        
+        Raises:
+            ValueError: Si la bandeja de entrada está vacía.
+            
+        Prints:
+            Información de cada mensaje en la bandeja de entrada, incluyendo el emisor, 
+            el texto del mensaje y la fecha de recepción.
+        """
+
         bandeja_de_entrada = self.mensajes.copy()
         i=1
-        if not(bandeja_de_entrada):
+        if not bandeja_de_entrada:
             raise ValueError(f"El numero -{self.numero_cel}- no tiene mensajes en la bandeja de entrada")
         print(f"Bandeja de Entrada del numero: {self.numero_cel}")
-        
+
         while bandeja_de_entrada:
             print(f"- {i} - ", end="")
             mensaje = bandeja_de_entrada.popleft()
@@ -64,8 +190,18 @@ class MensajesApp(Aplicacion):
             else:
                 print(f"Emisor: {mensaje.get_emisor()}, Texto: {mensaje.mensaje}, Fecha: {fecha_min}")
             i += 1
-        
+
     def ver_mensajes_de(self, numero, contacto):
+        """
+        Muestra los mensajes recibidos de un número o contacto específico.
+        
+        Args:
+            numero (str): Número de teléfono del emisor.
+            contacto (str): Nombre del contacto.
+        
+        Returns:
+            None
+        """
         mensajes = self.mensajes.copy()
         i=1
         print(f"Mensajes de: {contacto if contacto else numero}")
@@ -76,8 +212,18 @@ class MensajesApp(Aplicacion):
                 fecha_min = mensaje.fecha.strftime("%Y-%m-%d %H:%M")
                 print(f"Texto: {mensaje.mensaje}, Fecha: {fecha_min}")
                 i += 1
-    
+
     def ver_chats_recientes(self):
+        """
+        Muestra los chats recientes y devuelve una cola de números/contactos recientes.
+        Si no hay mensajes en la bandeja de entrada, lanza una excepción ValueError.
+        
+        Returns:
+            deque: Cola de números/contactos recientes.
+            
+        Raises:
+            ValueError: Si no hay mensajes en la bandeja de entrada.
+        """
         if not self.mensajes:
             raise ValueError(f"EL numero: {self.numero_cel} no tiene mensajes") 
         recientes = deque() #cola de numeros/contactos recientes
@@ -90,19 +236,30 @@ class MensajesApp(Aplicacion):
                 print(f"{i} - {self.nombre_contacto(mensaje.get_emisor()) if self.numero_en_contactos(mensaje.get_emisor()) else mensaje.get_emisor()}")
                 i +=1
         return recientes 
-    
+
     def eliminar_mensaje(self, indice):
+        """
+        Elimina un mensaje de la bandeja de entrada dado su índice.
+        
+        Args:
+            indice (int): Índice del mensaje a eliminar.
+            
+        Raises:
+            ValueError: Si el índice no es un número entero o está fuera de rango.
+            IndexError: Si el índice está fuera de rango.
+        """
         mensaje = self.mensajes[indice-1]
         self.mensajes.remove(mensaje)
         self.central.eliminar_mensaje(mensaje, self.numero_cel)
 
     @staticmethod
-    def validar_indice(indice, len):
-        return  indice.isdigit() and (not int(indice) < 1) and (not int(indice) > len)
+    def validar_indice(indice, largo):
+        """Valida si un índice es un número entero dentro del rango permitido."""
+        return  indice.isdigit() and int(indice) >= 1 and (not int(indice) > largo)
 
     def __str__(self):
         return f"Aplicacion Mensajeria del numero: {self.numero_cel}"
-    
+
     def menu_navegacion(self):
         os.system('cls')
         print(f"\nBienvenido a la aplicacion de Mensajes SMS del numero {self.numero_cel}")
@@ -131,7 +288,7 @@ class MensajesApp(Aplicacion):
                             lista2 = lista.copy()
                             while lista2:
                                 print(lista2)
-                            indice = (input("Ingrese el indice del contacto deseado: "))
+                            indice = input("Ingrese el indice del contacto deseado: ")
                             while not MensajesApp.validar_indice(indice,len(lista)): #Puedo hacer un metodo de validacion
                                 indice = input("Entrada incorrecta. Ingrese el indice del contacto deseado: ")
                         else:
@@ -204,4 +361,3 @@ class MensajesApp(Aplicacion):
                 print("Opción inválida, intente nuevamente")
                 input("Presione cualquier tecla para volver al menu de Mensajes...")
                 os.system('cls')
-    

@@ -44,7 +44,7 @@ class AppStore(Aplicacion):
     __str__(self):
         Devuelve una representación en cadena de la instancia de AppStore.
     """
-    exportador = ManejadorCSV("appstore.csv")
+    manejadorCSV = ManejadorCSV("appstore.csv")
 
     def __init__(self, aplicaciones_celular, configuracion: ConfigApp):
         """
@@ -148,7 +148,7 @@ class AppStore(Aplicacion):
             if app[0] == nombre:
                 app[2] = int(app[2]) + 1
         aplicaciones_disponibles.insert(0, ["Nombre", "Tamaño", "Descargas"])
-        AppStore.exportador.exportar(aplicaciones_disponibles)
+        AppStore.manejadorCSV.exportar(aplicaciones_disponibles)
 
     def consultar_tamanio(self, nombre):
         """Consulta el tamaño de una aplicación específica de la tienda por su nombre.
@@ -172,7 +172,7 @@ class AppStore(Aplicacion):
             retorna una lista vacía.
         """
         try:
-            return AppStore.exportador.leer_archivo(True)
+            return AppStore.manejadorCSV.leer_archivo(True)
         except FileNotFoundError:
             return []
 

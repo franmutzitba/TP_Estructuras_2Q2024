@@ -4,7 +4,7 @@ archivos CSV
 """
 import csv
 import numpy as np
-from mail import Mail #nose q esta pasando
+from Apps.mail import Mail #nose q esta pasando
 from collections import deque
 from comunicacion import Mensaje
 from datetime import datetime
@@ -23,6 +23,23 @@ class ManejadorCSV:
             nombre_archivo (str): El nombre del archivo CSV.
         """
         self.nombre_archivo = nombre_archivo
+
+    def exportar(self, lista: list, modo = "w"): #Por default escribe un archivo nuevo. Se puede cambiar a "a" para agregar al final
+        """
+        Exporta una lista a un archivo CSV.
+        
+        Args:
+            lista (list): La lista a exportar.
+            modo (str): El modo de escritura del archivo. Por defecto es "w".
+        """
+        try:
+            with open(self.nombre_archivo, mode=modo, newline="", encoding='utf-8') as archivo_csv:
+                escritor = csv.writer(archivo_csv)
+                escritor.writerows(lista)
+        except FileNotFoundError:
+            print("Archivo no encontrado")
+        except IOError:
+            print("Error al exportar archivo")
 
     def leer_archivo(self, skip_header=False):
         """

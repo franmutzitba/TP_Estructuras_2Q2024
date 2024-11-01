@@ -4,6 +4,7 @@ Módulo que contiene la clase MailApp, la cual es la aplicación de correo elect
 
 import os
 import re
+from datetime import datetime
 from enum import Enum
 from collections import deque
 from Apps.aplicacion import Aplicacion
@@ -220,9 +221,9 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
             print(e)
 
     @staticmethod
-    def crear_mail(cuerpo, email_emisor, email_receptor, encabezado):
+    def crear_mail(cuerpo, email_emisor, email_receptor, encabezado, fecha):
         """Crea un nuevo correo electrónico con los datos proporcionados."""
-        return Mail(cuerpo, email_emisor, email_receptor, encabezado)
+        return Mail(cuerpo, email_emisor, email_receptor, encabezado, fecha)
 
     def menu_navegacion(self):
         """Muestra el menú de navegación de la aplicación de Mail."""
@@ -265,7 +266,7 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
                 encabezado = input("Ingrese el encabezado: ")
                 cuerpo = input("Ingrese el cuerpo: ")
                 try:
-                    mensaje = self.crear_mail(cuerpo, email_emisor, email_receptor, encabezado)
+                    mensaje = self.crear_mail(cuerpo, email_emisor, email_receptor, encabezado, datetime.now())
                     self.enviar_mail(mensaje)
                 except ValueError as e:
                     print(e)

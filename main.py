@@ -3,7 +3,7 @@ Archivo principal del proyecto, donde se prueban las clases y métodos implement
 """
 
 from celular import Celular
-from Apps.mail import *
+#from Apps.mail import MailApp, CuentaMail
 from manejadorCSV import ManejadorCSV
 
 if "__main__" == __name__:
@@ -16,10 +16,10 @@ if "__main__" == __name__:
     celular1.lanzar_app("Configuracion").configurar_contrasenia("1234")
     celular2.encender_dispositivo()
     # celular2.encencer_dispositivo()
-    '''try:
+    try:
         celular1.menu_navegacion()
     except ValueError as e:
-        print(e)'''
+        print(e)
 
     telefono1 = celular1.aplicaciones["Telefono"]
     telefono2 = celular2.aplicaciones["Telefono"]
