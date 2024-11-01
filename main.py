@@ -15,10 +15,10 @@ if "__main__" == __name__:
     celular1.encender_dispositivo()
     celular2.encender_dispositivo()
     # celular2.encencer_dispositivo()
-    try:
+    '''try:
         celular1.menu_navegacion()
     except ValueError as e:
-        print(e)
+        print(e)'''
 
     telefono1 = celular1.aplicaciones["Telefono"]
     telefono2 = celular2.aplicaciones["Telefono"]
