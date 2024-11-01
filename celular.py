@@ -75,10 +75,10 @@ class Celular:
         if self.bloqueado and (contrasenia == self.aplicaciones['Configuracion'].get_contrasenia() or contrasenia is None) and self.encendido:
             self.bloqueado = False
             print(f"Se ha desbloqueado el dispositivo - {self.aplicaciones['Configuracion'].get_nombre()} -")
-        elif not(self.bloqueado):
-            raise ValueError(f"El dispositivo {self.aplicaciones['Configuracion'].get_nombre()} ya se encuentra desbloqueado")
         elif not(self.encendido):
             raise ValueError(f"El dispositivo {self.aplicaciones['Configuracion'].get_nombre()} se encuentra apagado")
+        elif not(self.bloqueado):
+            raise ValueError(f"El dispositivo {self.aplicaciones['Configuracion'].get_nombre()} ya se encuentra desbloqueado")
         else:
             raise ValueError("La contraseña ingresada es incorrecta")
     
@@ -148,7 +148,7 @@ class Celular:
                 valor = input("Encender (1) / Apagar (0): ")
                 try:
                     if valor == "1":
-                        self.encencer_dispositivo()
+                        self.encender_dispositivo()
                     elif valor == "0":
                         self.apagar_dispositivo()
                     else:
