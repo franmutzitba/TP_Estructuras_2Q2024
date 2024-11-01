@@ -33,7 +33,7 @@ class Celular:
         
         self.aplicaciones = {}
         self.descargar_apps_basicas(nombre, tamanio_a_bytes(almacenamiento), numero, self.aplicaciones)
- 
+
     def descargar_apps_basicas(self, nombre, almacenamiento, numero, aplicaciones):
         self.aplicaciones["Configuracion"] = ConfigApp(Configuracion(nombre, almacenamiento, Celular.central, numero, aplicaciones))
         self.aplicaciones["Contactos"] = ContactosApp()

@@ -63,24 +63,30 @@ class Central:
         if numero_cel not in self.registro_mensajes:
             raise ValueError(f"No hay Mensajes nuevos para el numero {numero_cel}")
         
-        # el diccionario registro_mensajes tiene por nro celular una pila de los mensajes recibidos
-        # necesito generar una lista en este caso pila que almacene los mensajes no sincronizados, es decir los primeros de la lista
+        # el diccionario registro_mensajes tiene por nro celular una lista de los mensajes recibidos
+        # necesito generar una lista en este caso pila que almacene los mensajes no sincronizados, es decir los primeros de la lista hasta el primer sincronizado
         # esta pila se recorre y se reciben los sms del mas antiguo al mas reciente en la bandeja de entrada del numero, el cual encendio el servico
         # sincronizando los mensajes  
         
-        mensajes = self.registro_mensajes[numero_cel]
-        mensajes_no_sinc = deque() #pila de mensajes no sincronizados
-        for mensaje in mensajes:
+        mensajes = self.registro_mensajes[numero_cel].copy()
+        mensajes_no_sinc = deque() #pila de mensajes no sincronizados que va del mas viejo al mas reciente
+        
+        while mensajes:
+            mensaje = mensajes.popleft()
             if mensaje.get_sincronizado():
                 break
             else:
                 mensajes_no_sinc.appendleft(mensaje)
-
+                
         if not(len(mensajes_no_sinc)):
             raise ValueError(f"No hay Mensajes nuevos para el numero {numero_cel}")  
         
-        for mensaje in mensajes_no_sinc: 
-            self.registro_dispositivos[numero_cel].aplicaciones["Mensajes"].recibir_sms(mensaje) 
+        while mensajes_no_sinc:
+            mensaje = mensajes_no_sinc.popleft()
+            self.registro_dispositivos[numero_cel].aplicaciones["Mensajes"].recibir_sms(mensaje)
+            # se envian los mensajes en orden cornologico
+            #primero los mas viejos, es decir los primeros de la lista, por eso popleft
+            # Tambien fueron los ultimos en enntrar por eso pila
 
     def esta_ocupado(self, numero, fecha_inicio_llamada_nueva:datetime):
         llamada = self.ultima_llamada_por_persona[numero]

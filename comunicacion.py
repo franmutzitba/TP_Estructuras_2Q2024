@@ -39,7 +39,9 @@ class Llamada(Comunicacion):
     
     
 class Mensaje(Comunicacion):
-    def __init__(self, emisor, receptor, mensaje, fecha):
+    def __init__(self, emisor, receptor, mensaje, fecha: datetime):
+        if not isinstance(fecha,datetime):
+            raise ValueError("La fecha debe de estar en formato datetime")
         super().__init__(emisor, receptor, 'Mensaje')
         self.mensaje = mensaje
         self.fecha = fecha

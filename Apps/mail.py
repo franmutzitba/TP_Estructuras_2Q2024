@@ -31,17 +31,18 @@ class Mail:
     leido (bool):
         Indica si el mail fue leído o no.
     """
-    def __init__(self, cuerpo, email_emisor, email_receptor, encabezado, leido=False):
+    def __init__(self, cuerpo, email_emisor, email_receptor, encabezado, fecha,leido=False):
         if not isinstance(cuerpo, str) or not isinstance(email_emisor, str) or not isinstance(email_receptor, str) or not isinstance(encabezado, str) or not isinstance(leido, bool):
             raise ValueError("Los atributos del Mail deben ser del tipo correcto")
         self.cuerpo = cuerpo
         self.email_emisor = email_emisor
         self.email_receptor = email_receptor
         self.encabezado = encabezado
+        self.fecha = fecha
         self.leido = leido
 
     def __str__(self):
-        return f"Encabezado: {self.encabezado}, Emisor: {self.email_emisor}, Leído: {self.leido}, Cuerpo: {self.cuerpo}"
+        return f"Fecha de emision:{self.fecha}\nEmisor: {self.email_emisor}\nReceptor: {self.email_receptor}\nEncabezado: {self.encabezado}\nLeído: {self.leido}\nCuerpo:\n{self.cuerpo}"
 
 class MailApp(Aplicacion): #Pertenece a cada telefono
     """Clase que representa la aplicación de Mail en un celular.
@@ -99,10 +100,12 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
         if self.cuenta_iniciada and self.central.consultar_LTE(self.numero):
             if criterio == CriterioLectura.NO_LEIDOS_PRIMEROS:
                 no_leidos = deque(mail for mail in CuentaMail.cuentas[self.cuenta_mail].bandeja_entrada if not mail.leido)
+                no_leidos = sorted(no_leidos, key=lambda mail: mail.fecha) #Ordena los mails por fecha dejando las mas nuevas al final (hay q probarlo)
                 while no_leidos:
                     print(no_leidos.popleft())
             elif criterio == CriterioLectura.POR_FECHA:
                 pila = CuentaMail.cuentas[self.cuenta_mail].bandeja_entrada.copy()
+                pila = sorted(pila, key=lambda mail: mail.fecha) #Ordena los mails por fecha dejando las mas nuevas al final (hay q probarlo)
                 while pila:
                     print(pila.pop())
             else:

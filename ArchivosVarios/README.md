@@ -20,10 +20,10 @@ App Store, Configuración, etc.), para al menos poder:
     a. Realizar llamadas a otros teléfonos marcando el número..
     b. Recibir llamadas de otros números.
     c. Terminar una llamada en curso.
-    d. Agendar y actualizar contactos
-    e. Enviar y recibir mensajes de texto (SMS) a un número de destino.
-    f. Ver bandeja de entrada de SMS e historial de llamadas.
-    g. Eliminar mensajes (SMS).
+    d. Agendar y actualizar contactos OK
+    e. Enviar y recibir mensajes de texto (SMS) a un número de destino. OK
+    f. Ver bandeja de entrada de SMS e historial de llamadas. OK
+    g. Eliminar mensajes (SMS). OK
     h. Ver e-mails, los cuales deben poder consultarse según:
         i. “no leídos primeros”
         ii. “por fecha” (del último en llegar al primero)
