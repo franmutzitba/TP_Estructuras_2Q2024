@@ -1,17 +1,51 @@
+"""
+Módulo que contiene la clase TelefonoApp. Esta clase representa la aplicación de Teléfono.
+"""
+
 import datetime
 import os
 from Apps.aplicacion import Aplicacion
-from Apps.contactos import ContactosApp
 
 class TelefonoApp(Aplicacion):
     """
     Clase que representa la aplicación de Teléfono.
     Hereda de la clase Aplicacion.
+    
+    Atributos:
+    ----------
+    numero (str): 
+        El número de teléfono del dispositivo.
+    contactos (dict):
+        Diccionario que almacena los contactos con el número de teléfono como clave y
+        el nombre como valor.
+    central (Central):
+        La instancia de la central telefónica.
+    
+    Métodos:
+    --------
+    __init__(numero, central, contactos):
+        Inicializa la clase TelefonoApp con un número, una central y una instancia de ContactosApp.
+    numero_en_contactos(numero):
+        Verifica si un número está en la lista de contactos.
+    nombre_contacto(numero):
+        Obtiene el nombre del contacto asociado a un número de teléfono.
+    iniciar_llamada_contacto(item, duracion):
+        Inicia una llamada a un contacto por su índice en la lista de contactos.
+    iniciar_llamada(numero_receptor, duracion=5):
+        Inicia una llamada a un número de receptor con una duración específica.
+    mostrar_historial_llamadas():
+        Muestra el historial de llamadas.
+    terminar_llamada_en_curso():
+        Termina la llamada en curso.
+    fecha_en_tupla(tupla):
+        Convierte la fecha de una tupla en un objeto datetime.
+    menu_navegacion():
+        Muestra el menú de navegación de la aplicación de teléfono.
     """
 
     def __init__(self, numero, central, contactos):
-        """
-        Inicializa la clase TelefonoApp con un número, una central y una instancia de ContactosApp.
+        """Inicializa la clase TelefonoApp con un número, una central y una instancia 
+        de ContactosApp.
 
         Args:
             numero (str): El número de teléfono del dispositivo.
@@ -24,8 +58,7 @@ class TelefonoApp(Aplicacion):
         self.central = central
 
     def numero_en_contactos(self, numero):
-        """
-        Verifica si un número está en la lista de contactos.
+        """Verifica si un número está en la lista de contactos.
 
         Args:
             numero (str): El número de teléfono a verificar.
@@ -36,8 +69,7 @@ class TelefonoApp(Aplicacion):
         return numero in self.contactos.keys()
 
     def nombre_contacto(self, numero):
-        """
-        Obtiene el nombre del contacto asociado a un número de teléfono.
+        """Obtiene el nombre del contacto asociado a un número de teléfono.
 
         Args:
             numero (str): El número de teléfono del contacto.
@@ -48,16 +80,19 @@ class TelefonoApp(Aplicacion):
         return self.contactos.get(numero)
 
     def iniciar_llamada_contacto(self, item, duracion):
-        """
-        Inicia una llamada a un contacto por su índice en la lista de contactos.
+        """Inicia una llamada a un contacto por su índice en la lista de contactos.
 
         Args:
             item (int): El índice del contacto en la lista de contactos.
             duracion (int): La duración de la llamada en minutos.
             hora_inicio (datetime): La hora de inicio de la llamada.
 
+        Returns:
+            None
+            
         Raises:
             ValueError: Si el índice del contacto es inválido.
+            ValueError: Si la duración de la llamada es mayor a 1440 minutos (24 horas).
         """
         if not item.isdigit():
             raise ValueError("El índice del contacto debe ser un número entero")
@@ -70,13 +105,15 @@ class TelefonoApp(Aplicacion):
         self.iniciar_llamada(numero_receptor, duracion)
 
     def iniciar_llamada(self, numero_receptor, duracion=5):
-        """
-        Inicia una llamada a un número de receptor con una duración específica.
+        """Inicia una llamada a un número de receptor con una duración específica.
 
         Args:
             numero_receptor (str): El número del receptor.
             duracion (int): La duración de la llamada en minutos. Por defecto es 5 minutos.
 
+        Returns:
+            None
+            
         Raises:
             ValueError: Si la duración de la llamada es mayor a 1440 minutos (24 horas).
         """
@@ -96,8 +133,7 @@ class TelefonoApp(Aplicacion):
         self.central.manejar_llamada(self.numero, numero_receptor, hora_inicio, duracion)
 
     def mostrar_historial_llamadas(self):
-        """
-        Muestra el historial de llamadas.
+        """Muestra el historial de llamadas.
         """
         #cuando se termine lo comentamos bien
         historial_personal = []
@@ -106,15 +142,14 @@ class TelefonoApp(Aplicacion):
                 for llamada in historial_emisor_receptor:
                     if llamada.emisor == self.numero or llamada.receptor == self.numero:
                         historial_personal.append(llamada)  # falta terminar pero no lo entiendo
-       
-       
+
         historial_organizado = []               #cambia los numeros por contactos cuando corresponde
         for llamada in historial_personal:
             if llamada.perdida:
                 tipo = "Llamada perdida"
             else:
                 tipo = "Llamada realizada"
-            
+
             if llamada.emisor == self.numero:
                 emisor = "Usted"
                 if llamada.receptor in self.contactos:
@@ -130,13 +165,14 @@ class TelefonoApp(Aplicacion):
 
                 datos_llamada = (llamada.fecha, emisor, receptor, tipo, llamada.duracion)
                 historial_organizado.append(datos_llamada)
-        
+
         historial_en_orden = sorted(historial_organizado, key=self.fecha_en_tupla)
         print("Historial de llamadas:")
         for llamada in historial_en_orden:
             print(f"Fecha: {llamada[0]}, emisor: {llamada[1]}, receptor: {llamada[2]}, tipo de llamada: {llamada[3]}, duracion: {llamada[4]} minutos")
 
     def terminar_llamada_en_curso(self):
+        """Termina la llamada en curso."""
         self.central.terminar_llamada(self.numero)
 
     @staticmethod
