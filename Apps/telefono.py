@@ -1,6 +1,7 @@
 import datetime
 import os
 from Apps.aplicacion import Aplicacion
+from Apps.contactos import ContactosApp
 
 class TelefonoApp(Aplicacion):
     """
@@ -19,7 +20,7 @@ class TelefonoApp(Aplicacion):
         """
         super().__init__(nombre="Telefono", tamanio="200 MB", esencial=True)
         self.numero = numero
-        self.contactos = contactos  # pedir la instancia de contactos creada en ese celular
+        self.contactos = contactos.agenda  # pedir la instancia de contactos creada en ese celular
         self.central = central
 
     def numero_en_contactos(self, numero):
@@ -60,7 +61,7 @@ class TelefonoApp(Aplicacion):
         """
         if not item.isdigit():
             raise ValueError("El índice del contacto debe ser un número entero")
-        if not duracion.isdigit():
+        if not isinstance(duracion, int):
             raise ValueError("La duración de la llamada debe ser un número entero")
         indice = int(item) - 1
         if indice < 0 or indice >= len(self.contactos.agenda):
@@ -79,14 +80,20 @@ class TelefonoApp(Aplicacion):
         Raises:
             ValueError: Si la duración de la llamada es mayor a 1440 minutos (24 horas).
         """
-        if not duracion.isdigit():
+        if not (isinstance(numero_receptor, int) or isinstance(numero_receptor, str)):
+            raise ValueError("Numero incorrecto")
+        if isinstance(numero_receptor, int):
+            numero_receptor = str(numero_receptor)         #lo convierto en str si es un int
+        if not isinstance(duracion, int):
             raise ValueError("La duracion debe ser un número entero")
-        if int(duracion) > 1440:
+        if duracion > 1440:
             raise ValueError("La duracion no puede ser mayor a 24hs (1440 minutos)")
+        if numero_receptor == self.numero:
+            raise ValueError("No es posible llamarse a si mismo")
 
         hora_inicio = datetime.datetime.now()
-        duracion = datetime.timedelta(minutes=int(duracion))
-        self.central.manejar_llamada(self.numero, numero_receptor, hora_inicio, int(duracion))
+        duracion = datetime.timedelta(minutes=duracion)
+        self.central.manejar_llamada(self.numero, numero_receptor, hora_inicio, duracion)
 
     def mostrar_historial_llamadas(self):
         """

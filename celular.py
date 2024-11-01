@@ -42,7 +42,7 @@ class Celular:
         self.aplicaciones["AppStore"] = AppStore(self.aplicaciones, self.aplicaciones["Configuracion"])
         self.aplicaciones["Telefono"] = TelefonoApp(numero, Celular.central, self.aplicaciones["Contactos"])
         
-    def encencer_dispositivo(self):
+    def encender_dispositivo(self):
         if self.encendido:
             raise ValueError(f" El dispositivo {self.aplicaciones['Configuracion'].get_nombre()} ya se encuentra encendido ")
     

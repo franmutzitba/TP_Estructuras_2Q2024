@@ -14,12 +14,16 @@ class Central:
         self.registro_llamadas = {} #registro de llamadas_perdidas_o_realizadas
         self.registro_dispositivos = {} #diccionario que contiene el numero en la key y el objeto celular en el valor
         self.registro_mensajes =  {} #Colas de mensajes
-        self.ultima_llamada_por_persona = {}  #guarda la persona como clave y como valor a la llamada
+        self.ultima_llamada_por_persona = {}  #guarda al numero como clave y como valor a la llamada
         self.manejador_sms = ManejadorSMS("archivo_sms.csv")
         
     def registrar_dispositivo(self, numero, celular):
         self.registro_dispositivos[numero]=celular
         print(f"Dispositivo {numero} registrado correctamente en la central")
+
+        #creo una ultima llamada de la persona, vacia, pero para agregar al numero al diccionario
+        llamada = Llamada(numero, numero, datetime.now(), timedelta(minutes=0))
+        self.ultima_llamada_por_persona[numero] = llamada
     
     def consultar_LTE(self, numero):
         return self.registro_dispositivos[numero].aplicaciones["Configuracion"].configuracion.modo_red == ModoRed.LTE
@@ -80,8 +84,8 @@ class Central:
 
     def esta_ocupado(self, numero, fecha_inicio_llamada_nueva:datetime):
         llamada = self.ultima_llamada_por_persona[numero]
-        fecha_inicio_anterior = datetime(llamada.fecha)
-        duracion = timedelta(llamada.duracion)
+        fecha_inicio_anterior = llamada.fecha
+        duracion = llamada.duracion
         fecha_fin_llamada_anterior = fecha_inicio_anterior + duracion
         return fecha_fin_llamada_anterior > fecha_inicio_llamada_nueva
     
