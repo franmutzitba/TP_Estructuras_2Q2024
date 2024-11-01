@@ -13,12 +13,13 @@ if "__main__" == __name__:
     celular3 = Celular("Motorola de Pedro", "Motorola G9", "456789123", "Android", "4GB", "32GB")
     celular4 = Celular("Huawei de Ana", "Huawei P40", "654321987", "Android", "8GB", "256GB")
     celular1.encender_dispositivo()
+    celular1.lanzar_app("Configuracion").configurar_contrasenia("1234")
     celular2.encender_dispositivo()
     # celular2.encencer_dispositivo()
-    '''try:
+    try:
         celular1.menu_navegacion()
     except ValueError as e:
-        print(e)'''
+        print(e)
 
     telefono1 = celular1.aplicaciones["Telefono"]
     telefono2 = celular2.aplicaciones["Telefono"]

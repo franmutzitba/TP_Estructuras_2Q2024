@@ -72,12 +72,12 @@ class Celular:
         print(f"Se ha bloqueado el dispositivo - {self.aplicaciones['Configuracion'].get_nombre()} -")
     
     def desbloquear_dispositivo(self, contrasenia = None):
-        if self.bloqueado and (contrasenia == self.aplicaciones['Configuracion'].get_contrasenia() or contrasenia is None) and self.encendido:
+        if self.bloqueado and contrasenia == self.aplicaciones['Configuracion'].get_contrasenia() and self.encendido:
             self.bloqueado = False
             print(f"Se ha desbloqueado el dispositivo - {self.aplicaciones['Configuracion'].get_nombre()} -")
         elif not self.encendido:
             raise ValueError(f"El dispositivo {self.aplicaciones['Configuracion'].get_nombre()} se encuentra apagado")
-        elif not(self.bloqueado):
+        elif not self.bloqueado:
             raise ValueError(f"El dispositivo {self.aplicaciones['Configuracion'].get_nombre()} ya se encuentra desbloqueado")
         else:
             raise ValueError("La contraseña ingresada es incorrecta")
@@ -206,9 +206,9 @@ if __name__ =="__main__":
     from Apps.mail import CriterioLectura
     celular1 = Celular("iPhone de Franco", "iPhone 13", "123456789", "iOS", "4GB", "64")
     celular2 = Celular("Samsung de Juan", "Samsung Galaxy S21", "987654321", "Android", "6GB", "128")
-    celular2.encencer_dispositivo()
+    #celular2.encencer_dispositivo()
     #celular2.desbloquear_dispositivo()
-    celular1.encencer_dispositivo()
+    #celular1.encencer_dispositivo()
     #celular1.desbloquear_dispositivo()
     celular1.lanzar_app("Configuracion").set_datos(True)
     celular2.lanzar_app("Configuracion").set_datos(True)
@@ -230,7 +230,7 @@ if __name__ =="__main__":
     # print(celular1.central.registro_mensajes["987654321"].popleft())
     print(celular2.central.registro_mensajes["987654321"][0].get_sincronizado())
     # #print(celular2.aplicaciones["Mensajes"].mensajes[0].get_sincronizado())
-    celular2.encencer_dispositivo()
+    #celular2.encencer_dispositivo()
     celular1.lanzar_app("Mensajes").enviar_sms("987654321", "mensaje 4") 
     print(celular2.aplicaciones["Configuracion"].configuracion.modo_red)
     print(celular2.central.registro_mensajes["987654321"][0].get_sincronizado())

@@ -124,7 +124,7 @@ class ConfigApp(Aplicacion):
         if contrasenia_vieja == self.configuracion.contrasenia or self.configuracion.contrasenia is None:
             if self.validar_contrasenia(contrasenia_nueva):
                 self.set_contrasenia(contrasenia_nueva)
-            else: 
+            else:
                 raise ValueError("La nueva contraseña no cumple con los requisitos")
         else:
             raise ValueError("Contraseña actual incorrecta")
