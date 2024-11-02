@@ -2,7 +2,6 @@
 Archivo principal del proyecto, donde se prueban las clases y métodos implementados.
 """
 
-
 #from Apps.mail import MailApp, CuentaMail
 from manejadorCSV import ManejadorCSV
 
