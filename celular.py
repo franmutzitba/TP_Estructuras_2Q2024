@@ -211,7 +211,7 @@ class Celular:
     #                 elif app == "AppStore":
     #                     celular.aplicaciones[app] = AppStore(celular.aplicaciones, celular.aplicaciones["Configuracion"])
     #                 else:
-    #                     celular.aplicaciones[app] = None
+    #                     celular.aplicaciones["AppStore"].descargar_app(app)
     #             celulares.append(celular)
     #     return celulares
 
