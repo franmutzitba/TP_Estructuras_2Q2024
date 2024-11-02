@@ -229,7 +229,7 @@ class MensajesApp(Aplicacion):
             ValueError: Si no hay mensajes en la bandeja de entrada.
         """
         if not self.mensajes:
-            raise ValueError(f"EL numero: {self.numero_cel} no tiene mensajes") 
+            raise ValueError(f"EL numero: {self.numero_cel} no tiene mensajes")
         recientes = deque() #cola de numeros/contactos recientes
         mensajes = self.mensajes.copy()
         i=1
@@ -239,7 +239,7 @@ class MensajesApp(Aplicacion):
                 recientes.append(mensaje.get_emisor())
                 print(f"{i} - {self.nombre_contacto(mensaje.get_emisor()) if self.numero_en_contactos(mensaje.get_emisor()) else mensaje.get_emisor()}")
                 i +=1
-        return recientes 
+        return recientes
 
     def eliminar_mensaje(self, indice):
         """
@@ -298,7 +298,7 @@ class MensajesApp(Aplicacion):
                         texto = input("Ingrese el mensaje a enviar: ")
                         if not texto:
                             raise ValueError("No se pueden enviar mensajes vacios")
-                        self.enviar_sms(numero, texto)                 
+                        self.enviar_sms(numero, texto)
 
                     elif opcion2 == "2":
                         os.system('cls')
@@ -332,7 +332,7 @@ class MensajesApp(Aplicacion):
                         indice = input("Entrada incorrecta. Ingrese el número del chat deseado: ")
                     emisor = recientes[int(indice)-1]
                     contacto = self.nombre_contacto(emisor) if self.numero_en_contactos(emisor) else None
-                    self.ver_mensajes_de(emisor,contacto)    
+                    self.ver_mensajes_de(emisor,contacto)
                 except ValueError as e:
                     print(e)
                 input("Presione cualquier tecla para volver al menu de la Mensajeria... ")

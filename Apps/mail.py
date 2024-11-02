@@ -114,7 +114,7 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
                     print(pila.pop())
             else:
                 raise ValueError("Criterio no válido")
-        else: 
+        else:
             raise ValueError("No se pudo ver la bandeja de entrada. Inicie sesión para continuar")
 
     def ver_bandeja_enviados(self):
@@ -341,7 +341,7 @@ class CuentaMail:
 
     def __init__(self, mail, contrasenia):
         if not self.validar_mail(mail):
-            raise ValueError("El mail no es válido")       
+            raise ValueError("El mail no es válido")
         if not self.validar_contrasenia(contrasenia):
             raise ValueError("La contraseña no es válida")
 

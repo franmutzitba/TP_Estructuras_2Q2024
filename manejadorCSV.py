@@ -148,7 +148,7 @@ class ManejadorLlamadas(ManejadorCSV):
         """
         lista_llamadas = self.leer_archivo(True)
         for llamada in lista_llamadas:
-            self.central.registrar_llamada(llamada[0], llamada[1], int(llamada[2]), datetime.fromisoformat(llamada[3]))     
+            self.central.registrar_llamada(llamada[0], llamada[1], int(llamada[2]), datetime.fromisoformat(llamada[3]))
 
 class ManejadorContactos(ManejadorCSV):
     """
@@ -228,12 +228,12 @@ class ManejadorDispositivos(ManejadorCSV):
         lista_dispositivos = self.leer_archivo(True)
         for dispositivo in lista_dispositivos:
             celular = Celular(
-                dispositivo[0], 
-                dispositivo[1], 
-                dispositivo[2], 
-                dispositivo[3], 
-                dispositivo[4], 
-                dispositivo[5], 
+                dispositivo[0],
+                dispositivo[1],
+                dispositivo[2],
+                dispositivo[3],
+                dispositivo[4],
+                dispositivo[5],
                 dispositivo[6]
             )
             celular.encender_dispositivo() if dispositivo[7] == "True" else celular.apagar_dispositivo()

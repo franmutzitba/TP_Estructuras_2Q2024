@@ -43,7 +43,7 @@ class Configuracion:
         self.almacenamiento_disponible = almacenamiento
         self.central = central
         self.numero = numero
-        self.aplicaciones_instaladas = aplicaciones_instaladas 
+        self.aplicaciones_instaladas = aplicaciones_instaladas
 
         self.modo_avion = modo_avion
         self.modo_red = modo_red
@@ -185,7 +185,7 @@ class ConfigApp(Aplicacion):
         if valor: #HAY Q VER ESTO
             self.configuracion.modo_avion = False
             try:
-                self.configuracion.central.registrar_mensajes(self.configuracion.numero)  
+                self.configuracion.central.registrar_mensajes(self.configuracion.numero)
             except ValueError as e:
                 print(e)
         print(f"El servicio se ha {'encendido' if valor is True else 'apagado'}")

@@ -320,12 +320,10 @@ class Celular:
 #     celular2.lanzar_app("Configuracion").set_datos(True)
 #     print(Celular.central.registro_dispositivos["987654321"])
 #     print(Celular.central.registro_dispositivos["123456789"])
-    
 #     celular1.lanzar_app("Mail").crear_cuenta("franco.mutz@gmail.com", "Franco123!")
 #     celular2.lanzar_app("Mail").crear_cuenta("franco.mutz2@gmail.com", "Franco123!")
 #     celular1.lanzar_app("Mail").iniciar_sesion("franco.mutz@gmail.com", "Franco123!")
 #     celular2.lanzar_app("Mail").iniciar_sesion("franco.mutz2@gmail.com", "Franco123!")
-    
 #     celular1.lanzar_app("Mail").enviar_mail(Mail("Hola", "franco.mutz@gmail.com", "franco.mutz2@gmail.com", "Saludo", fecha=datetime.now()))
 #     celular2.lanzar_app("Mail").ver_bandeja_entrada(CriterioLectura.NO_LEIDOS_PRIMEROS)
 #     celular1.lanzar_app("Mensajes").enviar_sms("987654321", "mensaje 0")
@@ -337,7 +335,7 @@ class Celular:
 #     print(celular2.central.registro_mensajes["987654321"][0].get_sincronizado())
 #     # #print(celular2.aplicaciones["Mensajes"].mensajes[0].get_sincronizado())
 #     #celular2.encencer_dispositivo()
-#     celular1.lanzar_app("Mensajes").enviar_sms("987654321", "mensaje 4") 
+#     celular1.lanzar_app("Mensajes").enviar_sms("987654321", "mensaje 4")
 #     print(celular2.aplicaciones["Configuracion"].configuracion.modo_red)
 #     print(celular2.central.registro_mensajes["987654321"][0].get_sincronizado())
 #     print(celular2.aplicaciones["Mensajes"].mensajes[0].get_sincronizado())
@@ -355,7 +353,6 @@ class Celular:
 #     for cola in (central2.registro_mensajes.values()):
 #         for mensaje in cola:
 #             print(mensaje)
-        
 #     # celular1.encencer_dispositivo()
 #     # celular1.central.mostrar_dispositivos()
 #     # celular1.aplicaciones["Configuracion"].set_servicio(True)
@@ -374,4 +371,3 @@ class Celular:
 #     # celular1.aplicaciones["AppStore"].descargar_app("Zoom") #No hay espacio suficiente
 #     # celular1.aplicaciones["AppStore"].mostrar_apps_disponibles()
 #     # celular1.aplicaciones["AppStore"].mostar_apps()
-

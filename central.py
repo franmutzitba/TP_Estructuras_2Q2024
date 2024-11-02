@@ -163,7 +163,7 @@ class Central:
 
         # el metodo sirve para recibir los mensajes aun no sincronizados al momento de encender de vuelta el servicio del dispositivo
         if not self.esta_registrado(numero_cel):
-            raise ValueError 
+            raise ValueError
         if numero_cel not in self.registro_mensajes:
             raise ValueError(f"No hay Mensajes nuevos para el numero {numero_cel}")
 
@@ -183,7 +183,7 @@ class Central:
                 mensajes_no_sinc.appendleft(mensaje)
 
         if not len(mensajes_no_sinc):
-            raise ValueError(f"No hay Mensajes nuevos para el numero {numero_cel}")  
+            raise ValueError(f"No hay Mensajes nuevos para el numero {numero_cel}")
 
         while mensajes_no_sinc:
             mensaje = mensajes_no_sinc.popleft()
