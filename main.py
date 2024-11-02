@@ -2,12 +2,13 @@
 Archivo principal del proyecto, donde se prueban las clases y métodos implementados.
 """
 
-from celular import Celular
+
 #from Apps.mail import MailApp, CuentaMail
-from manejadorCSV import ManejadorCSV
+#from manejadorCSV import ManejadorCSV
 
 if "__main__" == __name__:
-    exportadorCelulares = ManejadorCSV("celulares.csv")
+    from celular import Celular
+    #exportadorCelulares = ManejadorCSV("celulares.csv")
     celular1 = Celular("iPhone de Franco", "iPhone 13", "123456789", "iOS", "4GB", "64GB")
     celular2 = Celular("Samsung de Juan", "Samsung Galaxy S21", "987654321", "Android", "6GB", "128GB")
     celular3 = Celular("Motorola de Pedro", "Motorola G9", "456789123", "Android", "4GB", "32GB")

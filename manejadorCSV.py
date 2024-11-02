@@ -2,13 +2,13 @@
 Módulo para manejar la importación y exportación de la data a 
 archivos CSV
 """
+
 import csv
 from collections import deque
 from datetime import datetime
 import numpy as np
 from Apps.mail import Mail #nose q esta pasando
 from comunicacion import Mensaje
-
 from celular import Celular
 
 class ManejadorCSV:

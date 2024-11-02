@@ -15,6 +15,50 @@ from funciones_utiles import tamanio_a_bytes
 from central import Central
 
 class Celular:
+    """
+    Clase que representa un celular con sus respectivas características 
+    y aplicaciones. Contiene los métodos necesarios para encender, apagar,
+    bloquear y desbloquear el dispositivo, así como para lanzar aplicaciones.
+    El resto de las funcionalidades se encuentran en las aplicaciones.
+    
+    Atributos:
+    ----------
+    id_celular (uuid):
+        Identificador único del celular.
+    modelo (str):
+        Modelo del celular.
+    sistema_operativo (str):
+        Sistema operativo del celular.
+    memoria_ram (str):
+        Memoria RAM del celular.
+    almacenamiento (str):
+        Almacenamiento del celular.
+    encendido (bool):
+        Indica si el dispositivo está encendido.
+    bloqueado (bool):
+        Indica si el dispositivo está bloqueado.
+    aplicaciones (dict):
+        Diccionario que contiene las aplicaciones instaladas en el celular.
+        
+    Métodos:
+    --------
+    encender_dispositivo():
+        Enciende el dispositivo.
+    apagar_dispositivo():
+        Apaga el dispositivo.
+    bloquear_dispositivo():
+        Bloquea el dispositivo.
+    desbloquear_dispositivo(contrasenia: str):
+        Desbloquea el dispositivo.
+    get_nombre():
+        Retorna el nombre del dispositivo.
+    get_almacenamiento_disponible():
+        Retorna el almacenamiento disponible del dispositivo.
+    lanzar_app(nombre_app: str):
+        Lanza una aplicación del dispositivo, validando si el dispositivo está bloqueado o apagado.
+    menu_navegacion():
+        Menú de navegación del dispositivo
+    """
     central = Central()
 
     def __init__(self, nombre, modelo, numero, sistema_operativo, memoria_ram, almacenamiento, id_celular = uuid.uuid4()):
@@ -23,55 +67,95 @@ class Celular:
         if not bool(re.match(r"^\d+(\.\d+)?\s*[KMGTP]?B?$", almacenamiento)):
             raise ValueError("El campo almacenamiento debe ser un número seguido de un espacio y una unidad de medida válida")
         #Almaceno los parámetros no modificables por Configuración
-        self.id_celular = id_celular #Genera un UUID (Universal Unique Identifier) para el dispositivo
+        self.id_celular = id_celular #Genera un UUID (Universal Unique Identifier) para el celular
         self.modelo = modelo
         self.sistema_operativo = sistema_operativo
         self.memoria_ram = memoria_ram
-        
+
         self.encendido = False
         self.bloqueado = False
-        
+
         self.aplicaciones = {}
         self.descargar_apps_basicas(nombre, tamanio_a_bytes(almacenamiento), numero, self.aplicaciones)
 
     def descargar_apps_basicas(self, nombre, almacenamiento, numero, aplicaciones):
+        """Descarga las aplicaciones básicas del celular
+        Recibe los parámetros necesarios para la creación de las aplicaciones básicas
+        """
         self.aplicaciones["Configuracion"] = ConfigApp(Configuracion(nombre, almacenamiento, Celular.central, numero, aplicaciones))
         self.aplicaciones["Contactos"] = ContactosApp()
         self.aplicaciones["Mensajes"] = MensajesApp(numero, self.aplicaciones["Contactos"], Celular.central)
         self.aplicaciones["Mail"] = MailApp(numero, Celular.central)
         self.aplicaciones["AppStore"] = AppStore(self.aplicaciones, self.aplicaciones["Configuracion"])
         self.aplicaciones["Telefono"] = TelefonoApp(numero, Celular.central, self.aplicaciones["Contactos"])
-        
+
     def encender_dispositivo(self):
+        """Método que enciende el dispositivo
+        
+        Returns:
+            None
+            
+        Raises:
+            ValueError: Si el dispositivo ya se encuentra encendido
+        """
         if self.encendido:
             raise ValueError(f" El dispositivo {self.aplicaciones['Configuracion'].get_nombre()} ya se encuentra encendido ")
-    
+
         self.encendido = True
         if not self.central.esta_registrado(self.aplicaciones["Configuracion"].get_numero()):
             self.central.registrar_dispositivo(self.aplicaciones["Configuracion"].get_numero(), self)
         self.aplicaciones["Configuracion"].set_servicio(True)
-        
+
         print(f"Se ha encencido el dispositivo - {self.aplicaciones['Configuracion'].get_nombre()} -")
-            
+
     def apagar_dispositivo(self):
+        """Método que apaga el dispositivo
+        
+        Returns:
+            None
+            
+        Raises:
+            ValueError: Si el dispositivo ya se encuentra apagado
+        """
         if not self.encendido:
             raise ValueError(f" El dispositivo {self.aplicaciones['Configuracion'].get_nombre()} ya se encuentra apagado ")
-        
+
         self.encendido = False
         self.aplicaciones["Configuracion"].set_servicio(False)
         print(f"Se ha apagado el dispositivo - {self.aplicaciones['Configuracion'].get_nombre()} -")
-            
-    
+
     def bloquear_dispositivo(self):
+        """Método que bloquea el dispositivo
+        
+        Returns:
+            None
+        
+        Raises:
+            ValueError: Si el dispositivo ya se encuentra bloqueado
+            ValueError: Si el dispositivo se encuentra apagado
+        """
         if self.bloqueado:
             raise ValueError(f" El dispositivo {self.aplicaciones['Configuracion'].get_nombre()} ya se encuentra bloqueado ")
-        if not(self.encendido):
+        if not self.encendido:
             raise ValueError(f" El dispositivo {self.aplicaciones['Configuracion'].get_nombre()} se encuentra apagado")
-        
+
         self.bloqueado = True
         print(f"Se ha bloqueado el dispositivo - {self.aplicaciones['Configuracion'].get_nombre()} -")
-    
+
     def desbloquear_dispositivo(self, contrasenia = None):
+        """Método que desbloquea el dispositivo
+        
+        Args:
+            contrasenia (str): Contraseña para desbloquear el dispositivo
+        
+        Returns:
+            None
+        
+        Raises:
+            ValueError: Si el dispositivo ya se encuentra desbloqueado
+            ValueError: Si el dispositivo se encuentra apagado
+            ValueError: Si la contraseña ingresada es incorrecta
+        """
         if self.bloqueado and contrasenia == self.aplicaciones['Configuracion'].get_contrasenia() and self.encendido:
             self.bloqueado = False
             print(f"Se ha desbloqueado el dispositivo - {self.aplicaciones['Configuracion'].get_nombre()} -")
@@ -81,14 +165,16 @@ class Celular:
             raise ValueError(f"El dispositivo {self.aplicaciones['Configuracion'].get_nombre()} ya se encuentra desbloqueado")
         else:
             raise ValueError("La contraseña ingresada es incorrecta")
-    
+
     def get_nombre(self):
+        """Método que retorna el nombre del dispositivo"""
         return self.aplicaciones['Configuracion'].get_nombre()
-    
+
     def get_almacenamiento_disponible(self):
+        """Método que retorna el almacenamiento disponible del dispositivo"""
         return self.aplicaciones['Configuracion'].get_almacenamiento_disponible()
-    
-    def __str__(self) -> str:
+
+    def __str__(self):
         return f"ID: {self.id_celular}\nNombre: {self.aplicaciones['Configuracion'].get_nombre()}\nModelo: {self.modelo}\nSistema operativo: {self.sistema_operativo}\nMemoria RAM: {self.memoria_ram}\nAlmacenamiento: {self.aplicaciones['Configuracion'].get_almacenamiento_disponible()}\n"
 
     # Esta por verse si lo hacemos o no... Por ahora ignorar
@@ -122,6 +208,21 @@ class Celular:
     #     return celulares
 
     def lanzar_app(self,nombre_app):
+        """Método que lanza una aplicación del dispositivo.
+        Verifica si el dispositivo está bloqueado, apagado o si la aplicación no se 
+        encuentra instalada.
+        
+        Args:
+            nombre_app (str): Nombre de la aplicación a lanzar
+            
+        Returns:
+            Aplicacion: Aplicación lanzada
+        
+        Raises:
+            ValueError: Si la aplicación no se encuentra instalada
+            ValueError: Si el dispositivo se encuentra bloqueado
+            ValueError: Si el dispositivo se encuentra apagado
+        """
         if nombre_app not in self.aplicaciones:
             raise ValueError(f"La aplicación {nombre_app} no se encuentra instalada")
         elif self.bloqueado:
@@ -130,8 +231,9 @@ class Celular:
             return self.aplicaciones[nombre_app]
         else:
             raise ValueError("El dispositivo se encuentra apagado")
-        
+
     def menu_navegacion(self):
+        """Menú de navegación del dispositivo"""
         print("Bienvenido al celular")
         salir = False
         while not salir:
@@ -177,7 +279,7 @@ class Celular:
                 os.system('cls')
                 print("Ver/Lanzar aplicaciones")
                 print("Aplicaciones instaladas:")
-                for app in self.aplicaciones.keys():
+                for app in self.aplicaciones:
                     print(f"- {app}")
                 nombre_app = input("Ingrese el nombre de la aplicación que desea lanzar: ")
                 try:
@@ -199,8 +301,7 @@ class Celular:
                 print("Opción no válida, intente nuevamente")
                 input("Presione cualquier tecla para volver al menú del celular...")
                 os.system('cls')
-        
-        
+
 if __name__ =="__main__":
     from Apps.mail import *
     from Apps.mail import CriterioLectura
@@ -220,7 +321,7 @@ if __name__ =="__main__":
     celular1.lanzar_app("Mail").iniciar_sesion("franco.mutz@gmail.com", "Franco123!")
     celular2.lanzar_app("Mail").iniciar_sesion("franco.mutz2@gmail.com", "Franco123!")
     
-    celular1.lanzar_app("Mail").enviar_mail(Mail("Hola", "franco.mutz@gmail.com", "franco.mutz2@gmail.com", "Saludo"))
+    celular1.lanzar_app("Mail").enviar_mail(Mail("Hola", "franco.mutz@gmail.com", "franco.mutz2@gmail.com", "Saludo", fecha=datetime.now()))
     celular2.lanzar_app("Mail").ver_bandeja_entrada(CriterioLectura.NO_LEIDOS_PRIMEROS)
     celular1.lanzar_app("Mensajes").enviar_sms("987654321", "mensaje 0")
     celular2.apagar_dispositivo()
@@ -259,7 +360,7 @@ if __name__ =="__main__":
     # celular1.central.mostrar_dispositivos()
 
     # celular1.aplicaciones["AppStore"].mostrar_apps_disponibles()
-    # print("\n") 
+    # print("\n")
     # print(celular1.aplicaciones["Configuracion"].get_almacenamiento_disponible())
     # celular1.aplicaciones["AppStore"].descargar_app("WhatsApp")
     # print(celular1.aplicaciones["Configuracion"].get_almacenamiento_disponible())
