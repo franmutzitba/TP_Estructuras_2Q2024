@@ -53,8 +53,6 @@ class MensajesApp(Aplicacion):
         Elimina un mensaje de la bandeja de entrada dado su índice.
     validar_indice(indice, len):
         Valida si un índice es un número entero dentro del rango permitido.
-    __str__(self):
-        Devuelve una representación en cadena de la aplicación de mensajería.
     menu_navegacion(self):
         Muestra el menú de navegación de la aplicación de mensajería.
     """
@@ -66,7 +64,8 @@ class MensajesApp(Aplicacion):
         self.mensajes = deque()
 
     def crear_mensaje(self, receptor: str, mensaje: str):
-        """Crea un nuevo mensaje a partir de la clase Mensaje.
+        """
+        Crea un nuevo mensaje a partir de la clase Mensaje.
         
         Args:
             receptor (str): Número de teléfono del receptor.
@@ -78,7 +77,8 @@ class MensajesApp(Aplicacion):
         return Mensaje(self.numero_cel, receptor, mensaje,datetime.now())
 
     def numero_en_contactos(self, numero):
-        """Verifica si un número está en la lista de contactos.
+        """
+        Verifica si un número está en la lista de contactos.
         
         Args:
             numero (str): Número de teléfono a verificar.
@@ -89,7 +89,8 @@ class MensajesApp(Aplicacion):
         return numero in self.contactos
 
     def nombre_en_contactos(self, nombre):
-        """Verifica si un nombre está en la lista de contactos.
+        """
+        Verifica si un nombre está en la lista de contactos.
         
         Args:
             nombre (str): Nombre a verificar.
@@ -100,7 +101,8 @@ class MensajesApp(Aplicacion):
         return nombre in self.contactos.values()
 
     def nombre_contacto(self, numero):
-        """Obtiene el nombre del contacto dado un número de tel
+        """
+        Obtiene el nombre del contacto dado un número de tel
         
         Args:
             numero (str): Número de teléfono del contacto.
@@ -111,7 +113,8 @@ class MensajesApp(Aplicacion):
         return self.contactos[numero]
 
     def numeros_de_nombre(self, nombre):
-        """Obtiene una lista de números asociados a un nombre de contacto.
+        """
+        Obtiene una lista de números asociados a un nombre de contacto.
         
         Args:
             nombre (str): Nombre del contacto.
@@ -145,7 +148,8 @@ class MensajesApp(Aplicacion):
             print(f"Mensaje enviado correctamente al numero {receptor}")
 
     def recibir_sms(self, mensaje: Mensaje):
-        """Recibe un mensaje y lo agrega a la bandeja de entrada si no está sincronizado.
+        """
+        Recibe un mensaje y lo agrega a la bandeja de entrada si no está sincronizado.
         
         Args:
             mensaje (Mensaje): Objeto de la clase Mensaje.
@@ -257,9 +261,6 @@ class MensajesApp(Aplicacion):
         """Valida si un índice es un número entero dentro del rango permitido."""
         return  indice.isdigit() and int(indice) >= 1 and (not int(indice) > largo)
 
-    def __str__(self):
-        return f"Aplicacion Mensajeria del numero: {self.numero_cel}"
-
     def menu_navegacion(self):
         os.system('cls')
         print(f"\nBienvenido a la aplicacion de Mensajes SMS del numero {self.numero_cel}")
@@ -361,3 +362,6 @@ class MensajesApp(Aplicacion):
                 print("Opción inválida, intente nuevamente")
                 input("Presione cualquier tecla para volver al menu de Mensajes...")
                 os.system('cls')
+
+    def __str__(self):
+        return f"Aplicacion Mensajeria del numero: {self.numero_cel}"

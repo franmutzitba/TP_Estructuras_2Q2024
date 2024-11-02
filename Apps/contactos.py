@@ -6,7 +6,8 @@ import os
 from Apps.aplicacion import Aplicacion
 
 class ContactosApp(Aplicacion):
-    """ Clase que representa la aplicación de Contactos.
+    """
+    Clase que representa la aplicación de Contactos.
     Hereda de la clase Aplicacion.
     
     Atributos:
@@ -28,19 +29,19 @@ class ContactosApp(Aplicacion):
         Elimina un contacto de la agenda.
     menu_navegacion(): 
         Muestra el menú de navegación de la aplicación de Contactos.
-    __str__(): 
-        Devuelve una representación en cadena de la agenda de contactos.
     """
 
     def __init__(self):
-        """Inicializa la aplicación de Contactos con un nombre, tamaño y esencialidad.
+        """
+        Inicializa la aplicación de Contactos con un nombre, tamaño y esencialidad.
         También inicializa una agenda vacía.
         """
         super().__init__(nombre="Contactos", tamanio="800 MB", esencial=True)
         self.agenda = {}
 
     def get_contactos(self):
-        """Devuelve la agenda de contactos.
+        """
+        Devuelve la agenda de contactos.
 
         Returns:
             dict: La agenda de contactos.
@@ -48,7 +49,8 @@ class ContactosApp(Aplicacion):
         return self.agenda
 
     def agregar_contacto(self, numero, nombre):
-        """Agrega un contacto a la agenda.
+        """
+        Agrega un contacto a la agenda.
 
         Args:
             numero (str): El número de teléfono del contacto.
@@ -61,7 +63,8 @@ class ContactosApp(Aplicacion):
         self.agenda[numero] = nombre
 
     def eliminar_contacto(self, numero):
-        """Elimina un contacto de la agenda.
+        """
+        Elimina un contacto de la agenda.
 
         Args:
             numero (str): El número de teléfono del contacto a eliminar.
@@ -72,7 +75,8 @@ class ContactosApp(Aplicacion):
         print(f"Contacto con número {numero} eliminado con éxito")
 
     def menu_navegacion(self):
-        """Muestra el menú de navegación de la aplicación de Contactos.
+        """
+        Muestra el menú de navegación de la aplicación de Contactos.
         Permite al usuario agregar, ver y eliminar contactos, o salir de la aplicación.
         """
 
@@ -149,7 +153,8 @@ class ContactosApp(Aplicacion):
                 os.system('cls')
 
     def __str__(self):
-        """Devuelve una representación en cadena de la agenda de contactos.
+        """
+        Devuelve una representación en cadena de la agenda de contactos.
 
         Returns:
             str: La representación en cadena de la agenda de contactos.

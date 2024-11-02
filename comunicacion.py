@@ -70,8 +70,6 @@ class Llamada(Comunicacion):
         Retorna si la llamada fue perdida o no.
     set_perdida(self, perdida):
         Establece si la llamada fue perdida o no.
-    __str__(self):
-        Retorna una representación en cadena de la llamada.
     """
 
     def __init__(self, emisor, receptor, duracion, fecha):
@@ -133,8 +131,6 @@ class Mensaje(Comunicacion):
         Devuelve el contenido del mensaje.
     get_fecha(self):
         Devuelve la fecha en formato datetime.
-    __str__(self):
-        Devuelve una representación en cadena del mensaje.
     """
 
     def __init__(self, emisor, receptor, mensaje, fecha: datetime):

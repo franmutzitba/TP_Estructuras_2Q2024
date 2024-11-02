@@ -7,7 +7,8 @@ import os
 from funciones_utiles import tamanio_a_bytes
 
 class Aplicacion:
-    """Clase padre de todas las aplicaciones del celular. Agrupa todos los atributos y métodos 
+    """
+    Clase padre de todas las aplicaciones del celular. Agrupa todos los atributos y métodos 
     comunes a las aplicaciones.El propósito principal por el cual fue creada esta clase fue 
     para poder distinguir entre apps esenciales y no esenciales.
     
@@ -28,8 +29,6 @@ class Aplicacion:
         Devuelve True si la aplicación es esencial, False en caso contrario.
     menu_navegacion()
         Método que simula el menú de navegación de la aplicación.
-    __str__()
-        Devuelve una representación en cadena de la aplicación.
     """
     def __init__(self, nombre, tamanio, esencial = False):
         """

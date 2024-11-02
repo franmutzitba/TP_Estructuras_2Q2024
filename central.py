@@ -63,8 +63,6 @@ class Central:
         Carga los mensajes desde un archivo.
     exportar_mensajes():
         Exporta los mensajes a un archivo.
-    __str__() -> str:
-        Retorna una representación en cadena de la central.
     """
 
     def __init__(self):
@@ -334,5 +332,5 @@ class Central:
         """Exporta los mensajes a un archivo."""
         self.manejador_sms.exportar_mensajes(self.registro_mensajes)
 
-    def __str__(self) -> str:
+    def __str__(self):
         return f"Registro de llamdas: {self.registrar_llamada}\nRegistro de dispositivos: {self.registro_dispositivos}\n Registro de mensajes: {self.registro_mensajes}"

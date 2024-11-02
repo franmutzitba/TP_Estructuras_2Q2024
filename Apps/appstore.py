@@ -41,8 +41,6 @@ class AppStore(Aplicacion):
         Consulta el tamaño de una aplicación disponible en la tienda.
     aplicaciones_disponibles(self):
         Devuelve una lista de las aplicaciones disponibles en la tienda.
-    __str__(self):
-        Devuelve una representación en cadena de la instancia de AppStore.
     """
     manejadorCSV = ManejadorCSV("appstore.csv")
 
@@ -58,7 +56,8 @@ class AppStore(Aplicacion):
         self.configuracion = configuracion
 
     def mostrar_apps_disponibles(self):
-        """Muestra las aplicaciones disponibles en la tienda, indicando si ya están 
+        """
+        Muestra las aplicaciones disponibles en la tienda, indicando si ya están 
         instaladas en el celular.
         
         Returns:
@@ -75,7 +74,8 @@ class AppStore(Aplicacion):
                 print(f"Nombre: {app[0]} - Tamaño: {app[1]} - INSTALADA")
 
     def descargar_app(self, nombre):
-        """Descarga una aplicación de la tienda al celular, si hay suficiente espacio
+        """
+        Descarga una aplicación de la tienda al celular, si hay suficiente espacio
         y no está ya instalada. Para descargarla se agrega al diccionario de las aplicaciones 
         del celular y se resta el espacio de almacenamiento disponible.
         
@@ -111,7 +111,8 @@ class AppStore(Aplicacion):
             raise ValueError(f"La aplicación {nombre} no se encuentra en la AppStore")
 
     def desinstalar_app(self, nombre):
-        """Desinstala una aplicación del celular, si no es esencial y está instalada. 
+        """
+        Desinstala una aplicación del celular, si no es esencial y está instalada. 
         Para desinstalarla la elimina del diccionario de aplicaciones del celular y 
         suma el espacio de almacenamiento disponible.
     
@@ -135,7 +136,8 @@ class AppStore(Aplicacion):
         print(f"La aplicación {nombre} se ha desinstalado correctamente")
 
     def agregar_descarga(self, nombre):
-        """Incrementa el contador de descargas de una aplicación específica y actualiza el CSV.
+        """
+        Incrementa el contador de descargas de una aplicación específica y actualiza el CSV.
 
         Args:
             nombre (str): El nombre de la aplicación cuya descarga se va a incrementar.
@@ -151,7 +153,8 @@ class AppStore(Aplicacion):
         AppStore.manejadorCSV.exportar(aplicaciones_disponibles)
 
     def consultar_tamanio(self, nombre):
-        """Consulta el tamaño de una aplicación específica de la tienda por su nombre.
+        """
+        Consulta el tamaño de una aplicación específica de la tienda por su nombre.
 
         Args:
             nombre (str): El nombre de la aplicación cuyo tamaño se desea consultar.
@@ -165,7 +168,8 @@ class AppStore(Aplicacion):
                 return tamanio_a_bytes(app[1])
 
     def aplicaciones_disponibles(self):
-        """Obtiene la lista de aplicaciones disponibles en la appstore desde el archivo CSV.
+        """
+        Obtiene la lista de aplicaciones disponibles en la appstore desde el archivo CSV.
         
         Returns:
             list: Una lista de aplicaciones disponibles. Si el archivo no se encuentra, 
@@ -177,7 +181,8 @@ class AppStore(Aplicacion):
             return []
 
     def listar_apps_instaladas(self):
-        """Imprime las aplicaciones instaladas en el celular.
+        """
+        Imprime las aplicaciones instaladas en el celular.
         
         Returns:
             None
@@ -186,7 +191,8 @@ class AppStore(Aplicacion):
             print(app)
 
     def buscar_app(self, nombre):
-        """Lista todas las aplicaciones disponibles en la tienda que contienen el nombre ingresado.
+        """
+        Lista todas las aplicaciones disponibles en la tienda que contienen el nombre ingresado.
         
         Args:
             nombre (str): Nombre de la aplicación a buscar.
@@ -206,7 +212,8 @@ class AppStore(Aplicacion):
             raise ValueError(f"No se encontraron aplicaciones con el nombre {nombre}")
 
     def menu_navegacion(self):
-        """Menú de navegación de la AppStore.
+        """
+        Menú de navegación de la AppStore.
         
         Returns:
             None

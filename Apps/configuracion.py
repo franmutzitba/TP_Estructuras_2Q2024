@@ -15,7 +15,8 @@ class ModoRed(Enum):
     LTE = 2
 
 class Configuracion:
-    """Clase que contiene todos los atributos de la configuración del celular. 
+    """
+    Clase que contiene todos los atributos de la configuración del celular. 
     Son modificables a través de la clase ConfigApp.
     
     Atributos:
@@ -52,7 +53,8 @@ class Configuracion:
         return f"Nombre: {self.nombre}, Almacenamiento disponible: {self.almacenamiento_disponible} MB, Número: {self.numero}, Modo avión: {self.modo_avion}, Modo red: {self.modo_red}"
 
 class ConfigApp(Aplicacion):
-    """Esta clase representa la aplicación de configuración de cada celular que 
+    """
+    Esta clase representa la aplicación de configuración de cada celular que 
     permite gestionar diversas configuraciones del dispositivo.
     
     Atributos:
@@ -93,8 +95,6 @@ class ConfigApp(Aplicacion):
         Valida si la contraseña del celular cumple con los requisitos de seguridad.
     validar_nombre(nombre: str):
         Valida si el nombre del celular cumple con los requisitos.
-    __str__():
-        Retorna una representación en cadena de la configuración actual del dispositivo.
     """
 
     def __init__(self, configuracion: Configuracion):
@@ -102,7 +102,8 @@ class ConfigApp(Aplicacion):
         self.configuracion = configuracion
 
     def configurar_contrasenia(self, contrasenia_nueva, contrasenia_vieja = None):
-        """Configura una nueva contraseña si la contraseña vieja es correcta o si 
+        """
+        Configura una nueva contraseña si la contraseña vieja es correcta o si 
         no hay contraseña establecida. Este método permite configurar una nueva 
         contraseña para el usuario. Si se proporciona una contraseña actual, se 
         verifica que sea correcta antes de establecer la nueva contraseña. 
@@ -130,7 +131,8 @@ class ConfigApp(Aplicacion):
             raise ValueError("Contraseña actual incorrecta")
 
     def configurar_nombre(self, nombre):
-        """Configura el nombre en la configuración si cumple con los requisitos.
+        """
+        Configura el nombre en la configuración si cumple con los requisitos.
         
         Args:
             nombre (str): El nombre a configurar.
@@ -157,7 +159,8 @@ class ConfigApp(Aplicacion):
     ##setters
     #############################
     def set_servicio(self,valor:bool):
-        """Configura el estado del servicio de red del dispositivo.
+        """
+        Configura el estado del servicio de red del dispositivo.
         Este método ajusta el modo de red del dispositivo entre SOLO_VOZ_Y_SMS y SIN_RED
         basado en el valor proporcionado. Si el servicio ya está en el estado deseado,
         se lanzará una excepción.
@@ -212,7 +215,8 @@ class ConfigApp(Aplicacion):
         print(f"Los datos se han {'encendido' if valor is True else 'apagado'}")
 
     def set_modo_avion(self, valor:bool):
-        """Activa o desactiva el modo avión en la configuración.
+        """
+        Activa o desactiva el modo avión en la configuración.
         
         Args:
             valor (bool): True para activar el modo avión, False para desactivarlo.
@@ -241,7 +245,8 @@ class ConfigApp(Aplicacion):
         print(f"El modo avion se ha {'encendido' if valor is True else 'apagado'}")
 
     def set_contrasenia(self, contrasenia):
-        """Establece una nueva contraseña para el dispositivo.
+        """
+        Establece una nueva contraseña para el dispositivo.
         
         Args:
             contrasenia (str): La nueva contraseña a establecer.
@@ -254,7 +259,8 @@ class ConfigApp(Aplicacion):
         print("Contraseña actualizada correctamente")
 
     def set_almacenamiento_disponible(self, almacenamiento):
-        """Establece el almacenamiento disponible en el dispositivo.
+        """
+        Establece el almacenamiento disponible en el dispositivo.
         
         Args:
             almacenamiento (int): El almacenamiento disponible en Bytes.

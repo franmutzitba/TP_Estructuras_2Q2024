@@ -3,7 +3,8 @@ Módulo con funciones útiles para el manejo de archivos y directorios.
 """
 
 def tamanio_a_bytes(tamanio_formateado):
-    """Convierte una cadena de tamaño formateado (ej. "117.74 MB") a su valor en bytes.
+    """
+    Convierte una cadena de tamaño formateado (ej. "117.74 MB") a su valor en bytes.
 
     Args:
         tamanio_formateado (str): Tamaño en formato de cadena con sufijo (ej. "1.5 GB").

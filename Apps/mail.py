@@ -16,7 +16,8 @@ class CriterioLectura(Enum):
     POR_FECHA = 2
 
 class Mail:
-    """Clase que instancia un mail con los atributos cuerpo, email_emisor, email_receptor, 
+    """
+    Clase que instancia un mail con los atributos cuerpo, email_emisor, email_receptor, 
     encabezado y leido
     
     Atributos:
@@ -46,7 +47,8 @@ class Mail:
         return f"Fecha de emision:{self.fecha}\nEmisor: {self.email_emisor}\nReceptor: {self.email_receptor}\nEncabezado: {self.encabezado}\nLeído: {self.leido}\nCuerpo:\n{self.cuerpo}"
 
 class MailApp(Aplicacion): #Pertenece a cada telefono
-    """Clase que representa la aplicación de Mail en un celular.
+    """
+    Clase que representa la aplicación de Mail en un celular.
     
     Atributos:
     ----------
@@ -87,7 +89,8 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
         self.cuenta_iniciada = False
 
     def ver_bandeja_entrada(self, criterio):
-        """Muestra los correos de la bandeja de entrada según el criterio especificado.
+        """
+        Muestra los correos de la bandeja de entrada según el criterio especificado.
         
         Args:
             criterio (CriterioLectura): El criterio de lectura de los correos.
@@ -115,7 +118,8 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
             raise ValueError("No se pudo ver la bandeja de entrada. Inicie sesión para continuar")
 
     def ver_bandeja_enviados(self):
-        """Muestra los correos electrónicos en la bandeja de enviados de la cuenta de correo actual.
+        """
+        Muestra los correos electrónicos en la bandeja de enviados de la cuenta de correo actual.
         
         Returns:
             None
@@ -135,7 +139,8 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
             print(pila.pop())
 
     def enviar_mail(self, mensaje: Mail):
-        """Envía un correo electrónico si el emisor tiene cobertura LTE y la cuenta está iniciada.
+        """
+        Envía un correo electrónico si el emisor tiene cobertura LTE y la cuenta está iniciada.
 
         Args:
             mensaje (Mail): El mensaje de correo electrónico a enviar.
@@ -160,7 +165,8 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
             raise ValueError("No se pudo enviar el mensaje. No tiene cobertura LTE")
 
     def iniciar_sesion(self, mail, contrasenia):
-        """Inicia sesión en la cuenta de correo si las credenciales son correctas y la cobertura 
+        """
+        Inicia sesión en la cuenta de correo si las credenciales son correctas y la cobertura 
         LTE está disponible.
         
         Args:
@@ -184,7 +190,8 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
             print("No se pudo iniciar sesión. Verifique los datos ingresados")
 
     def cerrar_sesion(self):
-        """Cierra la sesión de la cuenta de correo actual.
+        """
+        Cierra la sesión de la cuenta de correo actual.
         Si la cobertura LTE no está disponible, se lanza una excepción.
 
         Returns:
@@ -200,7 +207,8 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
         print("Sesión cerrada con éxito")
 
     def crear_cuenta(self, mail, contrasenia):
-        """Crea una cuenta de correo electrónico si hay cobertura disponible.
+        """
+        Crea una cuenta de correo electrónico si hay cobertura disponible.
 
         Args:
             mail (str): La dirección de correo electrónico para la nueva cuenta.
@@ -328,8 +336,6 @@ class CuentaMail:
         Valida si un correo electrónico es válido y único.
     validar_contrasenia(contrasenia):
         Valida si una contraseña cumple con los requisitos de seguridad.
-    __str__(self):
-        Retorna una representación en cadena de la cuenta de correo.
     """
     cuentas = {}
 

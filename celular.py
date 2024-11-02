@@ -90,7 +90,8 @@ class Celular:
         self.aplicaciones["Telefono"] = TelefonoApp(numero, Celular.central, self.aplicaciones["Contactos"])
 
     def encender_dispositivo(self):
-        """Método que enciende el dispositivo
+        """
+        Método que enciende el dispositivo
         
         Returns:
             None
@@ -109,7 +110,8 @@ class Celular:
         print(f"Se ha encencido el dispositivo - {self.aplicaciones['Configuracion'].get_nombre()} -")
 
     def apagar_dispositivo(self):
-        """Método que apaga el dispositivo
+        """
+        Método que apaga el dispositivo
         
         Returns:
             None
@@ -125,7 +127,8 @@ class Celular:
         print(f"Se ha apagado el dispositivo - {self.aplicaciones['Configuracion'].get_nombre()} -")
 
     def bloquear_dispositivo(self):
-        """Método que bloquea el dispositivo
+        """
+        Método que bloquea el dispositivo
         
         Returns:
             None
@@ -143,7 +146,8 @@ class Celular:
         print(f"Se ha bloqueado el dispositivo - {self.aplicaciones['Configuracion'].get_nombre()} -")
 
     def desbloquear_dispositivo(self, contrasenia = None):
-        """Método que desbloquea el dispositivo
+        """
+        Método que desbloquea el dispositivo
         
         Args:
             contrasenia (str): Contraseña para desbloquear el dispositivo
@@ -208,7 +212,8 @@ class Celular:
     #     return celulares
 
     def lanzar_app(self,nombre_app):
-        """Método que lanza una aplicación del dispositivo.
+        """
+        Método que lanza una aplicación del dispositivo.
         Verifica si el dispositivo está bloqueado, apagado o si la aplicación no se 
         encuentra instalada.
         

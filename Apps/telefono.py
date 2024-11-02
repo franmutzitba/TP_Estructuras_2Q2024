@@ -44,7 +44,8 @@ class TelefonoApp(Aplicacion):
     """
 
     def __init__(self, numero, central, contactos):
-        """Inicializa la clase TelefonoApp con un número, una central y una instancia 
+        """
+        Inicializa la clase TelefonoApp con un número, una central y una instancia 
         de ContactosApp.
 
         Args:
@@ -58,7 +59,8 @@ class TelefonoApp(Aplicacion):
         self.central = central
 
     def numero_en_contactos(self, numero):
-        """Verifica si un número está en la lista de contactos.
+        """
+        Verifica si un número está en la lista de contactos.
 
         Args:
             numero (str): El número de teléfono a verificar.
@@ -69,7 +71,8 @@ class TelefonoApp(Aplicacion):
         return numero in self.contactos.keys()
 
     def nombre_contacto(self, numero):
-        """Obtiene el nombre del contacto asociado a un número de teléfono.
+        """
+        Obtiene el nombre del contacto asociado a un número de teléfono.
 
         Args:
             numero (str): El número de teléfono del contacto.
@@ -80,7 +83,8 @@ class TelefonoApp(Aplicacion):
         return self.contactos.get(numero)
 
     def iniciar_llamada_contacto(self, item, duracion):
-        """Inicia una llamada a un contacto por su índice en la lista de contactos.
+        """
+        Inicia una llamada a un contacto por su índice en la lista de contactos.
 
         Args:
             item (int): El índice del contacto en la lista de contactos.
@@ -105,7 +109,8 @@ class TelefonoApp(Aplicacion):
         self.iniciar_llamada(numero_receptor, duracion)
 
     def iniciar_llamada(self, numero_receptor, duracion=5):
-        """Inicia una llamada a un número de receptor con una duración específica.
+        """
+        Inicia una llamada a un número de receptor con una duración específica.
 
         Args:
             numero_receptor (str): El número del receptor.
@@ -133,8 +138,7 @@ class TelefonoApp(Aplicacion):
         self.central.manejar_llamada(self.numero, numero_receptor, hora_inicio, duracion)
 
     def mostrar_historial_llamadas(self):
-        """Muestra el historial de llamadas.
-        """
+        """Muestra el historial de llamadas."""
         #cuando se termine lo comentamos bien
         historial_personal = []
         for historial_receptor in self.central.registro_llamadas.values():                 #guarda todas las llamadas en la lista
