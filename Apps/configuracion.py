@@ -7,6 +7,7 @@ contraseña, el modo de red, el modo avión, entre otros.
 import os
 from enum import Enum
 from Apps.aplicacion import Aplicacion
+from funciones_utiles import tamanio_a_bytes
 
 class ModoRed(Enum):
     """Enum que representa los modos de red disponibles en el celular."""
@@ -40,7 +41,7 @@ class Configuracion:
     """
     def __init__(self, nombre, almacenamiento, central, numero, aplicaciones_instaladas, modo_red = ModoRed.LTE, modo_avion=False, contrasenia = None):
         self.nombre = nombre
-        self.almacenamiento_disponible = almacenamiento
+        self.almacenamiento_disponible = almacenamiento - tamanio_a_bytes("1.5GB") #se resta el tamaño de las aplicaciones básicas
         self.central = central
         self.numero = numero
         self.aplicaciones_instaladas = aplicaciones_instaladas

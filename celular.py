@@ -66,6 +66,10 @@ class Celular:
             raise ValueError("Los campos no pueden estar vacíos")
         if not bool(re.match(r"^\d+(\.\d+)?\s*[KMGTP]?B?$", almacenamiento)):
             raise ValueError("El campo almacenamiento debe ser un número seguido de un espacio y una unidad de medida válida")
+        #Se fija que haya espacio suficiente para las aplicaciones básicas
+        if tamanio_a_bytes(almacenamiento) < tamanio_a_bytes("1.5 GB"):
+            raise ValueError("El almacenamiento no es suficiente para las aplicaciones básicas")
+        
         #Almaceno los parámetros no modificables por Configuración
         self.id_celular = id_celular #Genera un UUID (Universal Unique Identifier) para el celular
         self.modelo = modelo
