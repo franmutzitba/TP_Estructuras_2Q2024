@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from collections import deque
 from comunicacion import Llamada, Mensaje
 from Apps.configuracion import ModoRed
-from manejadorCSV import ManejadorSMS
+#from manejadorCSV import ManejadorSMS
 #La primera vez que se activa el servicio del celular se da de alta en la central
 #Luego la central chequea que tenga servicio o LTE segun corresponda para realizar la comunicacion
 #
@@ -70,7 +70,7 @@ class Central:
         self.registro_dispositivos = {} #diccionario que contiene el numero en la key y el objeto celular en el valor
         self.registro_mensajes =  {} #Colas de mensajes
         self.ultima_llamada_por_persona = {}  #guarda al numero como clave y como valor a la llamada
-        self.manejador_sms = ManejadorSMS("archivo_sms.csv")
+        #self.manejador_sms = ManejadorSMS("archivo_sms.csv")
 
     def registrar_dispositivo(self, numero, celular):
         """
@@ -259,16 +259,15 @@ class Central:
             raise ValueError(f"No se puede realizar la llamada por el celular {emisor} al no estar activo el servicio")
         if not self.esta_activo(receptor):
             raise ValueError(f"No se puede realizar la llamada al celular {receptor} al no estar activo el servicio")
-        if self.esta_ocupado(receptor, fecha_inicio):
-            raise ValueError(f"El celular {emisor} se encuentra ocupado")
 
         llamada= Llamada(emisor, receptor, duracion, fecha_inicio)
         print(f"{emisor} llamando a {receptor}")
         if not self.esta_ocupado(receptor, fecha_inicio):
             self.registrar_llamada(llamada)
-
             self.ultima_llamada_por_persona[emisor] = llamada
             self.ultima_llamada_por_persona[receptor] = llamada
+        elif self.esta_ocupado(emisor, fecha_inicio):
+            print('Usted esta ocupado')
         else:
             print(f'El dispositivo de numero {receptor} esta ocupado')
             llamada.set_perdida(True)
@@ -324,13 +323,13 @@ class Central:
         for dispositivo in self.registro_dispositivos:
             print(dispositivo)
 
-    def cargar_mensajes(self):
-        """Carga los mensajes desde un archivo."""
-        self.manejador_sms.cargar_mensajes(self)
+    # def cargar_mensajes(self):
+    #     """Carga los mensajes desde un archivo."""
+    #     self.manejador_sms.cargar_mensajes(self)
 
-    def exportar_mensajes(self):
-        """Exporta los mensajes a un archivo."""
-        self.manejador_sms.exportar_mensajes(self.registro_mensajes)
+    # def exportar_mensajes(self):
+    #     """Exporta los mensajes a un archivo."""
+    #     self.manejador_sms.exportar_mensajes(self.registro_mensajes)
 
     def __str__(self):
         return f"Registro de llamdas: {self.registrar_llamada}\nRegistro de dispositivos: {self.registro_dispositivos}\n Registro de mensajes: {self.registro_mensajes}"

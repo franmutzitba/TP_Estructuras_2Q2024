@@ -6,7 +6,6 @@ import os
 import uuid
 import re
 from Apps.configuracion import Configuracion, ConfigApp
-from Apps.appstore import AppStore
 from Apps.telefono import TelefonoApp
 from Apps.mensajeriaSMS import MensajesApp
 from Apps.mail import MailApp
@@ -86,6 +85,8 @@ class Celular:
         """Descarga las aplicaciones básicas del celular
         Recibe los parámetros necesarios para la creación de las aplicaciones básicas
         """
+        from Apps.appstore import AppStore
+
         self.aplicaciones["Configuracion"] = ConfigApp(Configuracion(nombre, almacenamiento, Celular.central, numero, aplicaciones))
         self.aplicaciones["Contactos"] = ContactosApp()
         self.aplicaciones["Mensajes"] = MensajesApp(numero, self.aplicaciones["Contactos"], Celular.central)
@@ -182,39 +183,6 @@ class Celular:
         """Método que retorna el almacenamiento disponible del dispositivo"""
         return self.aplicaciones['Configuracion'].get_almacenamiento_disponible()
 
-    def __str__(self):
-        return f"ID: {self.id_celular}\nNombre: {self.aplicaciones['Configuracion'].get_nombre()}\nModelo: {self.modelo}\nSistema operativo: {self.sistema_operativo}\nMemoria RAM: {self.memoria_ram}\nAlmacenamiento: {self.aplicaciones['Configuracion'].get_almacenamiento_disponible()}\n"
-
-    # Esta por verse si lo hacemos o no... Por ahora ignorar
-    # def guardar_datos(self, filename): #ESTE METODO Y EL DE ABAJO HAY Q PASARLO AL EXPORTADOR Y HAY Q AGREGAR UNA VARIABLE CON TODOS LOS CELULARES
-    #     with open(filename, mode='w', newline='') as file:
-    #         writer = csv.writer(file)
-    #         writer.writerow(['id', 'nombre', 'modelo', 'numero', 'sistema_operativo', 'memoria_ram', 'almacenamiento', 'aplicaciones'])
-    #         aplicaciones = ','.join(self.aplicaciones.keys())
-    #         writer.writerow([self.id, self.aplicaciones['Configuracion'].get_nombre(), self.modelo, self.numero, self.sistema_operativo, self.memoria_ram, self.almacenamiento, aplicaciones])
-
-    # @staticmethod
-    # def cargar_datos(filename):
-    #     celulares = []
-    #     with open(filename, mode='r') as file:
-    #         reader = csv.DictReader(file)
-    #         for row in reader:
-    #             celular = Celular(row['nombre'], row['modelo'], row['numero'], row['sistema_operativo'], row['memoria_ram'], row['almacenamiento'])
-    #             aplicaciones = row['aplicaciones'].split(',')
-    #             for app in aplicaciones:
-    #                 if app == "Configuracion":
-    #                     celular.aplicaciones[app] = ConfigApp(Configuracion(aplicaciones['Configuracion'].get_nombre(), celular.almacenamiento, Celular.central, celular.numero))
-    #                 elif app == "Telefono":
-    #                     celular.aplicaciones[app] = TelefonoApp(celular.numero, Celular.central)
-    #                 elif app == "Mensajes":
-    #                     celular.aplicaciones[app] = MensajesApp(celular.numero, Celular.central)
-    #                 elif app == "AppStore":
-    #                     celular.aplicaciones[app] = AppStore(celular.aplicaciones, celular.aplicaciones["Configuracion"])
-    #                 else:
-    #                     celular.aplicaciones["AppStore"].descargar_app(app)
-    #             celulares.append(celular)
-    #     return celulares
-
     def lanzar_app(self,nombre_app):
         """
         Método que lanza una aplicación del dispositivo.
@@ -310,6 +278,10 @@ class Celular:
                 print("Opción no válida, intente nuevamente")
                 input("Presione cualquier tecla para volver al menú del celular...")
                 os.system('cls')
+
+    def __str__(self):
+        return f"ID: {self.id_celular}\nNombre: {self.aplicaciones['Configuracion'].get_nombre()}\nModelo: {self.modelo}\nSistema operativo: {self.sistema_operativo}\nMemoria RAM: {self.memoria_ram}\nAlmacenamiento: {self.aplicaciones['Configuracion'].get_almacenamiento_disponible()}\n"
+
 
 # if __name__ =="__main__":
 #     from Apps.mail import *

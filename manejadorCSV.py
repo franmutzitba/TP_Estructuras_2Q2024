@@ -7,7 +7,7 @@ import csv
 from collections import deque
 from datetime import datetime
 import numpy as np
-from Apps.mail import Mail #nose q esta pasando
+from Apps.mail import CuentaMail, Mail
 from comunicacion import Mensaje
 from celular import Celular
 
@@ -76,22 +76,30 @@ class ManejadorCSV:
             return matriz
         except FileNotFoundError:
             print("Archivo no encontrado")
+        except IOError:
+            print("Error al leer archivo")
 
 class ManejadorSMS(ManejadorCSV):
     """
     Clase para manejar archivos CSV específicos de mensajes SMS.
     Hereda de ManejadorCSV.
+    Atributos:
+    nombre_archivo (str): Nombre del archivo CSV.
+    central (Central): Central telefónica a la que se le cargarán los mensajes
     """
-    #El init no hace falta pq hereda de la clase padre
+    def __init__(self, nombre_archivo, central):
+        """
+        Inicializa la clase ManejadorSMS con el nombre del archivo y la central.
+        
+        """
+        super().__init__(nombre_archivo)
+        self.central = central
 
-    def exportar_mensajes(self, mensajes: dict):
+    def exportar_mensajes(self):
         """
         Exporta los mensajes a un archivo CSV.
-
-        Args:
-            mensajes (dict): Un diccionario con los mensajes a exportar.
         """
-        colas = mensajes.values()
+        colas = self.central.registro_mensajes.values()
         lista_a_exportar = []
         titulo = ["Emisor", "Receptor", "Texto", "Fecha", "Sincronizado"]
         lista_a_exportar.append(titulo)
@@ -102,18 +110,15 @@ class ManejadorSMS(ManejadorCSV):
                 lista_a_exportar.append([mensaje.get_emisor(), mensaje.get_receptor(), mensaje.get_mensaje(), mensaje.get_fecha(), mensaje.get_sincronizado()])
         self.exportar(lista_a_exportar)
 
-    def cargar_mensajes(self, central):
-        """
+    def cargar_mensajes(self):
+        """"
         Carga los mensajes desde un archivo CSV y los registra en la central.
-
-        Args:
-            central (Central): La instancia de la central telefónica.
         """
         lista_mensajes = deque(self.leer_archivo(True))  # cola
         while lista_mensajes:
             lista = lista_mensajes.popleft()
             mensaje = Mensaje(lista[0], lista[1], lista[2], datetime.fromisoformat(lista[3]))
-            central.registrar_mensaje_nuevo(mensaje)
+            self.central.registrar_mensaje_nuevo(mensaje)
 
 class ManejadorLlamadas(ManejadorCSV):
     """
@@ -205,7 +210,7 @@ class ManejadorDispositivos(ManejadorCSV):
         """
         Exporta los dispositivos a un archivo CSV.
         """
-        self.exportar(['Nombre', 'Numero', 'Tamanio', 'Esencial'])
+        self.exportar(['Nombre', 'Modelo', 'Numero', 'Sistema Operativo', 'Memoria RAM', 'Almacenamiento', 'ID', 'Encendido', 'Bloqueado','Contraseña', 'Aplicaciones'])
         for celular in self.central.registro_dispositivos:
             lista = [
                 celular.nombre,
@@ -213,12 +218,14 @@ class ManejadorDispositivos(ManejadorCSV):
                 celular.aplicaciones["Configuracion"].numero,
                 celular.sistema_operativo,
                 celular.memoria_ram,
-                celular.almacenamiento,
+                celular.aplicaciones["Configuracion"].almacenamiento,
                 celular.id_celular,
                 celular.encendido,
-                celular.bloqueado
+                celular.bloqueado,
+                celular.aplicaciones["Configuracion"].contrasenia
             ]
-            lista.extend(celular.aplicaciones.keys())
+            #Instala las aplicaciones que no se instalan solas
+            lista.extend(nombre for nombre, app in celular.aplicaciones.items() if app.es_esencial() is False)
             self.exportar(lista, "a")
 
     def cargar_dispositivos(self):
@@ -228,18 +235,28 @@ class ManejadorDispositivos(ManejadorCSV):
         lista_dispositivos = self.leer_archivo(True)
         for dispositivo in lista_dispositivos:
             celular = Celular(
-                dispositivo[0],
-                dispositivo[1],
-                dispositivo[2],
-                dispositivo[3],
-                dispositivo[4],
-                dispositivo[5],
-                dispositivo[6]
+                nombre = dispositivo[0],
+                modelo = dispositivo[1],
+                numero = dispositivo[2],
+                sistema_operativo = dispositivo[3],
+                memoria_ram = dispositivo[4],
+                almacenamiento = dispositivo[5],
+                id_celular = dispositivo[6]
             )
-            celular.encender_dispositivo() if dispositivo[7] == "True" else celular.apagar_dispositivo()
-            celular.desbloquear_dispositivo() if dispositivo[8] == "True" else celular.bloquear_dispositivo()
-            for aplicacion in dispositivo[14:]:  # nose si es 14 o 15 para q no instale las q se instalan solas
-                celular.instalar_aplicacion(aplicacion)
+
+            if dispositivo[7] == "True":
+                celular.encender_dispositivo()
+            else:
+                celular.apagar_dispositivo()
+
+            if dispositivo[8] == "True":
+                celular.desbloquear_dispositivo()
+            else:
+                celular.bloquear_dispositivo()
+
+            celular.aplicaciones["Configuracion"].configurar_contrasenia(contrasenia = dispositivo[9])
+            for aplicacion in dispositivo[10:]:
+                celular.aplicaciones["AppStore"].descargar_app(aplicacion)
 
 class ManejadorMails(ManejadorCSV):
     """
@@ -289,4 +306,25 @@ class ManejadorMails(ManejadorCSV):
                 self.cuenta_mail.recibir_mail(mail)
             else:
                 self.cuenta_mail.enviar_mail(mail)
-        
+
+class ManejadorCuentasMail(ManejadorCSV):
+    """
+    Clase para manejar archivos CSV específicos de cuentas de mail.
+    Hereda de ManejadorCSV.
+    """
+
+    def exportar_cuentas(self):
+        """
+        Exporta las cuentas de mail a un archivo CSV.
+        """
+        self.exportar(['Correo', 'Contraseña'])
+        for cuenta in CuentaMail.cuentas:
+            self.exportar([cuenta.mail, cuenta.contrasenia], "a")
+
+    def cargar_cuentas(self):
+        """
+        Carga las cuentas de mail desde un archivo CSV y las registra en la aplicación de mail.
+        """
+        lista_cuentas = self.leer_archivo(True)
+        for cuenta in lista_cuentas:
+            CuentaMail(cuenta[0], cuenta[1])
