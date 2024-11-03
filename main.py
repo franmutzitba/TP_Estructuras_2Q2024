@@ -42,10 +42,11 @@ if "__main__" == __name__:
     telefono1 = celular1.aplicaciones["Telefono"]
     telefono2 = celular2.aplicaciones["Telefono"]
     telefono1.iniciar_llamada("987654321", 5)
+    telefono1.iniciar_llamada("987654321", 5)
     #telefono1.mostrar_historial_llamadas()
     #telefono2.mostrar_historial_llamadas()
-    input("")
-    telefono2.terminar_llamada_en_curso()
+    #input("")
+    #telefono2.terminar_llamada_en_curso()
     celular3.encender_dispositivo()
     telefono2.iniciar_llamada(456789123, 10)
     telefono2.mostrar_historial_llamadas()
