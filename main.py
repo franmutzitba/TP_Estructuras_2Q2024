@@ -57,12 +57,13 @@ if "__main__" == __name__:
     celular1.lanzar_app("Configuracion").configurar_nombre("Lionelanderere")
     print(celular1.aplicaciones["Configuracion"].configuracion.nombre)
     #celular2.encencer_dispositivo()
-    # try:
-    #     celular1.menu_navegacion()
-    # except ValueError as e:
-    #     print(e)
-    # except:
-    #     print("Error")
+    try:
+        celular1.menu_navegacion()
+    except ValueError as e:
+        print(e)
+    except:
+        print("Error")
+    print(celular1.lanzar_app("Configuracion").configuracion)
 
     #Guardamos los datos en los archivos csv
     manejador_celulares.exportar_dispositivos()

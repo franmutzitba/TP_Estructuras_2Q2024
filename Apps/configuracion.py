@@ -51,7 +51,8 @@ class Configuracion:
         self.contrasenia = contrasenia
 
     def __str__(self):
-        return f"Nombre: {self.nombre}, Almacenamiento disponible: {self.almacenamiento_disponible} MB, Número: {self.numero}, Modo avión: {self.modo_avion}, Modo red: {self.modo_red}"
+        modo_avion = "Prendido" if self.modo_avion else "Apagado"
+        return f"Nombre: {self.nombre}\nAlmacenamiento disponible: {self.almacenamiento_disponible} MB\nNúmero: {self.numero}\nModo avión: {modo_avion}\nModo red: {self.modo_red}"
 
 class ConfigApp(Aplicacion):
     """
