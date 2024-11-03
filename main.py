@@ -10,25 +10,43 @@ Archivo principal del proyecto, donde se prueban las clases y métodos implement
 
 
 #from Apps.mail import MailApp, CuentaMail
-#from manejadorCSV import ManejadorCSV
+from manejadorCSV import *
 
 if "__main__" == __name__:
     from celular import Celular
-    #exportadorCelulares = ManejadorCSV("celulares.csv")
+    manejador_celulares = ManejadorDispositivos("celulares.csv", Celular.central)
+    manejador_sms = ManejadorSMS("archivo_sms.csv", Celular.central)
+    manejador_llamadas = ManejadorLlamadas("archivo_llamadas.csv", Celular.central)
+    manejador_cuentas_mail = ManejadorCuentasMail("cuentas_mail.csv")
+    #manejador_mails = ManejadorMails("mails.csv", Celular.central)
+    
+    #Cargamos los datos de los archivos csv
+    manejador_celulares.cargar_dispositivos()
+    manejador_sms.cargar_mensajes()
+    manejador_llamadas.cargar_llamadas()
+    manejador_cuentas_mail.cargar_cuentas()
+    
+    #Instanciamos algunos celulares
     celular1 = Celular("iPhone de Franco", "iPhone 13", "123456789", "iOS", "4GB", "64GB")
     celular2 = Celular("Samsung de Juan", "Samsung Galaxy S21", "987654321", "Android", "6GB", "128GB")
     celular3 = Celular("Motorola de Pedro", "Motorola G9", "456789123", "Android", "4GB", "32GB")
     celular4 = Celular("Huawei de Ana", "Huawei P40", "654321987", "Android", "8GB", "256GB")
+    
+    #Encendemos el 1,2,3
     celular1.encender_dispositivo()
     celular2.encender_dispositivo()
     celular3.encender_dispositivo()
-    celular1.lanzar_app("Configuracion").configurar_contrasenia("1234")
+    
+    #Agregamos algunos contactos
+    celular1.lanzar_app("Contactos").agregar_contacto("987654321", "Juan")
+    celular1.lanzar_app("Contactos").agregar_contacto("456789123", "Pedro")
 
-    try:
-        celular3.lanzar_app("Telefono").iniciar_llamada("987654321", 5)
-        celular1.lanzar_app("Telefono").iniciar_llamada("987654321", 5)
-    except ValueError as e:
-        print(e)
+    #Enviamos algunos mails
+    # try:
+    #     #celular3.lanzar_app("Telefono").iniciar_llamada("987654321", 5)
+    #     #celular1.lanzar_app("Telefono").iniciar_llamada("987654321", 5)
+    # except ValueError as e:
+    #     print(e)
     input(" ")
     #celular1.lanzar_app("Telefono").terminar_llamada_en_curso()
     #celular2.lanzar_app("Telefono").iniciar_llamada("123456789", 5)
@@ -38,15 +56,12 @@ if "__main__" == __name__:
         celular1.menu_navegacion()
     except ValueError as e:
         print(e)
+    except:
+        print("Error")
 
-    telefono1 = celular1.aplicaciones["Telefono"]
-    telefono2 = celular2.aplicaciones["Telefono"]
-    telefono1.iniciar_llamada("987654321", 5)
-    telefono1.iniciar_llamada("987654321", 5)
-    #telefono1.mostrar_historial_llamadas()
-    #telefono2.mostrar_historial_llamadas()
-    #input("")
-    #telefono2.terminar_llamada_en_curso()
-    celular3.encender_dispositivo()
-    telefono2.iniciar_llamada(456789123, 10)
-    telefono2.mostrar_historial_llamadas()
+    #Guardamos los datos en los archivos csv
+    manejador_celulares.exportar_dispositivos()
+    manejador_sms.exportar_mensajes()
+    manejador_llamadas.exportar_llamadas()
+    manejador_cuentas_mail.exportar_cuentas()
+    

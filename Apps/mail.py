@@ -104,7 +104,7 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
         if self.cuenta_iniciada and self.central.consultar_LTE(self.numero):
             if criterio == CriterioLectura.NO_LEIDOS_PRIMEROS:
                 no_leidos = deque(mail for mail in CuentaMail.cuentas[self.cuenta_mail].bandeja_entrada if not mail.leido)
-                no_leidos = sorted(no_leidos, key=lambda mail: mail.fecha) #Ordena los mails por fecha dejando las mas nuevas al final (hay q probarlo)
+                no_leidos = deque(sorted(no_leidos, key=lambda mail: mail.fecha)) #Ordena los mails por fecha dejando las mas nuevas al final (hay q probarlo)
                 while no_leidos:
                     print(no_leidos.popleft())
             elif criterio == CriterioLectura.POR_FECHA:
@@ -291,6 +291,7 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
                 input("Presione cualquier tecla para volver al menu de Mail...")
                 os.system('cls')
             elif opcion == "5":
+                os.system("cls")
                 try:
                     self.cerrar_sesion()
                 except ValueError as e:
@@ -298,6 +299,7 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
                 input("Presione cualquier tecla para volver al menu de Mail...")
                 os.system('cls')
             elif opcion == "6":
+                os.system("cls")
                 mail = input("Ingrese el mail: ")
                 contrasenia = input("Ingrese la contraseña: ")
                 try:

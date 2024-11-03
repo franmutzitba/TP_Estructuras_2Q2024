@@ -115,6 +115,8 @@ class ManejadorSMS(ManejadorCSV):
         Carga los mensajes desde un archivo CSV y los registra en la central.
         """
         lista_mensajes = deque(self.leer_archivo(True))  # cola
+        if not lista_mensajes:
+            return None
         while lista_mensajes:
             lista = lista_mensajes.popleft()
             mensaje = Mensaje(lista[0], lista[1], lista[2], datetime.fromisoformat(lista[3]))
@@ -152,6 +154,8 @@ class ManejadorLlamadas(ManejadorCSV):
         Carga las llamadas desde un archivo CSV y las registra en la central.
         """
         lista_llamadas = self.leer_archivo(True)
+        if not lista_llamadas:
+            return None
         for llamada in lista_llamadas:
             self.central.registrar_llamada(llamada[0], llamada[1], int(llamada[2]), datetime.fromisoformat(llamada[3]))
 
@@ -210,29 +214,31 @@ class ManejadorDispositivos(ManejadorCSV):
         """
         Exporta los dispositivos a un archivo CSV.
         """
-        self.exportar(['Nombre', 'Modelo', 'Numero', 'Sistema Operativo', 'Memoria RAM', 'Almacenamiento', 'ID', 'Encendido', 'Bloqueado','Contraseña', 'Aplicaciones'])
-        for celular in self.central.registro_dispositivos:
+        self.exportar([['Nombre', 'Modelo', 'Numero', 'Sistema Operativo', 'Memoria RAM', 'Almacenamiento', 'ID', 'Encendido', 'Bloqueado','Contraseña', 'Aplicaciones']])
+        for celular in self.central.registro_dispositivos.values():
             lista = [
-                celular.nombre,
+                celular.aplicaciones["Configuracion"].configuracion.nombre,
                 celular.modelo,
-                celular.aplicaciones["Configuracion"].numero,
+                celular.aplicaciones["Configuracion"].configuracion.numero,
                 celular.sistema_operativo,
                 celular.memoria_ram,
-                celular.aplicaciones["Configuracion"].almacenamiento,
+                celular.aplicaciones["Configuracion"].configuracion.almacenamiento_disponible,
                 celular.id_celular,
                 celular.encendido,
                 celular.bloqueado,
-                celular.aplicaciones["Configuracion"].contrasenia
+                celular.aplicaciones["Configuracion"].configuracion.contrasenia
             ]
             #Instala las aplicaciones que no se instalan solas
             lista.extend(nombre for nombre, app in celular.aplicaciones.items() if app.es_esencial() is False)
-            self.exportar(lista, "a")
+            self.exportar([lista], "a")
 
     def cargar_dispositivos(self):
         """
         Carga los dispositivos desde un archivo CSV y los registra en la central.
         """
         lista_dispositivos = self.leer_archivo(True)
+        if not lista_dispositivos:
+            return None
         for dispositivo in lista_dispositivos:
             celular = Celular(
                 nombre = dispositivo[0],
@@ -317,14 +323,16 @@ class ManejadorCuentasMail(ManejadorCSV):
         """
         Exporta las cuentas de mail a un archivo CSV.
         """
-        self.exportar(['Correo', 'Contraseña'])
-        for cuenta in CuentaMail.cuentas:
-            self.exportar([cuenta.mail, cuenta.contrasenia], "a")
+        self.exportar([['Correo', 'Contraseña']])
+        for mail,contrasenia in CuentaMail.cuentas:
+            self.exportar([mail, contrasenia], "a")
 
     def cargar_cuentas(self):
         """
         Carga las cuentas de mail desde un archivo CSV y las registra en la aplicación de mail.
         """
         lista_cuentas = self.leer_archivo(True)
+        if not lista_cuentas:
+            return None
         for cuenta in lista_cuentas:
             CuentaMail(cuenta[0], cuenta[1])
