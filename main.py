@@ -21,7 +21,10 @@ if "__main__" == __name__:
     #manejador_mails = ManejadorMails("mails.csv", Celular.central)
     
     #Cargamos los datos de los archivos csv
-    manejador_celulares.cargar_dispositivos()
+    # manejador_celulares.cargar_dispositivos()
+    # for celular in Celular.central.registro_dispositivos.values():
+    #     print(celular)
+    # input("")
     manejador_sms.cargar_mensajes()
     manejador_llamadas.cargar_llamadas()
     manejador_cuentas_mail.cargar_cuentas()
@@ -47,17 +50,19 @@ if "__main__" == __name__:
     #     #celular1.lanzar_app("Telefono").iniciar_llamada("987654321", 5)
     # except ValueError as e:
     #     print(e)
-    input(" ")
+    #input(" ")
     #celular1.lanzar_app("Telefono").terminar_llamada_en_curso()
     #celular2.lanzar_app("Telefono").iniciar_llamada("123456789", 5)
     celular1.lanzar_app("Contactos").agregar_contacto("987654321", "Alec")
+    celular1.lanzar_app("Configuracion").configurar_nombre("Lionelanderere")
+    print(celular1.aplicaciones["Configuracion"].configuracion.nombre)
     #celular2.encencer_dispositivo()
-    try:
-        celular1.menu_navegacion()
-    except ValueError as e:
-        print(e)
-    except:
-        print("Error")
+    # try:
+    #     celular1.menu_navegacion()
+    # except ValueError as e:
+    #     print(e)
+    # except:
+    #     print("Error")
 
     #Guardamos los datos en los archivos csv
     manejador_celulares.exportar_dispositivos()

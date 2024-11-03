@@ -102,6 +102,8 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
             ValueError: Si el criterio no es válido.
         """
         if self.cuenta_iniciada and self.central.consultar_LTE(self.numero):
+            if not CuentaMail.cuentas[self.cuenta_mail].bandeja_entrada:
+                raise ValueError("No hay mails en la bandeja de entrada")
             if criterio == CriterioLectura.NO_LEIDOS_PRIMEROS:
                 no_leidos = deque(mail for mail in CuentaMail.cuentas[self.cuenta_mail].bandeja_entrada if not mail.leido)
                 no_leidos = deque(sorted(no_leidos, key=lambda mail: mail.fecha)) #Ordena los mails por fecha dejando las mas nuevas al final (hay q probarlo)
@@ -133,6 +135,8 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
             raise ValueError("No se pudo ver la bandeja de enviados. Consulte su cobertura")
         if not self.cuenta_iniciada:
             raise ValueError("No se pudo ver la bandeja de enviados. Inicie sesión para continuar")
+        if not CuentaMail.cuentas[self.cuenta_mail].bandeja_enviados:
+            raise ValueError("No hay mails en la bandeja de enviados")
 
         pila = CuentaMail.cuentas[self.cuenta_mail].bandeja_enviados.copy()
         while pila:
