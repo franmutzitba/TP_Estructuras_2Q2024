@@ -42,27 +42,45 @@ class ManejadorCSV:
         except IOError:
             print("Error al exportar archivo")
 
-    def leer_archivo(self, skip_header=False):
+    def leer_archivo(self, skip_first = False):
         """
         Lee el archivo CSV y devuelve su contenido.
-
+        
         Args:
-            skip_header (bool): Indica si se debe omitir la primera fila del archivo. 
+            skip_first (bool): Indica si se debe omitir la primera fila del archivo. 
             Por defecto es False.
-
-        Returns:
-            list: Una lista con el contenido del archivo CSV.
         """
         try:
-            if skip_header:
-                data = np.genfromtxt(self.nombre_archivo, delimiter=',', dtype=str, skip_header=1)
-            else:
-                data = np.genfromtxt(self.nombre_archivo, delimiter=',', dtype=str)
-            return data.tolist()
+            with open(self.nombre_archivo, "r", encoding='utf-8') as archivo_csv:
+                lector = csv.reader(archivo_csv)
+                if skip_first:
+                    next(lector)
+                return list(lector)
         except FileNotFoundError:
             print("Archivo no encontrado")
         except IOError:
             print("Error al leer archivo")
+    # def leer_archivo(self, skip_header=False):
+    #     """
+    #     Lee el archivo CSV y devuelve su contenido.
+
+    #     Args:
+    #         skip_header (bool): Indica si se debe omitir la primera fila del archivo. 
+    #         Por defecto es False.
+
+    #     Returns:
+    #         list: Una lista con el contenido del archivo CSV.
+    #     """
+    #     try:
+    #         if skip_header:
+    #             data = np.genfromtxt(self.nombre_archivo, delimiter=',', dtype=str, skip_header=1)
+    #         else:
+    #             data = np.genfromtxt(self.nombre_archivo, delimiter=',', dtype=str)
+    #         return data.tolist()
+    #     except FileNotFoundError:
+    #         print("Archivo no encontrado")
+    #     except IOError:
+    #         print("Error al leer archivo")
 
     def leer_matriz(self):
         """
@@ -143,11 +161,11 @@ class ManejadorLlamadas(ManejadorCSV):
         """
         Exporta las llamadas a un archivo CSV.
         """
-        self.exportar(['Receptor', 'Emisor', 'Duracion', 'Fecha Inicio'])
+        self.exportar([['Receptor', 'Emisor', 'Duracion', 'Fecha Inicio']])
         for receptor, emisores in self.central.registro_llamadas.items():
             for emisor, llamadas in emisores.items():
                 for llamada in llamadas:
-                    self.exportar([receptor, emisor, llamada.get_duracion(), llamada.get_fecha_inicio()], "a")
+                    self.exportar([[receptor, emisor, llamada.get_duracion(), llamada.get_fecha_inicio()]], "a")
 
     def cargar_llamadas(self):
         """
@@ -216,6 +234,10 @@ class ManejadorDispositivos(ManejadorCSV):
         """
         self.exportar([['Nombre', 'Modelo', 'Numero', 'Sistema Operativo', 'Memoria RAM', 'Almacenamiento', 'ID', 'Encendido', 'Bloqueado','Contraseña', 'Aplicaciones']])
         for celular in self.central.registro_dispositivos.values():
+            if celular.aplicaciones["Configuracion"].configuracion.contrasenia is None:
+                contrasenia = "None"
+            else:
+                contrasenia = celular.aplicaciones["Configuracion"].configuracion.contrasenia
             lista = [
                 celular.aplicaciones["Configuracion"].configuracion.nombre,
                 celular.modelo,
@@ -226,7 +248,7 @@ class ManejadorDispositivos(ManejadorCSV):
                 celular.id_celular,
                 celular.encendido,
                 celular.bloqueado,
-                celular.aplicaciones["Configuracion"].configuracion.contrasenia
+                contrasenia
             ]
             #Instala las aplicaciones que no se instalan solas
             lista.extend(nombre for nombre, app in celular.aplicaciones.items() if app.es_esencial() is False)
@@ -252,15 +274,13 @@ class ManejadorDispositivos(ManejadorCSV):
 
             if dispositivo[7] == "True":
                 celular.encender_dispositivo()
-            else:
-                celular.apagar_dispositivo()
 
+            if dispositivo[9] != "None":
+                celular.aplicaciones["Configuracion"].configurar_contrasenia(contrasenia_nueva = dispositivo[9])
+                
             if dispositivo[8] == "True":
                 celular.desbloquear_dispositivo()
-            else:
-                celular.bloquear_dispositivo()
 
-            celular.aplicaciones["Configuracion"].configurar_contrasenia(contrasenia = dispositivo[9])
             for aplicacion in dispositivo[10:]:
                 celular.aplicaciones["AppStore"].descargar_app(aplicacion)
 
@@ -323,9 +343,9 @@ class ManejadorCuentasMail(ManejadorCSV):
         """
         Exporta las cuentas de mail a un archivo CSV.
         """
-        self.exportar([['Correo', 'Contraseña']])
-        for mail,contrasenia in CuentaMail.cuentas:
-            self.exportar([mail, contrasenia], "a")
+        self.exportar([['Usuario', 'Contraseña']])
+        for cuenta in CuentaMail.cuentas.values():
+            self.exportar([[cuenta.mail, cuenta.contrasenia]], "a")
 
     def cargar_cuentas(self):
         """
