@@ -254,6 +254,11 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
             opcion = input("Ingrese una opción: ")
             if opcion == "1":
                 os.system("cls")
+                if not self.cuenta_iniciada:
+                    print("No se pudo ver la bandeja de entrada. Inicie sesión para continuar")
+                    input("Presione cualquier tecla para volver al menu de Mail...")
+                    os.system('cls')
+                    continue
                 try:
                     criterio = input("Ingrese el criterio de lectura (1: No leídos primeros, 2: Por fecha): ")
                     while criterio not in ["1", "2"]:
@@ -265,25 +270,35 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
                 os.system('cls')
             elif opcion == "2":
                 os.system("cls")
-                try:
-                    self.ver_bandeja_enviados()
-                except ValueError as e:
-                    print(e)
-                input("Presione cualquier tecla para volver al menu de Mail...")
-                os.system('cls')
+                if not self.cuenta_iniciada:
+                    print("No se pudo ver la bandeja de enviados. Inicie sesión para continuar")
+                    input("Presione cualquier tecla para volver al menu de Mail...")
+                    os.system('cls')
+                else:
+                    try:
+                        self.ver_bandeja_enviados()
+                    except ValueError as e:
+                        print(e)
+                    input("Presione cualquier tecla para volver al menu de Mail...")
+                    os.system('cls')
             elif opcion == "3":
                 os.system("cls")
-                #email_emisor = input("Ingrese el email del emisor: ")
-                email_receptor = input("Ingrese el email del receptor: ")
-                encabezado = input("Ingrese el encabezado: ")
-                cuerpo = input("Ingrese el cuerpo: ")
-                try:
-                    mensaje = self.crear_mail(cuerpo, self.cuenta_mail.mail, email_receptor, encabezado, datetime.now())
-                    self.enviar_mail(mensaje)
-                except ValueError as e:
-                    print(e)
-                input("Presione cualquier tecla para volver al menu de Mail...")
-                os.system('cls')
+                if not self.cuenta_iniciada:
+                    print("No se puede enviar mail. Inicie sesión para continuar")
+                    input("Presione cualquier tecla para volver al menu de Mail...")
+                    os.system('cls')
+                    
+                else:
+                    email_receptor = input("Ingrese el email del receptor: ")
+                    encabezado = input("Ingrese el encabezado: ")
+                    cuerpo = input("Ingrese el cuerpo: ")
+                    try:
+                        mensaje = self.crear_mail(cuerpo, CuentaMail.cuentas[self.cuenta_mail].mail, email_receptor, encabezado, datetime.now())
+                        self.enviar_mail(mensaje)
+                    except ValueError as e:
+                        print(e)
+                    input("Presione cualquier tecla para volver al menu de Mail...")
+                    os.system('cls')
             elif opcion == "4":
                 os.system("cls")
                 mail = input("Ingrese la direccion de mail: ")
