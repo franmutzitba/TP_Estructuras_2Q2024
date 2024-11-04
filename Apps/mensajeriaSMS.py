@@ -355,8 +355,6 @@ class MensajesApp(Aplicacion):
                 os.system('cls')
                 print("Saliendo de la aplicacion de Mensajes...")
                 salir = True
-                input("Presione cualquier tecla para volver al menu del celular...")
-                os.system('cls')
             else:
                 os.system('cls')
                 print("Opción inválida, intente nuevamente")

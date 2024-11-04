@@ -10,7 +10,7 @@ from Apps.telefono import TelefonoApp
 from Apps.mensajeriaSMS import MensajesApp
 from Apps.mail import MailApp
 from Apps.contactos import ContactosApp
-from funciones_utiles import tamanio_a_bytes
+from funciones_utiles import tamanio_a_bytes, tamanio_a_gb
 from central import Central
 
 class Celular:
@@ -59,10 +59,13 @@ class Celular:
         Menú de navegación del dispositivo
     """
     central = Central()
+    numeros = set()
 
     def __init__(self, nombre, modelo, numero, sistema_operativo, memoria_ram, almacenamiento, id_celular = uuid.uuid4()):
         if not nombre or not modelo or not numero or not sistema_operativo or not memoria_ram or not almacenamiento:
             raise ValueError("Los campos no pueden estar vacíos")
+        if numero in Celular.numeros:
+            raise ValueError(f"Numero -{ numero} - ya pertenece a un celular")
         if not bool(re.match(r"^\d+(\.\d+)?\s*[KMGTP]?B?$", almacenamiento)):
             raise ValueError("El campo almacenamiento debe ser un número seguido de un espacio y una unidad de medida válida")
         #Se fija que haya espacio suficiente para las aplicaciones básicas
@@ -74,12 +77,14 @@ class Celular:
         self.modelo = modelo
         self.sistema_operativo = sistema_operativo
         self.memoria_ram = memoria_ram
-
+        self.almacenamiento_original = almacenamiento
+        
         self.encendido = False
         self.bloqueado = False
 
         self.aplicaciones = {}
         self.descargar_apps_basicas(nombre, tamanio_a_bytes(almacenamiento), numero, self.aplicaciones)
+        Celular.numeros.add(numero)
 
     def descargar_apps_basicas(self, nombre, almacenamiento, numero, aplicaciones):
         """Descarga las aplicaciones básicas del celular
@@ -260,6 +265,7 @@ class Celular:
                     print(f"- {app}")
                 nombre_app = input("Ingrese el nombre de la aplicación que desea lanzar: ")
                 try:
+                    os.system('cls')
                     print(f"Lanzando {nombre_app}...")
                     self.lanzar_app(nombre_app).menu_navegacion()
                 except ValueError as e:
@@ -280,7 +286,7 @@ class Celular:
                 os.system('cls')
 
     def __str__(self):
-        return f"ID: {self.id_celular}\nNombre: {self.aplicaciones['Configuracion'].get_nombre()}\nModelo: {self.modelo}\nSistema operativo: {self.sistema_operativo}\nMemoria RAM: {self.memoria_ram}\nAlmacenamiento: {self.aplicaciones['Configuracion'].get_almacenamiento_disponible()}\n"
+        return f"ID: {self.id_celular}\nNombre: {self.aplicaciones['Configuracion'].get_nombre()}\nModelo: {self.modelo}\nSistema operativo: {self.sistema_operativo}\nMemoria RAM: {self.memoria_ram}\nAlmacenamiento: {tamanio_a_gb(self.aplicaciones['Configuracion'].get_almacenamiento_disponible())} GB\n"
 
 
 # if __name__ =="__main__":

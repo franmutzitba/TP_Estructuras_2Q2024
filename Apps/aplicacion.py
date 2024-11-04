@@ -3,7 +3,6 @@ Módulo que contiene la clase Aplicacion, la cual es la clase padre de todas las
 del celular.
 """
 
-import os
 from funciones_utiles import tamanio_a_bytes
 
 class Aplicacion:
@@ -53,8 +52,6 @@ class Aplicacion:
         """Método que simula el menú de navegación de la aplicación."""
         print(f"Bienvenido a la aplicación {self.nombre}")
         print("Esta aplicación no se encuentra desarrollada aún.")
-        input("Presione cualquier tecla para volver al menú del celular...")
-        os.system("cls")
 
     def __str__(self) -> str:
         return f"Nombre: {self.nombre}\nEsencial: {self.esencial}\nTamaño: {self.tamanio} bytes"

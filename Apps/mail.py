@@ -273,12 +273,12 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
                 os.system('cls')
             elif opcion == "3":
                 os.system("cls")
-                email_emisor = input("Ingrese el email del emisor: ")
+                #email_emisor = input("Ingrese el email del emisor: ")
                 email_receptor = input("Ingrese el email del receptor: ")
                 encabezado = input("Ingrese el encabezado: ")
                 cuerpo = input("Ingrese el cuerpo: ")
                 try:
-                    mensaje = self.crear_mail(cuerpo, email_emisor, email_receptor, encabezado, datetime.now())
+                    mensaje = self.crear_mail(cuerpo, self.cuenta_mail, email_receptor, encabezado, datetime.now())
                     self.enviar_mail(mensaje)
                 except ValueError as e:
                     print(e)
@@ -316,8 +316,6 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
                 os.system('cls')
                 print("Saliendo del Mail..")
                 salir = True
-                input("Presione cualquier tecla para volver al menu del celular...")
-                os.system('cls')
             else:
                 os.system('cls')
                 print("Opción inválida, intente nuevamente")

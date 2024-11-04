@@ -144,8 +144,6 @@ class ContactosApp(Aplicacion):
                 os.system('cls')
                 print("Saliendo de la aplicación de Contactos...")
                 salir = True
-                input("Presione cualquier tecla para volver al menú del celular...")
-                os.system('cls')
             else:
                 os.system('cls')
                 print("Opción inválida")

@@ -1,4 +1,5 @@
 Nombre,Modelo,Numero,Sistema Operativo,Memoria RAM,Almacenamiento,ID,Encendido,Bloqueado,Contraseña,Aplicaciones
-Lionelanderere,iPhone 13,123456789,iOS,4GB,67108864000,153abdd9-4d91-47ae-848e-8b9b796c94ab,True,False,None
-Samsung de Juan,Samsung Galaxy S21,987654321,Android,6GB,135828340736,153abdd9-4d91-47ae-848e-8b9b796c94ab,True,False,None
-Motorola de Pedro,Motorola G9,456789123,Android,4GB,32749125632,153abdd9-4d91-47ae-848e-8b9b796c94ab,True,False,None
+Samsung de Juan,Samsung Galaxy S21,987654321,Android,6GB,128GB,153abdd9-4d91-47ae-848e-8b9b796c94ab,True,False,None
+iPhone de Franco,iPhone 13,234567890,iOS,4GB,64GB,8de73551-1631-4812-9a3c-4c9e3b808926,True,False,None
+Samsung de Juan,Samsung Galaxy S21,345678901,Android,6GB,128GB,8de73551-1631-4812-9a3c-4c9e3b808926,True,False,None
+Motorola de Pedro,Motorola G9,000000000,Android,4GB,32GB,8de73551-1631-4812-9a3c-4c9e3b808926,True,False,None

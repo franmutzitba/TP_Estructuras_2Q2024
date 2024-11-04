@@ -183,7 +183,7 @@ class ManejadorContactos(ManejadorCSV):
     Hereda de ManejadorCSV.
     """
 
-    def __init__(self, nombre_archivo, contactos_app):
+    def __init__(self, nombre_archivo, central):
         """
         Inicializa la clase ManejadorContactos con el nombre del archivo y la aplicación 
         de contactos.
@@ -193,23 +193,28 @@ class ManejadorContactos(ManejadorCSV):
             contactos_app (ContactosApp): La instancia de la aplicación de contactos.
         """
         super().__init__(nombre_archivo)
-        self.contactos_app = contactos_app
+        self.central = central
 
     def exportar_contactos(self):
         """
         Exporta los contactos a un archivo CSV.
         """
-        self.exportar(['Nombre', 'Numero'])
-        for numero, contacto in self.contactos_app.adenda.items():
-            self.exportar([numero, contacto], "a")
+        self.exportar([['Numero Celuar','Nombre', 'Numero Contacto']])
+        for celular in self.central.registro_dispositivos.values():
+            for numero, contacto in celular.aplicaciones["Contactos"].agenda.items():
+                self.exportar([[celular.aplicaciones['Configuracion'].configuracion.numero, contacto, numero]], "a")
 
     def cargar_contactos(self):
         """
         Carga los contactos desde un archivo CSV y los registra en la aplicación de contactos.
         """
         lista_contactos = self.leer_archivo(True)
-        for contacto in lista_contactos:
-            self.contactos_app.agregar_contacto(contacto[1], contacto[0])
+        if not lista_contactos:
+            return None
+        for linea in lista_contactos:
+            celular = self.central.registro_dispositivos[linea[0]]
+            celular.aplicaciones["Contactos"].agregar_contacto(linea[2], linea[1])
+            
 
 class ManejadorDispositivos(ManejadorCSV):
     """
@@ -244,7 +249,7 @@ class ManejadorDispositivos(ManejadorCSV):
                 celular.aplicaciones["Configuracion"].configuracion.numero,
                 celular.sistema_operativo,
                 celular.memoria_ram,
-                celular.aplicaciones["Configuracion"].configuracion.almacenamiento_disponible,
+                celular.almacenamiento_original,
                 celular.id_celular,
                 celular.encendido,
                 celular.bloqueado,
@@ -257,7 +262,11 @@ class ManejadorDispositivos(ManejadorCSV):
     def cargar_dispositivos(self):
         """
         Carga los dispositivos desde un archivo CSV y los registra en la central.
+        
+        Return:
+            lista_celulares (list): Lista de objetos Celular.
         """
+        lista_celulares = []
         lista_dispositivos = self.leer_archivo(True)
         if not lista_dispositivos:
             return None
@@ -277,12 +286,15 @@ class ManejadorDispositivos(ManejadorCSV):
 
             if dispositivo[9] != "None":
                 celular.aplicaciones["Configuracion"].configurar_contrasenia(contrasenia_nueva = dispositivo[9])
-                
+
             if dispositivo[8] == "True":
                 celular.desbloquear_dispositivo()
 
             for aplicacion in dispositivo[10:]:
-                celular.aplicaciones["AppStore"].descargar_app(aplicacion)
+                celular.aplicaciones["AppStore"].descargar_app(aplicacion, carga_datos = True)
+            lista_celulares.append(celular)
+
+        return lista_celulares
 
 class ManejadorMails(ManejadorCSV):
     """

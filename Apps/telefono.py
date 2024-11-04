@@ -245,8 +245,6 @@ class TelefonoApp(Aplicacion):
                 os.system("cls")
                 print("Saliendo de la aplicacion Telefono...")
                 salir = True
-                input("Presione cualquier tecla para volver al menú del celular...")
-                os.system('cls')
             else:
                 print("Opción inválida")
                 input("Presione cualquier tecla para volver al menú de Teléfono...")

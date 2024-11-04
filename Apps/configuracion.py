@@ -7,7 +7,7 @@ contraseña, el modo de red, el modo avión, entre otros.
 import os
 from enum import Enum
 from Apps.aplicacion import Aplicacion
-from funciones_utiles import tamanio_a_bytes
+from funciones_utiles import tamanio_a_bytes, tamanio_a_gb
 
 class ModoRed(Enum):
     """Enum que representa los modos de red disponibles en el celular."""
@@ -52,7 +52,7 @@ class Configuracion:
 
     def __str__(self):
         modo_avion = "Prendido" if self.modo_avion else "Apagado"
-        return f"Nombre: {self.nombre}\nAlmacenamiento disponible: {self.almacenamiento_disponible} MB\nNúmero: {self.numero}\nModo avión: {modo_avion}\nModo red: {self.modo_red}"
+        return f"Nombre: {self.nombre}\nAlmacenamiento disponible: {tamanio_a_gb(self.almacenamiento_disponible)} GB\nNúmero: {self.numero}\nModo avión: {modo_avion}\nModo red: {self.modo_red}"
 
 class ConfigApp(Aplicacion):
     """
@@ -397,13 +397,11 @@ class ConfigApp(Aplicacion):
                 os.system('cls')
                 print("Saliendo de la aplicación de Configuración...")
                 salir = True
-                input("Presione cualquier tecla para volver al menu del celular...")
-                os.system('cls')
             else:
                 print("Opción inválida, intente nuevamente")
                 input("Presione cualquier tecla para volver al menu de Configuración...")
                 os.system('cls')
 
     def __str__(self):
-        return f"Configuración: {self.configuracion}"
+        return f"Configuración: \n{self.configuracion}"
     

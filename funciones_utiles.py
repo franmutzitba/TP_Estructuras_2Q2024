@@ -31,3 +31,15 @@ def tamanio_a_bytes(tamanio_formateado):
 
     # Si no hay sufijo (es decir, el valor está en bytes), convertir directamente
     return int(float(tamanio_formateado))
+
+def tamanio_a_gb(tamanio_bytes):
+    """
+    Convierte un tamaño en bytes a su valor en gigabytes.
+
+    Args:
+        tamanio_bytes (int): Tamaño en bytes.
+
+    Returns:
+        float: El tamaño convertido a gigabytes.
+    """
+    return tamanio_bytes / (1024 ** 3)

@@ -73,7 +73,7 @@ class AppStore(Aplicacion):
             else:
                 print(f"Nombre: {app[0]} - Tamaño: {app[1]} - INSTALADA")
 
-    def descargar_app(self, nombre):
+    def descargar_app(self, nombre, carga_datos = False):
         """
         Descarga una aplicación de la tienda al celular, si hay suficiente espacio
         y no está ya instalada. Para descargarla se agrega al diccionario de las aplicaciones 
@@ -81,7 +81,9 @@ class AppStore(Aplicacion):
         
         Args:
             nombre (str): Nombre de la aplicación a descargar.
-        
+            carga_datos (bool): Indica si se puede descargar la aplicación sin conexión a internet.
+            Esto es para la carga de datos desde el csv.
+            
         Returns:
             None
             
@@ -91,7 +93,7 @@ class AppStore(Aplicacion):
         """
         if nombre in self.aplicaciones_celular:
             raise ValueError(f"La aplicación {nombre} ya se encuentra instalada")
-        if self.configuracion.get_modo_red() != ModoRed.LTE:
+        if self.configuracion.get_modo_red() != ModoRed.LTE and carga_datos is False:
             raise ValueError("No es posible descargar aplicaciones en este momento. Consulte su conexión a internet")
 
         encontrada = False
@@ -231,7 +233,10 @@ class AppStore(Aplicacion):
             opcion = input("Seleccione una opción: ")
             if opcion == "1":
                 os.system('cls')
-                self.mostrar_apps_disponibles()
+                try:
+                    self.mostrar_apps_disponibles()
+                except ValueError as e:
+                    print(e)
                 input("Presione cualquier tecla para volver al menu de AppStore...")
                 os.system('cls')
             elif opcion == "2":
@@ -265,8 +270,6 @@ class AppStore(Aplicacion):
                 os.system('cls')
                 print("Saliendo de la AppStore")
                 salir = True
-                input("Presione cualquier tecla para volver al menu del celular...")
-                os.system('cls')
             else:
                 os.system('cls')
                 print("Opción inválida, intente nuevamente")
