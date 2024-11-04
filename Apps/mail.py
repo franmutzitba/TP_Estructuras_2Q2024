@@ -278,7 +278,7 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
                 encabezado = input("Ingrese el encabezado: ")
                 cuerpo = input("Ingrese el cuerpo: ")
                 try:
-                    mensaje = self.crear_mail(cuerpo, self.cuenta_mail, email_receptor, encabezado, datetime.now())
+                    mensaje = self.crear_mail(cuerpo, self.cuenta_mail.mail, email_receptor, encabezado, datetime.now())
                     self.enviar_mail(mensaje)
                 except ValueError as e:
                     print(e)
