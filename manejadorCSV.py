@@ -288,7 +288,7 @@ class ManejadorDispositivos(ManejadorCSV):
                 celular.aplicaciones["Configuracion"].configurar_contrasenia(contrasenia_nueva = dispositivo[9])
 
             if dispositivo[8] == "True":
-                celular.desbloquear_dispositivo()
+                celular.bloquear_dispositivo()
 
             for aplicacion in dispositivo[10:]:
                 celular.aplicaciones["AppStore"].descargar_app(aplicacion, carga_datos = True)
@@ -302,48 +302,27 @@ class ManejadorMails(ManejadorCSV):
     Hereda de ManejadorCSV.
     """
 
-    def __init__(self, nombre_archivo, cuenta_mail):
+    def exportar_mails(self):
         """
-        Inicializa la clase ManejadorMails con el nombre del archivo y la cuenta de mail.
+        Exporta los mails a un archivo CSV. Exporta solo los de la bandeja de entrada,
+        de forma de que no haya mails duplicados.
+        """
+        self.exportar([['Emisor', 'Receptor', 'Asunto', 'Texto', 'Fecha']])
+        for cuenta in CuentaMail.cuentas.values():
+            for mail in cuenta.bandeja_entrada:
+                self.exportar([[mail.cuerpo, mail.email_emisor, mail.email_receptor, mail.asunto, mail.fecha, mail.leido]], "a")
 
-        Args:
-            nombre_archivo (str): El nombre del archivo CSV.
-            cuenta_mail (CuentaMail): La instancia de la cuenta de mail.
+    def cargar_mails(self):
         """
-        super().__init__(nombre_archivo)
-        self.cuenta_mail = cuenta_mail
-
-    def exportar_mails(self, entrada=True):
+        Carga los mails desde un archivo CSV y los registra en la bandeja de entrada
+        o enviados de cada cuenta, segun si es el receptor o emisor, respectivamente.
         """
-        Exporta los mails a un archivo CSV.
-
-        Args:
-            entrada (bool): Indica si se deben exportar los mails de la bandeja de entrada (True) 
-            o de la bandeja de enviados (False). Por defecto es True.
-        """
-        self.exportar(['Emisor', 'Receptor', 'Asunto', 'Texto', 'Fecha'])
-        if entrada:
-            for mail in self.cuenta_mail.bandeja_entrada:
-                self.exportar([mail.cuerpo, mail.emisor, mail.receptor, mail.encabecado, mail.fecha, mail.leido], "a")
-        else:
-            for mail in self.cuenta_mail.bandeja_enviados:
-                self.exportar([mail.cuerpo, mail.emisor, mail.receptor, mail.encabecado, mail.fecha, mail.leido], "a")
-
-    def cargar_mails(self, entrada=True):
-        """
-        Carga los mails desde un archivo CSV y los registra en la cuenta de mail.
-
-        Args:
-            entrada (bool): Indica si se deben cargar los mails en la bandeja de entrada (True) 
-            o en la bandeja de enviados (False). Por defecto es True.
-        """
+        formato_fecha = "%Y-%m-%d %H:%M:%S.%f"
         lista_mails = self.leer_archivo(True)
         for mail in lista_mails:
-            mail = Mail(mail[0], mail[1], mail[2], mail[3], mail[4])
-            if entrada:
-                self.cuenta_mail.recibir_mail(mail)
-            else:
-                self.cuenta_mail.enviar_mail(mail)
+            mail = Mail(cuerpo = mail[0], email_emisor = mail[1], email_receptor = mail[2], asunto = mail[3], fecha = datetime.strptime(mail[4], formato_fecha), leido = mail[5]=="True")
+            CuentaMail.cuentas[mail.email_receptor].bandeja_entrada.append(mail)
+            CuentaMail.cuentas[mail.email_emisor].bandeja_enviados.append(mail)
 
 class ManejadorCuentasMail(ManejadorCSV):
     """

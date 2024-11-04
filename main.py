@@ -13,7 +13,7 @@ if "__main__" == __name__:
     manejador_llamadas = ManejadorLlamadas("archivo_llamadas.csv", Celular.central)
     manejador_cuentas_mail = ManejadorCuentasMail("cuentas_mail.csv")
     manejador_contactos = ManejadorContactos("contactos.csv", Celular.central)
-    #manejador_mails = ManejadorMails("mails.csv", Celular.central)
+    manejador_mails = ManejadorMails("mails.csv")
 
     #Cargamos los datos de los archivos csv
     celulares = manejador_celulares.cargar_dispositivos()
@@ -27,6 +27,7 @@ if "__main__" == __name__:
     manejador_sms.cargar_mensajes()
     manejador_llamadas.cargar_llamadas()
     manejador_cuentas_mail.cargar_cuentas()
+    manejador_mails.cargar_mails()
     manejador_contactos.cargar_contactos()
 
     #Instanciamos algunos celulares
@@ -72,4 +73,5 @@ if "__main__" == __name__:
     manejador_sms.exportar_mensajes()
     manejador_llamadas.exportar_llamadas()
     manejador_cuentas_mail.exportar_cuentas()
+    manejador_mails.exportar_mails()
     manejador_contactos.exportar_contactos()

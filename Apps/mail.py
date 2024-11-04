@@ -18,7 +18,7 @@ class CriterioLectura(Enum):
 class Mail:
     """
     Clase que instancia un mail con los atributos cuerpo, email_emisor, email_receptor, 
-    encabezado y leido
+    asunto y leido
     
     Atributos:
     ----------
@@ -28,23 +28,23 @@ class Mail:
         Email del emisor del mail.
     email_receptor (str):
         Email del receptor del mail.
-    encabezado (str):
-        Encabezado del mail.
+    asunto (str):
+        Asunto del mail.
     leido (bool):
         Indica si el mail fue leído o no.
     """
-    def __init__(self, cuerpo, email_emisor, email_receptor, encabezado, fecha,leido=False):
-        if not isinstance(cuerpo, str) or not isinstance(email_emisor, str) or not isinstance(email_receptor, str) or not isinstance(encabezado, str) or not isinstance(leido, bool):
+    def __init__(self, cuerpo, email_emisor, email_receptor, asunto, fecha, leido=False):
+        if not isinstance(cuerpo, str) or not isinstance(email_emisor, str) or not isinstance(email_receptor, str) or not isinstance(asunto, str) or not isinstance(leido, bool):
             raise ValueError("Los atributos del Mail deben ser del tipo correcto")
         self.cuerpo = cuerpo
         self.email_emisor = email_emisor
         self.email_receptor = email_receptor
-        self.encabezado = encabezado
+        self.asunto = asunto
         self.fecha = fecha
         self.leido = leido
 
     def __str__(self):
-        return f"Fecha de emision:{self.fecha}\nEmisor: {self.email_emisor}\nReceptor: {self.email_receptor}\nEncabezado: {self.encabezado}\nLeído: {self.leido}\nCuerpo:\n{self.cuerpo}"
+        return f"Fecha:{self.fecha}\nEmisor: {self.email_emisor}\nReceptor: {self.email_receptor}\nAsunto: {self.asunto}\nCuerpo: {self.cuerpo}\n"
 
 class MailApp(Aplicacion): #Pertenece a cada telefono
     """
@@ -75,7 +75,7 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
         Cierra la sesión iniciada en la aplicación de Mail.
     crear_cuenta(mail, contrasenia): 
         Crea una nueva cuenta de correo electrónico.
-    crear_mail(cuerpo, email_emisor, email_receptor, encabezado): 
+    crear_mail(cuerpo, email_emisor, email_receptor, asunto): 
         Crea un nuevo correo electrónico.
     menu_navegacion(): 
         Muestra el menú de navegación de la aplicación de Mail.
@@ -107,11 +107,17 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
             if criterio == CriterioLectura.NO_LEIDOS_PRIMEROS:
                 no_leidos = deque(mail for mail in CuentaMail.cuentas[self.cuenta_mail].bandeja_entrada if not mail.leido)
                 no_leidos = deque(sorted(no_leidos, key=lambda mail: mail.fecha)) #Ordena los mails por fecha dejando las mas nuevas al final (hay q probarlo)
+                if not no_leidos:
+                    print("\nNo hay mails sin leer\n")
+                for mail in no_leidos:
+                    mail.leido = True
                 while no_leidos:
                     print(no_leidos.popleft())
             elif criterio == CriterioLectura.POR_FECHA:
                 pila = CuentaMail.cuentas[self.cuenta_mail].bandeja_entrada.copy()
                 pila = sorted(pila, key=lambda mail: mail.fecha) #Ordena los mails por fecha dejando las mas nuevas al final (hay q probarlo)
+                if not pila:
+                    print("\nNo hay mails en la bandeja de entrada\n")
                 while pila:
                     print(pila.pop())
             else:
@@ -233,9 +239,9 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
             print(e)
 
     @staticmethod
-    def crear_mail(cuerpo, email_emisor, email_receptor, encabezado, fecha):
+    def crear_mail(cuerpo, email_emisor, email_receptor, asunto, fecha):
         """Crea un nuevo correo electrónico con los datos proporcionados."""
-        return Mail(cuerpo, email_emisor, email_receptor, encabezado, fecha)
+        return Mail(cuerpo, email_emisor, email_receptor, asunto, fecha)
 
     def menu_navegacion(self):
         """Muestra el menú de navegación de la aplicación de Mail."""
@@ -290,10 +296,10 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
                     
                 else:
                     email_receptor = input("Ingrese el email del receptor: ")
-                    encabezado = input("Ingrese el encabezado: ")
+                    asunto = input("Ingrese el asunto: ")
                     cuerpo = input("Ingrese el cuerpo: ")
                     try:
-                        mensaje = self.crear_mail(cuerpo, CuentaMail.cuentas[self.cuenta_mail].mail, email_receptor, encabezado, datetime.now())
+                        mensaje = self.crear_mail(cuerpo, self.cuenta_mail, email_receptor, asunto, datetime.now())
                         self.enviar_mail(mensaje)
                     except ValueError as e:
                         print(e)
