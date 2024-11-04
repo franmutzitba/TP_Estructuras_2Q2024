@@ -61,6 +61,7 @@ if "__main__" == __name__:
     # print(celular1.aplicaciones["Configuracion"].configuracion.nombre)
     #celular2.encencer_dispositivo()
     os.system("cls")
+    
     try:
         celulares[int(indice)-1].menu_navegacion()
     except ValueError as e:

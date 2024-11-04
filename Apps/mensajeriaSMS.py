@@ -188,11 +188,14 @@ class MensajesApp(Aplicacion):
         while bandeja_de_entrada:
             print(f"- {i} - ", end="")
             mensaje = bandeja_de_entrada.popleft()
+            fecha_min = mensaje.fecha.strftime("%Y-%m-%d %H:%M")
             if self.numero_en_contactos(mensaje.get_emisor()) :
-                fecha_min = mensaje.fecha.strftime("%Y-%m-%d %H:%M")
-                print(f"Emisor: {self.nombre_contacto(mensaje.get_emisor())}, Texto: {mensaje.mensaje}, Fecha: {fecha_min}")
+                
+                print(f"Emisor: {self.nombre_contacto(mensaje.get_emisor())}, Fecha: {fecha_min}")
+                print(f"      {mensaje.mensaje}")
             else:
-                print(f"Emisor: {mensaje.get_emisor()}, Texto: {mensaje.mensaje}, Fecha: {fecha_min}")
+                print(f"Emisor: {mensaje.get_emisor()}, Fecha: {fecha_min}")
+                print(f"      Texto: {mensaje.mensaje}")
             i += 1
 
     def ver_mensajes_de(self, numero, contacto):
@@ -208,13 +211,15 @@ class MensajesApp(Aplicacion):
         """
         mensajes = self.mensajes.copy()
         i=1
-        print(f"Mensajes de: {contacto if contacto else numero}")
+        print(f"Mensajes recibidos de: {contacto if contacto else numero}")
+     
         while mensajes:
             mensaje = mensajes.popleft()
             if mensaje.get_emisor() == numero:
                 print(f"- {i} - ", end="")
                 fecha_min = mensaje.fecha.strftime("%Y-%m-%d %H:%M")
-                print(f"Texto: {mensaje.mensaje}, Fecha: {fecha_min}")
+                print(f"{fecha_min}")
+                print(f"      {mensaje.mensaje}")
                 i += 1
 
     def ver_chats_recientes(self):
