@@ -8,7 +8,7 @@ from collections import deque
 from datetime import datetime
 import numpy as np
 from Apps.mail import CuentaMail, Mail
-from comunicacion import Mensaje
+from comunicacion import Mensaje, Llamada
 from celular import Celular
 
 class ManejadorCSV:
@@ -175,7 +175,7 @@ class ManejadorLlamadas(ManejadorCSV):
         if not lista_llamadas:
             return None
         for llamada in lista_llamadas:
-            self.central.registrar_llamada(llamada[0], llamada[1], int(llamada[2]), datetime.fromisoformat(llamada[3]))
+            self.central.registrar_llamada(Llamada(llamada[1], llamada[0], 10, datetime.fromisoformat(llamada[3])))
 
 class ManejadorContactos(ManejadorCSV):
     """

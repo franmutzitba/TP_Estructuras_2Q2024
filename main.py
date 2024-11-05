@@ -31,33 +31,32 @@ if "__main__" == __name__:
     manejador_mails.cargar_mails()
     manejador_contactos.cargar_contactos()
     
-
     #Instanciamos algunos celulares
-    celular1 = Celular("iPhone de Franco", "iPhone 13", "234567890", "iOS", "4GB", "64GB")
-    celular2 = Celular("Samsung de Juan", "Samsung Galaxy S21", "345678901", "Android", "6GB", "128GB")
-    celular3 = Celular("Motorola de Pedro", "Motorola G9", "000000000", "Android", "4GB", "32GB")
-    celular4 = Celular("Huawei de Ana", "Huawei P40", "012347618", "Android", "8GB", "256GB")
+    # celular1 = Celular("iPhone de Franco", "iPhone 13", "234567890", "iOS", "4GB", "64GB")
+    # celular2 = Celular("Samsung de Juan", "Samsung Galaxy S21", "345678901", "Android", "6GB", "128GB")
+    # celular3 = Celular("Motorola de Pedro", "Motorola G9", "000000000", "Android", "4GB", "32GB")
+    # celular4 = Celular("Huawei de Ana", "Huawei P40", "012347618", "Android", "8GB", "256GB")
 
-    #Encendemos el 1,2,3
-    celular1.encender_dispositivo()
-    celular2.encender_dispositivo()
-    celular3.encender_dispositivo()
+    # #Encendemos el 1,2,3
+    # celular1.encender_dispositivo()
+    # celular2.encender_dispositivo()
+    # celular3.encender_dispositivo()
     
-    #Agregamos algunos contactos
-    celular1.lanzar_app("Contactos").agregar_contacto("987654321", "Juan")
-    celular1.lanzar_app("Contactos").agregar_contacto("456789123", "Pedro")
+    # #Agregamos algunos contactos
+    # celular1.lanzar_app("Contactos").agregar_contacto("987654321", "Juan")
+    # celular1.lanzar_app("Contactos").agregar_contacto("456789123", "Pedro")
 
-    #Enviamos algunos mails
-    # try:
-    #     #celular3.lanzar_app("Telefono").iniciar_llamada("987654321", 5)
-    #     #celular1.lanzar_app("Telefono").iniciar_llamada("987654321", 5)
-    # except ValueError as e:
-    #     print(e)
-    #input(" ")
-    #celular1.lanzar_app("Telefono").terminar_llamada_en_curso()
-    celular2.lanzar_app("Telefono").iniciar_llamada("234567890", 47)
+    # #Enviamos algunos mails
+    # # try:
+    # #     #celular3.lanzar_app("Telefono").iniciar_llamada("987654321", 5)
+    # #     #celular1.lanzar_app("Telefono").iniciar_llamada("987654321", 5)
+    # # except ValueError as e:
+    # #     print(e)
+    # #input(" ")
+    # #celular1.lanzar_app("Telefono").terminar_llamada_en_curso()
+    # celular2.lanzar_app("Telefono").iniciar_llamada("234567890", 47)
     
-    celular2.lanzar_app("Telefono").terminar_llamada_en_curso()
+    # celular2.lanzar_app("Telefono").terminar_llamada_en_curso()
     # celular1.lanzar_app("Contactos").agregar_contacto("987654321", "Alec")
     # celular1.lanzar_app("Contactos").agregar_contacto("456789123", "Pedro")
     # celular2.lanzar_app("Contactos").agregar_contacto("654321987", "Ana")
