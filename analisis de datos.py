@@ -1,4 +1,3 @@
-
 """
     This script contains various functions to generate different types of plots for analyzing application data from a CSV file. The plots include bar charts, pie charts, scatter plots, histograms, line charts, stacked bar charts, box plots, area charts, violin plots, and bubble charts. Each function reads data from a CSV file using the ManejadorCSV class and generates a specific type of plot using matplotlib.
 Functions:
