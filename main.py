@@ -15,6 +15,7 @@ if "__main__" == __name__:
     manejador_contactos = ManejadorContactos("contactos.csv", Celular.central)
     manejador_mails = ManejadorMails("mails.csv")
 
+    
     #Cargamos los datos de los archivos csv
     celulares = manejador_celulares.cargar_dispositivos()
     os.system("cls")
@@ -29,21 +30,22 @@ if "__main__" == __name__:
     manejador_cuentas_mail.cargar_cuentas()
     manejador_mails.cargar_mails()
     manejador_contactos.cargar_contactos()
+    
 
     #Instanciamos algunos celulares
-    # celular1 = Celular("iPhone de Franco", "iPhone 13", "234567890", "iOS", "4GB", "64GB")
-    # celular2 = Celular("Samsung de Juan", "Samsung Galaxy S21", "345678901", "Android", "6GB", "128GB")
-    # celular3 = Celular("Motorola de Pedro", "Motorola G9", "000000000", "Android", "4GB", "32GB")
-    # celular4 = Celular("Huawei de Ana", "Huawei P40", "012347618", "Android", "8GB", "256GB")
+    celular1 = Celular("iPhone de Franco", "iPhone 13", "234567890", "iOS", "4GB", "64GB")
+    celular2 = Celular("Samsung de Juan", "Samsung Galaxy S21", "345678901", "Android", "6GB", "128GB")
+    celular3 = Celular("Motorola de Pedro", "Motorola G9", "000000000", "Android", "4GB", "32GB")
+    celular4 = Celular("Huawei de Ana", "Huawei P40", "012347618", "Android", "8GB", "256GB")
 
     #Encendemos el 1,2,3
-    # celular1.encender_dispositivo()
-    # celular2.encender_dispositivo()
-    # celular3.encender_dispositivo()
+    celular1.encender_dispositivo()
+    celular2.encender_dispositivo()
+    celular3.encender_dispositivo()
     
     #Agregamos algunos contactos
-    # celular1.lanzar_app("Contactos").agregar_contacto("987654321", "Juan")
-    # celular1.lanzar_app("Contactos").agregar_contacto("456789123", "Pedro")
+    celular1.lanzar_app("Contactos").agregar_contacto("987654321", "Juan")
+    celular1.lanzar_app("Contactos").agregar_contacto("456789123", "Pedro")
 
     #Enviamos algunos mails
     # try:
@@ -53,14 +55,17 @@ if "__main__" == __name__:
     #     print(e)
     #input(" ")
     #celular1.lanzar_app("Telefono").terminar_llamada_en_curso()
-    #celular2.lanzar_app("Telefono").iniciar_llamada("123456789", 5)
+    celular2.lanzar_app("Telefono").iniciar_llamada("234567890", 47)
+    
+    celular2.lanzar_app("Telefono").terminar_llamada_en_curso()
     # celular1.lanzar_app("Contactos").agregar_contacto("987654321", "Alec")
     # celular1.lanzar_app("Contactos").agregar_contacto("456789123", "Pedro")
     # celular2.lanzar_app("Contactos").agregar_contacto("654321987", "Ana")
     # celular1.lanzar_app("Configuracion").configurar_nombre("Lionelanderere")
     # print(celular1.aplicaciones["Configuracion"].configuracion.nombre)
     #celular2.encencer_dispositivo()
-    os.system("cls")
+    #os.system("cls")
+    
     
     try:
         celulares[int(indice)-1].menu_navegacion()
@@ -68,6 +73,7 @@ if "__main__" == __name__:
         print(e)
     except Exception as e:
         print(f"Error: {e}")
+        
 
     #Guardamos los datos en los archivos csv
     manejador_celulares.exportar_dispositivos()

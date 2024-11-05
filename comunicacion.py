@@ -87,7 +87,7 @@ class Llamada(Comunicacion):
         return self.duracion
 
     # Faltan getters y setters de emisor y receptor
-    def get_fecha(self):
+    def get_fecha_inicio(self):
         """Retorna la fecha y hora en que se realizó la llamada"""
         return self.fecha
 
