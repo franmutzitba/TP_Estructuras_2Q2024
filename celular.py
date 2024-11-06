@@ -111,13 +111,13 @@ class Celular:
         """
         if self.encendido:
             raise ValueError(f" El dispositivo {self.aplicaciones['Configuracion'].get_nombre()} ya se encuentra encendido ")
-
+        print(f"Se ha encencido el dispositivo - {self.aplicaciones['Configuracion'].get_nombre()} -")
         self.encendido = True
         if not self.central.esta_registrado(self.aplicaciones["Configuracion"].get_numero()):
             self.central.registrar_dispositivo(self.aplicaciones["Configuracion"].get_numero(), self)
         self.aplicaciones["Configuracion"].set_servicio(True)
 
-        print(f"Se ha encencido el dispositivo - {self.aplicaciones['Configuracion'].get_nombre()} -")
+        
 
     def apagar_dispositivo(self):
         """

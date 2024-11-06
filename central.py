@@ -298,7 +298,7 @@ class Central:
             raise ValueError(f"El celular {emisor} se encuentra sin servicio e incapaz de mandar mensajes")
         if not self.esta_registrado(receptor):
             raise ValueError(f"El celular {receptor} no esta registrado en la Central")
-        print(f"Enviando mensaje de {emisor} a {receptor}\n")
+        print(f"Enviando mensaje de {emisor} a {receptor}...\n")
         return True
 
     def eliminar_mensaje(self, mensaje, numero):

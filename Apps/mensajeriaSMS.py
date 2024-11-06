@@ -159,7 +159,7 @@ class MensajesApp(Aplicacion):
         """
         if not mensaje.get_sincronizado():
             mensaje.set_sincronizado()
-            self.mensajes.appendleft(mensaje)
+            self.mensajes.append(mensaje)
         else:
             print("El mensaje ya ha sido recibido")
 
@@ -182,7 +182,7 @@ class MensajesApp(Aplicacion):
         bandeja_de_entrada = self.mensajes.copy()
         i=1
         if not bandeja_de_entrada:
-            raise ValueError(f"El numero -{self.numero_cel}- no tiene mensajes en la bandeja de entrada")
+            raise ValueError(f"El numero: {self.numero_cel} no tiene mensajes en la bandeja de entrada")
         print(f"Bandeja de Entrada del numero: {self.numero_cel}")
 
         while bandeja_de_entrada:
