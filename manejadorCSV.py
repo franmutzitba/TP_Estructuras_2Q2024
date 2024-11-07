@@ -5,7 +5,7 @@ archivos CSV
 
 import csv
 from collections import deque
-from datetime import datetime
+from datetime import datetime, timedelta
 import numpy as np
 from Apps.mail import CuentaMail, Mail
 from comunicacion import Mensaje, Llamada
@@ -175,7 +175,7 @@ class ManejadorLlamadas(ManejadorCSV):
         if not lista_llamadas:
             return None
         for llamada in lista_llamadas:
-            self.central.registrar_llamada(Llamada(llamada[1], llamada[0], 10, datetime.fromisoformat(llamada[3])))
+            self.central.registrar_llamada(Llamada(llamada[1], llamada[0], datetime.timedelta(llamada[2]), datetime.fromisoformat(llamada[3])))
 
 class ManejadorContactos(ManejadorCSV):
     """
