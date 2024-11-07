@@ -9,42 +9,12 @@ from enum import Enum
 from collections import deque
 from Apps.aplicacion import Aplicacion
 from central import Central
+from comunicacion import Mail
 
 class CriterioLectura(Enum):
     """Enum para los criterios de lectura de los emails"""
     NO_LEIDOS_PRIMEROS = 1
     POR_FECHA = 2
-
-class Mail:
-    """
-    Clase que instancia un mail con los atributos cuerpo, email_emisor, email_receptor, 
-    asunto y leido
-    
-    Atributos:
-    ----------
-    cuerpo (str):
-        Cuerpo del mail.
-    email_emisor (str):
-        Email del emisor del mail.
-    email_receptor (str):
-        Email del receptor del mail.
-    asunto (str):
-        Asunto del mail.
-    leido (bool):
-        Indica si el mail fue leído o no.
-    """
-    def __init__(self, cuerpo, email_emisor, email_receptor, asunto, fecha, leido=False):
-        if not isinstance(cuerpo, str) or not isinstance(email_emisor, str) or not isinstance(email_receptor, str) or not isinstance(asunto, str) or not isinstance(leido, bool):
-            raise ValueError("Los atributos del Mail deben ser del tipo correcto")
-        self.cuerpo = cuerpo
-        self.email_emisor = email_emisor
-        self.email_receptor = email_receptor
-        self.asunto = asunto
-        self.fecha = fecha
-        self.leido = leido
-
-    def __str__(self):
-        return f"Fecha:{self.fecha}\nEmisor: {self.email_emisor}\nReceptor: {self.email_receptor}\nAsunto: {self.asunto}\nCuerpo: {self.cuerpo}\n"
 
 class MailApp(Aplicacion): #Pertenece a cada telefono
     """
@@ -165,9 +135,9 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
         if self.central.consultar_LTE(self.numero):
             if self.cuenta_iniciada:
                 CuentaMail.cuentas[self.cuenta_mail].bandeja_enviados.append(mensaje) #Agrega el mensaje a la bandeja de enviados sin importar si el receptor existe o no
-                if mensaje.email_receptor in CuentaMail.cuentas:
-                    CuentaMail.cuentas[mensaje.email_receptor].bandeja_entrada.append(mensaje) #Agrega el mensaje a la bandeja de entrada del receptor (si existe). Sino se pierde el mail
-                print(f"Mensaje enviado a {mensaje.email_receptor} con éxito") #Con receptor me refiero al mail del receptor
+                if mensaje.receptor in CuentaMail.cuentas:
+                    CuentaMail.cuentas[mensaje.receptor].bandeja_entrada.append(mensaje) #Agrega el mensaje a la bandeja de entrada del receptor (si existe). Sino se pierde el mail
+                print(f"Mensaje enviado a {mensaje.receptor} con éxito") #Con receptor me refiero al mail del receptor
             else:
                 raise ValueError("No se pudo enviar el mensaje. Inicie sesión para continuar")
         else:
@@ -243,9 +213,9 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
             print(e)
 
     @staticmethod
-    def crear_mail(cuerpo, email_emisor, email_receptor, asunto, fecha):
+    def crear_mail(cuerpo, emisor, receptor, asunto, fecha):
         """Crea un nuevo correo electrónico con los datos proporcionados."""
-        return Mail(cuerpo, email_emisor, email_receptor, asunto, fecha)
+        return Mail(cuerpo, emisor, receptor, asunto, fecha)
 
     def menu_navegacion(self):
         """Muestra el menú de navegación de la aplicación de Mail."""

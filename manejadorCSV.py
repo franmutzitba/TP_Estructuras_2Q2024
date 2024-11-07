@@ -310,7 +310,7 @@ class ManejadorMails(ManejadorCSV):
         self.exportar([['Cuerpo', 'Emisor', 'Receptor', 'Asunto', 'Fecha', 'Leido']])
         for cuenta in CuentaMail.cuentas.values():
             for mail in cuenta.bandeja_entrada:
-                self.exportar([[mail.cuerpo, mail.email_emisor, mail.email_receptor, mail.asunto, mail.fecha, mail.leido]], "a")
+                self.exportar([[mail.cuerpo, mail.emisor, mail.receptor, mail.asunto, mail.fecha, mail.leido]], "a")
 
     def cargar_mails(self):
         """
@@ -320,9 +320,9 @@ class ManejadorMails(ManejadorCSV):
         formato_fecha = "%Y-%m-%d %H:%M:%S.%f"
         lista_mails = self.leer_archivo(True)
         for mail in lista_mails:
-            mail = Mail(cuerpo = mail[0], email_emisor = mail[1], email_receptor = mail[2], asunto = mail[3], fecha = datetime.strptime(mail[4], formato_fecha), leido = mail[5]=="True")
-            CuentaMail.cuentas[mail.email_receptor].bandeja_entrada.append(mail)
-            CuentaMail.cuentas[mail.email_emisor].bandeja_enviados.append(mail)
+            mail = Mail(cuerpo = mail[0], emisor = mail[1], receptor = mail[2], asunto = mail[3], fecha = datetime.strptime(mail[4], formato_fecha), leido = mail[5]=="True")
+            CuentaMail.cuentas[mail.receptor].bandeja_entrada.append(mail)
+            CuentaMail.cuentas[mail.emisor].bandeja_enviados.append(mail)
 
 class ManejadorCuentasMail(ManejadorCSV):
     """
