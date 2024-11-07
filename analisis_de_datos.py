@@ -23,7 +23,7 @@ import numpy as np
 from manejadorCSV import ManejadorCSV
 
 class AnalisisDatos:
-    
+    """Clase para realizar análisis de datos de PlayStore Data"""
     def __init__(self, nombre_archivo):
         self.manejador = ManejadorCSV(nombre_archivo)
         self.data = self.manejador.leer_archivo()
@@ -44,7 +44,7 @@ class AnalisisDatos:
             print("10. Gráfico de Violín de Calificaciones por Tipo")
             print("11. Gráfico de Burbujas de Calificaciones, Reseñas y Tamaño")
             print("12. Salir")
-            opcion = input("Seleccione una opción: ") 
+            opcion = input("Seleccione una opción: ")
             if opcion == '1':
                 self.grafico_barras_categorias()
             elif opcion == '2':
@@ -98,10 +98,11 @@ class AnalisisDatos:
         """
         tipos = defaultdict(int)
         for row in self.data:
-            tipos[row[6]] += 1
+            if row[6] in ['Free', 'Paid']:
+                tipos[row[6]] += 1
         
         plt.figure(figsize=(8, 8))
-        plt.pie(tipos.values(), labels=tipos.keys(), autopct='%1.1f%%', startangle=140, colors=['lightgreen', 'lightcoral'])
+        plt.pie(tipos.values(), labels=tipos.keys(), autopct='%1.1f%%', startangle=160, colors=['lightgreen', 'lightcoral'])
         plt.title('Distribución de Tipos de Aplicaciones (Gratis vs. Pagadas)')
         plt.show()
 
