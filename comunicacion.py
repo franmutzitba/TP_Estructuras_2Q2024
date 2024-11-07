@@ -73,7 +73,7 @@ class Llamada(Comunicacion):
     """
 
     def __init__(self, emisor, receptor, duracion, fecha, perdida=False):
-        super().__init__(emisor, receptor, 'Llamada realizada')
+        super().__init__(emisor, receptor, 'Llamada')
         self.duracion = duracion
         self.fecha = fecha
         self.perdida = perdida

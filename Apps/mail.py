@@ -101,29 +101,31 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
         Raises:
             ValueError: Si el criterio no es válido.
         """
-        if self.cuenta_iniciada and self.central.consultar_LTE(self.numero):
-            if not CuentaMail.cuentas[self.cuenta_mail].bandeja_entrada:
-                raise ValueError("No hay mails en la bandeja de entrada")
-            if criterio == CriterioLectura.NO_LEIDOS_PRIMEROS:
-                no_leidos = deque(mail for mail in CuentaMail.cuentas[self.cuenta_mail].bandeja_entrada if not mail.leido)
-                no_leidos = deque(sorted(no_leidos, key=lambda mail: mail.fecha)) #Ordena los mails por fecha dejando las mas nuevas al final (hay q probarlo)
-                if not no_leidos:
-                    print("\nNo hay mails sin leer\n")
-                for mail in no_leidos:
-                    mail.leido = True
-                while no_leidos:
-                    print(no_leidos.popleft())
-            elif criterio == CriterioLectura.POR_FECHA:
-                pila = CuentaMail.cuentas[self.cuenta_mail].bandeja_entrada.copy()
-                pila = sorted(pila, key=lambda mail: mail.fecha) #Ordena los mails por fecha dejando las mas nuevas al final (hay q probarlo)
-                if not pila:
-                    print("\nNo hay mails en la bandeja de entrada\n")
-                while pila:
-                    print(pila.pop())
-            else:
-                raise ValueError("Criterio no válido")
-        else:
+        if not self.central.consultar_LTE(self.numero):
+            raise ValueError("No se pudo ver la bandeja de entrada. Consulte su cobertura")
+        if not self.cuenta_iniciada:
             raise ValueError("No se pudo ver la bandeja de entrada. Inicie sesión para continuar")
+        if not CuentaMail.cuentas[self.cuenta_mail].bandeja_entrada:
+            raise ValueError("No hay mails en la bandeja de entrada")
+
+        if criterio == CriterioLectura.NO_LEIDOS_PRIMEROS:
+            no_leidos = deque(mail for mail in CuentaMail.cuentas[self.cuenta_mail].bandeja_entrada if not mail.leido)
+            no_leidos = deque(sorted(no_leidos, key=lambda mail: mail.fecha)) #Ordena los mails por fecha dejando las mas nuevas al final (hay q probarlo)
+            if not no_leidos:
+                print("\nNo hay mails sin leer\n")
+            for mail in no_leidos:
+                mail.leido = True
+            while no_leidos:
+                print(no_leidos.popleft())
+        elif criterio == CriterioLectura.POR_FECHA:
+            pila = CuentaMail.cuentas[self.cuenta_mail].bandeja_entrada.copy()
+            pila = sorted(pila, key=lambda mail: mail.fecha) #Ordena los mails por fecha dejando las mas nuevas al final (hay q probarlo)
+            if not pila:
+                print("\nNo hay mails en la bandeja de entrada\n")
+            while pila:
+                print(pila.pop())
+        else:
+            raise ValueError("Criterio no válido")
 
     def ver_bandeja_enviados(self):
         """
@@ -161,17 +163,15 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
         Raises:
             ValueError: Si la cuenta no está iniciada o no tiene cobertura LTE.
         """
-        #Le consulta a la central si el emisor tiene LTE
-        if self.central.consultar_LTE(self.numero):
-            if self.cuenta_iniciada:
-                CuentaMail.cuentas[self.cuenta_mail].bandeja_enviados.append(mensaje) #Agrega el mensaje a la bandeja de enviados sin importar si el receptor existe o no
-                if mensaje.email_receptor in CuentaMail.cuentas:
-                    CuentaMail.cuentas[mensaje.email_receptor].bandeja_entrada.append(mensaje) #Agrega el mensaje a la bandeja de entrada del receptor (si existe). Sino se pierde el mail
-                print(f"Mensaje enviado a {mensaje.email_receptor} con éxito") #Con receptor me refiero al mail del receptor
-            else:
-                raise ValueError("No se pudo enviar el mensaje. Inicie sesión para continuar")
-        else:
+        if not self.central.consultar_LTE(self.numero):
             raise ValueError("No se pudo enviar el mensaje. No tiene cobertura LTE")
+        if not self.cuenta_iniciada:
+            raise ValueError("No se pudo enviar el mensaje. Inicie sesión para continuar")
+
+        CuentaMail.cuentas[self.cuenta_mail].bandeja_enviados.append(mensaje) #Agrega el mensaje a la bandeja de enviados sin importar si el receptor existe o no
+        if mensaje.email_receptor in CuentaMail.cuentas:
+            CuentaMail.cuentas[mensaje.email_receptor].bandeja_entrada.append(mensaje) #Agrega el mensaje a la bandeja de entrada del receptor (si existe). Sino se pierde el mail
+        print(f"Mensaje enviado a {mensaje.email_receptor} con éxito") #Con receptor me refiero al mail del receptor
 
     def iniciar_sesion(self, mail, contrasenia):
         """
@@ -295,8 +295,6 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
                 os.system("cls")
                 if not self.cuenta_iniciada:
                     print("No se puede enviar mail. Inicie sesión para continuar")
-                    input("Presione cualquier tecla para volver al menu de Mail...")
-                    os.system('cls')
                 else:
                     email_receptor = input("Ingrese el email del receptor: ")
                     asunto = input("Ingrese el asunto: ")
@@ -306,8 +304,8 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
                         self.enviar_mail(mensaje)
                     except ValueError as e:
                         print(e)
-                    input("Presione cualquier tecla para volver al menu de Mail...")
-                    os.system('cls')
+                input("Presione cualquier tecla para volver al menu de Mail...")
+                os.system('cls')
             elif opcion == "4":
                 os.system("cls")
                 mail = input("Ingrese la direccion de mail: ")
