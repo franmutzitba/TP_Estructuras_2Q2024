@@ -114,12 +114,15 @@ class Central:
         """
         emisor = llamada.get_emisor()
         receptor = llamada.get_receptor()
-        if llamada.get_receptor() not in self.registro_mensajes:
+        if llamada.get_receptor() not in self.registro_llamadas:
             self.registro_llamadas[receptor] = {}  # Crear un diccionario para el receptor
 
         if emisor not in self.registro_llamadas[receptor]:
-            self.registro_llamadas[receptor][emisor] = []  # Crear una lista para el emisor
-            self.registro_llamadas[receptor][emisor].append(llamada)  # Agregar el llamada a la lista
+            self.registro_llamadas[receptor][emisor] = []
+            # Crear una lista para el emisor
+
+        # Agregar el llamada a la lista
+        self.registro_llamadas[receptor][emisor].append(llamada)  # Agregar el llamada a la lista
         print(f"Se a registrado la llamada recibida por el numero - {receptor} - enviada por - {emisor} - en la central")
 
     def registrar_mensaje_nuevo(self, mensaje: Mensaje):
@@ -182,7 +185,7 @@ class Central:
             else:
                 mensajes_no_sinc.appendleft(mensaje)
 
-        if not len(mensajes_no_sinc):
+        if not mensajes_no_sinc:
             raise ValueError(f"No hay Mensajes nuevos para el numero {numero_cel}")
 
         while mensajes_no_sinc:
@@ -228,7 +231,7 @@ class Central:
             fecha_inicio = llamada.fecha
             fecha_fin = datetime.now()
 
-            duracion_nueva = fecha_fin - fecha_inicio               #cambio la duracion a el tiempo entre el inicio y fin.
+            duracion_nueva = (fecha_fin - fecha_inicio)           #cambio la duracion a el tiempo entre el inicio y fin.
             llamada.set_duracion(duracion_nueva)
             print(f"Se termino la llamada en curso entre {llamada.emisor} y {llamada.receptor}")
 
@@ -322,14 +325,6 @@ class Central:
         """
         for dispositivo in self.registro_dispositivos:
             print(dispositivo)
-
-    # def cargar_mensajes(self):
-    #     """Carga los mensajes desde un archivo."""
-    #     self.manejador_sms.cargar_mensajes(self)
-
-    # def exportar_mensajes(self):
-    #     """Exporta los mensajes a un archivo."""
-    #     self.manejador_sms.exportar_mensajes(self.registro_mensajes)
 
     def __str__(self):
         return f"Registro de llamdas: {self.registrar_llamada}\nRegistro de dispositivos: {self.registro_dispositivos}\n Registro de mensajes: {self.registro_mensajes}"

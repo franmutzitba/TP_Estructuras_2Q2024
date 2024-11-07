@@ -164,7 +164,6 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
         #Le consulta a la central si el emisor tiene LTE
         if self.central.consultar_LTE(self.numero):
             if self.cuenta_iniciada:
-                #Esto hay q verlo bien
                 CuentaMail.cuentas[self.cuenta_mail].bandeja_enviados.append(mensaje) #Agrega el mensaje a la bandeja de enviados sin importar si el receptor existe o no
                 if mensaje.email_receptor in CuentaMail.cuentas:
                     CuentaMail.cuentas[mensaje.email_receptor].bandeja_entrada.append(mensaje) #Agrega el mensaje a la bandeja de entrada del receptor (si existe). Sino se pierde el mail
@@ -192,6 +191,9 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
         if not self.central.consultar_LTE(self.numero):
             raise ValueError("No se pudo iniciar sesión. Consulte su cobertura")
 
+        if self.cuenta_iniciada:
+            raise ValueError("Ya hay una sesión iniciada")
+        
         if mail in CuentaMail.cuentas and CuentaMail.cuentas[mail].contrasenia == contrasenia:
             self.cuenta_mail = mail
             self.cuenta_iniciada = True
@@ -212,6 +214,8 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
         """
         if not self.central.consultar_LTE(self.numero):
             raise ValueError("No se pudo realizar la acción. Consulte su cobertura")
+        if not self.cuenta_iniciada:
+            raise ValueError("No se pudo cerrar la sesión. No hay una sesión iniciada")
         self.cuenta_mail = None
         self.cuenta_iniciada = False
         print("Sesión cerrada con éxito")
@@ -293,7 +297,6 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
                     print("No se puede enviar mail. Inicie sesión para continuar")
                     input("Presione cualquier tecla para volver al menu de Mail...")
                     os.system('cls')
-                    
                 else:
                     email_receptor = input("Ingrese el email del receptor: ")
                     asunto = input("Ingrese el asunto: ")

@@ -64,6 +64,8 @@ class Celular:
     def __init__(self, nombre, modelo, numero, sistema_operativo, memoria_ram, almacenamiento, id_celular = uuid.uuid4()):
         if not nombre or not modelo or not numero or not sistema_operativo or not memoria_ram or not almacenamiento:
             raise ValueError("Los campos no pueden estar vacíos")
+        if not numero.isdigit() or len(numero)!=8:
+            raise ValueError("Numero de celular incorrecto!! ... El formato son 8 digitos")
         if numero in Celular.numeros:
             raise ValueError(f"Numero -{ numero} - ya pertenece a un celular")
         if not bool(re.match(r"^\d+(\.\d+)?\s*[KMGTP]?B?$", almacenamiento)):
@@ -71,14 +73,14 @@ class Celular:
         #Se fija que haya espacio suficiente para las aplicaciones básicas
         if tamanio_a_bytes(almacenamiento) < tamanio_a_bytes("1.5 GB"):
             raise ValueError("El almacenamiento no es suficiente para las aplicaciones básicas")
-        
+
         #Almaceno los parámetros no modificables por Configuración
         self.id_celular = id_celular #Genera un UUID (Universal Unique Identifier) para el celular
         self.modelo = modelo
         self.sistema_operativo = sistema_operativo
         self.memoria_ram = memoria_ram
         self.almacenamiento_original = almacenamiento
-        
+
         self.encendido = False
         self.bloqueado = False
 
@@ -116,8 +118,6 @@ class Celular:
         if not self.central.esta_registrado(self.aplicaciones["Configuracion"].get_numero()):
             self.central.registrar_dispositivo(self.aplicaciones["Configuracion"].get_numero(), self)
         self.aplicaciones["Configuracion"].set_servicio(True)
-
-        
 
     def apagar_dispositivo(self):
         """

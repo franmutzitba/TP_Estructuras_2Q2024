@@ -1,7 +1,8 @@
 # Demostraciones de las distintas areas del proyecto
 
 import os
-from manejadorCSV import *
+from manejadorCSV import ManejadorDispositivos, ManejadorSMS, ManejadorLlamadas, ManejadorContactos, ManejadorMails, ManejadorCuentasMail
+
 if "__main__" == __name__:
     from celular import Celular
     
@@ -33,9 +34,26 @@ if "__main__" == __name__:
     except ValueError as e:
         print(e)
     
-    
+    #########################
+    #Prueba del area de Mails
+    #########################
+    # def prueba_mails(celular1):
+    #     try:
+    #         celular1.encender_dispositivo()
+    #     except ValueError as e:
+    #         print(e)
+    #     try:
+    #         celular1.lanzar_app("Configuracion").set_servivio(True)
+    #     except ValueError as e:
+    #         print(e)
+        
+    #     input("Presione para enviar mails:")
+    #     os.system("cls")
+    #     mails = [[]]
+    #     for mail in mails:
+    #         celular1.lanzar_app("Mail").enviar_mail(mail[0],mail[1],mail[2],mail[3])
     ################################
-    #Pruba del area de la Mensajeria
+    #Prueba del area de la Mensajeria
     ################################
     def prueba_mensajeria(celular1,celular4):
         """

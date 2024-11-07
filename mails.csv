@@ -1,1 +1,9 @@
-Emisor,Receptor,Asunto,Texto,Fecha
+Emisor,Receptor,Asunto,Texto,Fecha,Leido
+Hola,ahoffmann@itba.edu.ar,fmutz@itba.edu.ar,Reunión,2024-05-01 10:00:00.923994,True
+Hola,fmutz@itba.edu.ar,ahoffmann@itba.edu.ar,Reunión,2024-05-01 10:00:00.923994,False
+"123,probando",ellabra@gmail.com,ahoffmann@itba.edu.ar,Hola,2024-11-07 18:15:35.255308,False
+Chau,fmutz@itba.edu.ar,ellabra@gmail.com,"Prueba, hola como va",2024-11-04 16:30:14.504284,True
+Chau,fmutz@itba.edu.ar,ellabra@gmail.com,"Prueba, hola como va",2024-11-17 16:30:14.504284,True
+Chau,fmutz@itba.edu.ar,ellabra@gmail.com,"Prueba, hola como va",2024-11-01 16:30:14.504284,True
+Chau,fmutz@itba.edu.ar,ellabra@gmail.com,"Prueba, hola como va",2024-11-11 16:30:14.504284,True
+Chau,fmutz@itba.edu.ar,ellabra@gmail.com,"Prueba, hola como va",2024-11-29 16:30:14.504284,True

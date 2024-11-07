@@ -72,11 +72,11 @@ class Llamada(Comunicacion):
         Establece si la llamada fue perdida o no.
     """
 
-    def __init__(self, emisor, receptor, duracion, fecha):
+    def __init__(self, emisor, receptor, duracion, fecha, perdida=False):
         super().__init__(emisor, receptor, 'Llamada realizada')
         self.duracion = duracion
         self.fecha = fecha
-        self.perdida = False
+        self.perdida = perdida
 
     def set_duracion(self, tiempo):
         """Establece la duración de la llamada"""
@@ -86,7 +86,7 @@ class Llamada(Comunicacion):
         """Retorna la duración de la llamada"""
         return self.duracion
 
-    # Faltan getters y setters de emisor y receptor
+    
     def get_fecha_inicio(self):
         """Retorna la fecha y hora en que se realizó la llamada"""
         return self.fecha

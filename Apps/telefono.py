@@ -143,7 +143,7 @@ class TelefonoApp(Aplicacion):
             for historial_emisor_receptor in historial_receptor.values():
                 for llamada in historial_emisor_receptor:
                     if llamada.emisor == self.numero or llamada.receptor == self.numero:
-                        historial_personal.append(llamada)  # falta terminar pero no lo entiendo
+                        historial_personal.append(llamada)
 
         historial_organizado = []               #cambia los numeros por contactos cuando corresponde
         for llamada in historial_personal:

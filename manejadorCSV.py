@@ -5,7 +5,7 @@ archivos CSV
 
 import csv
 from collections import deque
-from datetime import datetime, timedelta
+from datetime import datetime
 import numpy as np
 from Apps.mail import CuentaMail, Mail
 from comunicacion import Mensaje, Llamada
@@ -161,11 +161,12 @@ class ManejadorLlamadas(ManejadorCSV):
         """
         Exporta las llamadas a un archivo CSV.
         """
-        self.exportar([['Receptor', 'Emisor', 'Duracion', 'Fecha Inicio']])
+        self.exportar([['Receptor', 'Emisor', 'Duracion', 'Fecha Inicio', 'Recibida']])
         for receptor, emisores in self.central.registro_llamadas.items():
             for emisor, llamadas in emisores.items():
                 for llamada in llamadas:
-                    self.exportar([[receptor, emisor, llamada.get_duracion(), llamada.get_fecha_inicio()]], "a")
+                    duracion = str(llamada.get_duracion())[:-7:] if len(str(llamada.get_duracion())[:-7:]) > 6 else str(llamada.get_duracion())
+                    self.exportar([[receptor, emisor, duracion, llamada.get_fecha_inicio(), not llamada.get_perdida()]], "a")
 
     def cargar_llamadas(self):
         """
@@ -175,7 +176,7 @@ class ManejadorLlamadas(ManejadorCSV):
         if not lista_llamadas:
             return None
         for llamada in lista_llamadas:
-            self.central.registrar_llamada(Llamada(llamada[1], llamada[0], datetime.timedelta(llamada[2]), datetime.fromisoformat(llamada[3])))
+            self.central.registrar_llamada(Llamada(llamada[1], llamada[0], datetime.strptime(llamada[2],'%H:%M:%S').time(), datetime.fromisoformat(llamada[3]), llamada[4] == "False"))
 
 class ManejadorContactos(ManejadorCSV):
     """
@@ -214,7 +215,6 @@ class ManejadorContactos(ManejadorCSV):
         for linea in lista_contactos:
             celular = self.central.registro_dispositivos[linea[0]]
             celular.aplicaciones["Contactos"].agregar_contacto(linea[2], linea[1])
-            
 
 class ManejadorDispositivos(ManejadorCSV):
     """
@@ -307,7 +307,7 @@ class ManejadorMails(ManejadorCSV):
         Exporta los mails a un archivo CSV. Exporta solo los de la bandeja de entrada,
         de forma de que no haya mails duplicados.
         """
-        self.exportar([['Emisor', 'Receptor', 'Asunto', 'Texto', 'Fecha']])
+        self.exportar([['Cuerpo', 'Emisor', 'Receptor', 'Asunto', 'Fecha', 'Leido']])
         for cuenta in CuentaMail.cuentas.values():
             for mail in cuenta.bandeja_entrada:
                 self.exportar([[mail.cuerpo, mail.email_emisor, mail.email_receptor, mail.asunto, mail.fecha, mail.leido]], "a")
