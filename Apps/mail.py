@@ -110,7 +110,8 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
 
         if criterio == CriterioLectura.NO_LEIDOS_PRIMEROS:
             no_leidos = deque(mail for mail in CuentaMail.cuentas[self.cuenta_mail].bandeja_entrada if not mail.leido)
-            no_leidos = deque(sorted(no_leidos, key=lambda mail: mail.fecha)) #Ordena los mails por fecha dejando las mas nuevas al final (hay q probarlo)
+            #Ordena los mails por fecha dejando las mas nuevas al final
+            no_leidos = deque(sorted(no_leidos, key=lambda mail: mail.fecha))
             if not no_leidos:
                 print("\nNo hay mails sin leer\n")
             for mail in no_leidos:
@@ -119,7 +120,8 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
                 print(no_leidos.popleft())
         elif criterio == CriterioLectura.POR_FECHA:
             pila = CuentaMail.cuentas[self.cuenta_mail].bandeja_entrada.copy()
-            pila = sorted(pila, key=lambda mail: mail.fecha) #Ordena los mails por fecha dejando las mas nuevas al final (hay q probarlo)
+            #Ordena los mails por fecha dejando las mas nuevas al final
+            pila = sorted(pila, key=lambda mail: mail.fecha)
             if not pila:
                 print("\nNo hay mails en la bandeja de entrada\n")
             while pila:
@@ -168,10 +170,12 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
         if not self.cuenta_iniciada:
             raise ValueError("No se pudo enviar el mensaje. Inicie sesión para continuar")
 
-        CuentaMail.cuentas[self.cuenta_mail].bandeja_enviados.append(mensaje) #Agrega el mensaje a la bandeja de enviados sin importar si el receptor existe o no
+        #Agrega el mensaje a la bandeja de enviados sin importar si el receptor existe o no
+        CuentaMail.cuentas[self.cuenta_mail].bandeja_enviados.append(mensaje)
         if mensaje.email_receptor in CuentaMail.cuentas:
-            CuentaMail.cuentas[mensaje.email_receptor].bandeja_entrada.append(mensaje) #Agrega el mensaje a la bandeja de entrada del receptor (si existe). Sino se pierde el mail
-        print(f"Mensaje enviado a {mensaje.email_receptor} con éxito") #Con receptor me refiero al mail del receptor
+            #Agrega el mensaje a la bandeja de entrada del receptor (si existe). Sino se pierde el mail
+            CuentaMail.cuentas[mensaje.email_receptor].bandeja_entrada.append(mensaje)
+        print(f"Mensaje enviado a {mensaje.email_receptor} con éxito")
 
     def iniciar_sesion(self, mail, contrasenia):
         """
@@ -193,7 +197,7 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
 
         if self.cuenta_iniciada:
             raise ValueError("Ya hay una sesión iniciada")
-        
+
         if mail in CuentaMail.cuentas and CuentaMail.cuentas[mail].contrasenia == contrasenia:
             self.cuenta_mail = mail
             self.cuenta_iniciada = True

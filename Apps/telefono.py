@@ -136,16 +136,23 @@ class TelefonoApp(Aplicacion):
         self.central.manejar_llamada(self.numero, numero_receptor, hora_inicio, duracion)
 
     def mostrar_historial_llamadas(self):
-        """Muestra el historial de llamadas."""
-        #cuando se termine lo comentamos bien
+        """Muestra el historial de llamadas. Se fija si el número está
+        en la lista de contactos del celular y en caso positivo muestra el nombre del contacto,
+        en lugar del número de teléfono.
+        
+        Raises:
+            ValueError: Si no hay llamadas registradas.
+        """
         historial_personal = []
-        for historial_receptor in self.central.registro_llamadas.values(): #guarda todas las llamadas en la lista
+        #guarda todas las llamadas en la lista historial_personal
+        for historial_receptor in self.central.registro_llamadas.values():
             for historial_emisor_receptor in historial_receptor.values():
                 for llamada in historial_emisor_receptor:
                     if llamada.emisor == self.numero or llamada.receptor == self.numero:
                         historial_personal.append(llamada)
 
-        historial_organizado = []               #cambia los numeros por contactos cuando corresponde
+        #cambia los numeros por contactos cuando corresponde
+        historial_organizado = []
         for llamada in historial_personal:
             if llamada.perdida:
                 tipo = "Llamada perdida"
@@ -155,7 +162,8 @@ class TelefonoApp(Aplicacion):
             if llamada.emisor == self.numero:
                 emisor = "Usted"
                 if llamada.receptor in self.contactos.agenda:
-                    receptor = self.contactos.agenda[llamada.receptor]     #busca el nombre del contacto
+                    #busca el nombre del contacto
+                    receptor = self.contactos.agenda[llamada.receptor]
                 else:
                     receptor = llamada.receptor
                 datos_llamada = (llamada.fecha, emisor, receptor, tipo, llamada.duracion)
