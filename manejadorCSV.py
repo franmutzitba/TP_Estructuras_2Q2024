@@ -201,7 +201,7 @@ class ManejadorContactos(ManejadorCSV):
         """
         Exporta los contactos a un archivo CSV.
         """
-        self.exportar([['Numero Celuar','Nombre', 'Numero Contacto']])
+        self.exportar([['Numero Celular','Nombre', 'Numero Contacto']])
         for celular in self.central.registro_dispositivos.values():
             for numero, contacto in celular.aplicaciones["Contactos"].agenda.items():
                 self.exportar([[celular.aplicaciones['Configuracion'].configuracion.numero, contacto, numero]], "a")

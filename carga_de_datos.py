@@ -15,18 +15,19 @@ from comunicacion import Mail
 ###########################
 ####### Manejadores #######
 ###########################
-manejador_celulares = ManejadorDispositivos("celulares.csv", Celular.central)
-manejador_sms = ManejadorSMS("archivo_sms.csv", Celular.central)
-manejador_llamadas = ManejadorLlamadas("archivo_llamadas.csv", Celular.central)
-manejador_cuentas_mail = ManejadorCuentasMail("cuentas_mail.csv")
-manejador_contactos = ManejadorContactos("contactos.csv", Celular.central)
-manejador_mails = ManejadorMails("mails.csv")
+manejador_celulares = ManejadorDispositivos("celulares2.csv", Celular.central)
+manejador_sms = ManejadorSMS("archivo_sms2.csv", Celular.central)
+manejador_llamadas = ManejadorLlamadas("archivo_llamadas2.csv", Celular.central)
+manejador_cuentas_mail = ManejadorCuentasMail("cuentas_mail2.csv")
+manejador_contactos = ManejadorContactos("contactos2.csv", Celular.central)
+manejador_mails = ManejadorMails("mails2.csv")
 
 
 
 ###########################
 # Instancia de celulares ##
 ###########################
+os.system("cls")
 input("Presione para instanciar 4 celulares:")
 celular1 = Celular("iPhone de Franco", "iPhone 13", "46579361", "iOS", "4GB", "64GB")
 celular2 = Celular("Samsung de Eze", "Samsung Galaxy S21", "48321234", "Android", "6GB", "128GB")
@@ -67,6 +68,7 @@ celular4.lanzar_app("Contactos").agregar_contacto("46579361", "Franco")
 ###########################
 # Instancia de SMS #######
 ###########################
+input("Presione para apagar el celular de Alec:")
 if celular4.encendido:
     celular4.apagar_dispositivo()
 input("Presione para enviar mensajes:")
@@ -104,9 +106,10 @@ print("")
 ###########################
 # Instancia de llamadas ###
 ###########################
-celular1.lanzar_app("Llamadas").iniciar_llamada("48321234")
-celular1.lanzar_app("Llamadas").terminar_llamada_en_curso()
-celular1.lanzar_app("Llamadas").iniciar_llamada("45671230",150)
+input("Presione para realizar llamadas:")
+celular1.lanzar_app("Telefono").iniciar_llamada("48321234")
+celular1.lanzar_app("Telefono").terminar_llamada_en_curso()
+celular1.lanzar_app("Telefono").iniciar_llamada("45671230",150)
 
 
 
@@ -151,9 +154,9 @@ celular1.lanzar_app("Mail").cerrar_sesion()
 #############################
 input("Presione para cargar los datos a los archivos csv:")
 #Cargamos los datos a los archivos csv
-manejador_celulares.cargar_dispositivos()
-manejador_contactos.cargar_contactos()
-manejador_sms.cargar_mensajes()
-manejador_llamadas.cargar_llamadas()
-manejador_cuentas_mail.cargar_cuentas()
-manejador_mails.cargar_mails()
+manejador_celulares.exportar_dispositivos()
+manejador_contactos.exportar_contactos()
+manejador_sms.exportar_mensajes()
+manejador_llamadas.exportar_llamadas()
+manejador_cuentas_mail.exportar_cuentas()
+manejador_mails.exportar_mails()

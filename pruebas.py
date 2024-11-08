@@ -46,13 +46,13 @@
 # print( fecha_hoy > fecha_random1 + c)
 
 
-from Apps.aplicacion import *
-from Apps.appstore import *
-from Apps.configuracion import *
-from Apps.contactos import *
-from Apps.mail import *
-from Apps.mensajeriaSMS import *
-from Apps.calculadora import *
-from analisis_de_datos import *
+# from Apps.aplicacion import *
+# from Apps.appstore import *
+# from Apps.configuracion import *
+# from Apps.contactos import *
+# from Apps.mail import *
+# from Apps.mensajeriaSMS import *
+# from Apps.calculadora import *
+# from analisis_de_datos import *
 
-print()
+# print()
