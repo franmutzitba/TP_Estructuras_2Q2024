@@ -4,6 +4,7 @@ Módulo que contiene la aplicación AppStore
 
 import os
 from Apps.aplicacion import Aplicacion
+from Apps.calculadora import CalculadoraApp
 from Apps.configuracion import ConfigApp, ModoRed
 from manejadorCSV import ManejadorCSV
 from funciones_utiles import tamanio_a_bytes
@@ -43,6 +44,7 @@ class AppStore(Aplicacion):
         Devuelve una lista de las aplicaciones disponibles en la tienda.
     """
     manejadorCSV = ManejadorCSV("appstore.csv")
+    desarolladas = {"Calculadora":CalculadoraApp}
 
     def __init__(self, aplicaciones_celular, configuracion: ConfigApp):
         """
@@ -101,7 +103,11 @@ class AppStore(Aplicacion):
         for app in aplicaciones_disponibles:
             if app[0] == nombre and encontrada is False:
                 if tamanio_a_bytes(app[1]) <= self.configuracion.get_almacenamiento_disponible():
-                    self.aplicaciones_celular[nombre] = Aplicacion(nombre=nombre, tamanio=app[1], esencial=False) # Instancia de la clase Aplicacion. Se asume que las apps descargadas del appstore no son esenciales.
+                    if nombre in AppStore.desarolladas: # Como todavia no hay mas Apps desarolladas y la unica que existe no recibe parametros entonces instanciamos directomente la clase
+                        self.aplicaciones_celular[nombre] = AppStore.desarolladas[nombre]()
+                    else:
+                        # Instancia de la clase Aplicacion. Se asume que las apps descargadas del appstore no son esenciales.
+                        self.aplicaciones_celular[nombre] = Aplicacion(nombre=nombre, tamanio=app[1], esencial=False)
                     nuevo_almacenamiento = self.configuracion.get_almacenamiento_disponible() - tamanio_a_bytes(app[1])
                     self.configuracion.set_almacenamiento_disponible(nuevo_almacenamiento)
                     self.agregar_descarga(nombre)

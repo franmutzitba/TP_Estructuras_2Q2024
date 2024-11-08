@@ -24,7 +24,7 @@ if "__main__" == __name__:
     manejador_cuentas_mail.cargar_cuentas()
     manejador_mails.cargar_mails()
     manejador_contactos.cargar_contactos()
-    
+
     os.system("cls")
     salir = False
     while not salir:

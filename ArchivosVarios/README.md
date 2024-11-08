@@ -17,22 +17,22 @@ Un teléfono celular debe al menos poder:
 
 3. Abrir una cierta aplicación para interactuar con ella (Contactos, Mensajería SMS, e-mail, Teléfono,
 App Store, Configuración, etc.), para al menos poder:
-    a. Realizar llamadas a otros teléfonos marcando el número..
-    b. Recibir llamadas de otros números.
-    c. Terminar una llamada en curso.
+    a. Realizar llamadas a otros teléfonos marcando el número.. OK
+    b. Recibir llamadas de otros números. OK
+    c. Terminar una llamada en curso. OK
     d. Agendar y actualizar contactos OK
     e. Enviar y recibir mensajes de texto (SMS) a un número de destino. OK
     f. Ver bandeja de entrada de SMS e historial de llamadas. OK
     g. Eliminar mensajes (SMS). OK
     h. Ver e-mails, los cuales deben poder consultarse según:
-        i. “no leídos primeros”
-        ii. “por fecha” (del último en llegar al primero)
+        i. “no leídos primeros” OK
+        ii. “por fecha” (del último en llegar al primero) OK
     i. Descargar una nueva app desde la tienda de aplicaciones. OK
     j. Configurar:
         i. nombre de teléfono, código de desbloqueo. OK
         ii. Activar red móvil: cada vez que el dispositivo se enciende esta acción debe ejecutarse. OK
         iii. Desactivar red móvil OK
-        iv. Activar y desactivar datos (conectividad a internet)
+        iv. Activar y desactivar datos (conectividad a internet) OK
 
 
 ¿Cómo ocurre la comunicación?

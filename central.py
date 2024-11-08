@@ -9,10 +9,57 @@ from Apps.configuracion import ModoRed
 #from manejadorCSV import ManejadorSMS
 #La primera vez que se activa el servicio del celular se da de alta en la central
 #Luego la central chequea que tenga servicio o LTE segun corresponda para realizar la comunicacion
-#
 
 class Central:
-   
+    """
+    La clase Central representa una central de comunicaciones que maneja 
+    dispositivos, llamadas y mensajes. Contiene todos los celulares registrados.
+    
+    Atributos:
+    ----------
+    registro_llamadas (deque):
+        Pila de llamadas registradas en la central.
+    registro_dispositivos (dict):
+        Diccionario que contiene el número de teléfono como clave y el objeto celular como valor.
+    registro_mensajes (dict):
+        Diccionario que contiene colas de mensajes.
+
+    Métodos:
+    --------
+    __init__():
+        Inicializa una instancia de la clase Central.
+    registrar_dispositivo(numero, celular):
+        Registra un dispositivo en la central.
+    consultar_LTE(numero):
+        Consulta si un dispositivo está en modo LTE.
+    esta_registrado(numero: str) -> bool:
+        Verifica si un número está registrado en la central.
+    esta_activo(numero: str) -> bool:
+        Verifica si un número está activo en la central.
+    registrar_llamada(llamada):
+        Registra una llamada en la central.
+    registrar_mensaje_nuevo(mensaje: Mensaje):
+        Registra un nuevo mensaje en la central.
+    registrar_mensajes(numero_cel):
+        Registra los mensajes no sincronizados de un dispositivo.
+    esta_ocupado(numero, fecha_inicio_llamada_nueva: datetime):
+        Verifica si un número está ocupado en una llamada.
+    terminar_llamada(numero):
+        Termina una llamada en curso.
+    manejar_llamada(emisor, receptor, fecha_inicio: datetime, duracion: timedelta):
+        Maneja una llamada entre dos dispositivos.
+    manejar_mensaje(emisor, receptor):
+        Maneja el envío de un mensaje entre dos dispositivos.
+    eliminar_mensaje(mensaje, numero):
+        Elimina un mensaje de la central.
+    mostrar_dispositivos():
+        Muestra todos los dispositivos registrados en la central.
+    cargar_mensajes():
+        Carga los mensajes desde un archivo.
+    exportar_mensajes():
+        Exporta los mensajes a un archivo.
+    """
+
     def __init__(self):
         self.registro_llamadas = deque()
         self.registro_dispositivos = {} #diccionario que contiene el numero en la key y el objeto celular en el valor
@@ -55,8 +102,8 @@ class Central:
         emisor = llamada.get_emisor()
         receptor = llamada.get_receptor()
         
-        self.registro_dispositivos[emisor].aplicaciones["Telefono"].añadir_llamada(llamada, iniciada=True)
-        self.registro_dispositivos[receptor].aplicaciones["Telefono"].añadir_llamada(llamada, iniciada=False)
+        self.registro_dispositivos[emisor].aplicaciones["Telefono"].aniadir_llamada(llamada, iniciada=True)
+        self.registro_dispositivos[receptor].aplicaciones["Telefono"].aniadir_llamada(llamada, iniciada=False)
         print("")
         print(f"Se a registrado la llamada {'perdida' if llamada.get_perdida() else 'recibida'} por el numero - {receptor} - enviada por - {emisor} - en la central")
 
@@ -159,27 +206,26 @@ class Central:
             ValueError: Si no hay llamada en curso.
         """
 
-
         if not self.esta_ocupado(numero):
             raise ValueError ("No hay llamada en curso")
         if not self.esta_registrado(numero):    
             raise ValueError (f"El celular {numero} no se encuentra registrado en la Central")
         if not self.esta_activo(numero):
-            raise ValueError (f"El celular {numero} no se encuentra activo en la Central")    
-        
-        
+            raise ValueError (f"El celular {numero} no se encuentra activo en la Central")
+
         llamada = self.registro_dispositivos[numero].aplicaciones["Telefono"].get_ultima_llamada()
         fecha_inicio = llamada.get_fecha()
         fecha_fin = datetime.now()
 
         duracion_nueva = fecha_fin - fecha_inicio        
         llamada.set_duracion(duracion_nueva)
-        
+
         print(f"Se termino la llamada en curso entre {llamada.emisor} y {llamada.receptor}")
 
     def manejar_llamada(self, emisor, receptor, fecha_inicio:datetime, duracion:timedelta):
         """
-        Maneja una llamada que se produce en la central, la registra y la almacena en el registro de llamadas.
+        Maneja una llamada que se produce en la central, la registra y la almacena en el 
+        registro de llamadas.
         
         Args:
             emisor (str): Número de teléfono del emisor de la llamada.
@@ -203,7 +249,7 @@ class Central:
 
         print(f"{emisor} llamando a {receptor}...")
         if self.esta_ocupado(emisor):
-            raise ValueError(f"Usted ya se encuentra ocupado")
+            raise ValueError("Usted ya se encuentra ocupado")
         llamada= Llamada(emisor, receptor, duracion, fecha_inicio)
         if self.esta_ocupado(receptor):
             print(f"El dispositivo de numero {receptor} esta ocupado")

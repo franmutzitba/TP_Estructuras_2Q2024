@@ -163,7 +163,7 @@ class ManejadorLlamadas(ManejadorCSV):
         """
         self.exportar([['Emisor', 'Receptor', 'Duracion', 'Fecha Inicio', 'Perdida']])
         while self.central.registro_llamadas:
-            llamada = self.central.registro_llamadas.pop()
+            llamada = self.central.registro_llamadas.popleft()
             self.exportar([[llamada.get_emisor(), llamada.get_receptor(), llamada.get_duracion(), llamada.get_fecha(), llamada.get_perdida()]], "a")
             
     def cargar_llamadas(self):

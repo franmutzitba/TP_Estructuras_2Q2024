@@ -160,7 +160,7 @@ class Mensaje(Comunicacion):
     def __str__(self):
         fecha_min = self.fecha.strftime("%Y-%m-%d %H:%M")
         return f"Emisor: {self.emisor}, Receptor: {self.receptor}, Texto: {self.mensaje}, Fecha: {fecha_min}"
-    
+
 class Mail(Comunicacion):
     """
     Clase que instancia un mail con los atributos cuerpo, email_emisor, email_receptor, 
@@ -179,7 +179,7 @@ class Mail(Comunicacion):
     leido (bool):
         Indica si el mail fue leído o no.
     """
-    def __init__(self, cuerpo, emisor, receptor, asunto, fecha, leido=False):            
+    def __init__(self, cuerpo, emisor, receptor, asunto, fecha, leido=False):
         super().__init__(emisor, receptor, 'Mail')
         if not isinstance(cuerpo, str) or not isinstance(emisor, str) or not isinstance(receptor, str) or not isinstance(asunto, str) or not isinstance(leido, bool):
             raise ValueError("Los atributos del Mail deben ser del tipo correcto")
@@ -187,6 +187,6 @@ class Mail(Comunicacion):
         self.asunto = asunto
         self.fecha = fecha
         self.leido = leido
+
     def __str__(self):
         return f"Fecha:{self.fecha}\nEmisor: {self.emisor}\nReceptor: {self.receptor}\nAsunto: {self.asunto}\nCuerpo: {self.cuerpo}\n"
-

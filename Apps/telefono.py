@@ -2,12 +2,51 @@
 Módulo que contiene la clase TelefonoApp. Esta clase representa la aplicación de Teléfono.
 """
 
+from collections import deque
 import datetime
 import os
 from Apps.aplicacion import Aplicacion
-from collections import deque
 
 class TelefonoApp(Aplicacion):
+    """Clase que representa la aplicación de Teléfono de un dispositivo móvil.
+    
+    Atributos:
+    ----------
+    numero (str):
+        Número de teléfono del dispositivo.
+    contactos (dict):
+        Diccionario con los contactos del dispositivo.
+    central (CentralTelefonica):
+        Instancia de la central telefónica a la que pertenece el teléfono.
+    llamadas_iniciadas (deque):
+        Cola de llamadas iniciadas por el teléfono.
+    llamadas_recibidas (deque):
+        Cola de llamadas recibidas por el teléfono.
+    
+    Métodos:
+    --------
+    numero_en_contactos(self, numero):
+        Verifica si un número está en la lista de contactos.
+    nombre_contacto(self, numero):
+        Obtiene el nombre del contacto dado un número de teléfono.
+    iniciar_llamada_contacto(self, item, duracion):
+        Inicia una llamada a un contacto por su índice en la lista de contactos.
+    iniciar_llamada(self, numero_receptor, duracion=5):
+        Inicia una llamada a un número receptor con una duración especificada.
+    aniadir_llamada(self, llamada, iniciada=False):
+        Agrega una llamada a la lista de llamadas.
+    mostrar_historial_llamadas(self):
+        Muestra el historial de llamadas del teléfono.
+    terminar_llamada_en_curso(self):
+        Termina la llamada en curso del teléfono.
+    get_ultima_llamada(self):
+        Devuelve la última llamada realizada o recibida por el teléfono.
+    mostrar_contactos(self):
+        Muestra la lista de contactos registrados en el teléfono.
+    menu_navegacion(self):
+        Muestra el menú de navegación de la aplicación de teléfono.
+    """
+    
     def __init__(self, numero, central, contactos):
         super().__init__(nombre="Telefono", tamanio="200 MB", esencial=True)
         self.numero = numero
@@ -15,7 +54,7 @@ class TelefonoApp(Aplicacion):
         self.central = central
         self.llamadas_iniciadas = deque()
         self.llamadas_recibidas = deque()
-        
+
     def numero_en_contactos(self, numero):
         """
         Verifica si un número está en la lista de contactos.
@@ -29,7 +68,6 @@ class TelefonoApp(Aplicacion):
         return numero in self.contactos.keys()
 
     def nombre_contacto(self, numero):
-        
         """
         Obtiene el nombre del contacto dado un número de teléfono.
         
@@ -94,9 +132,8 @@ class TelefonoApp(Aplicacion):
         fecha_inicio = datetime.datetime.now()
         duracion = datetime.timedelta(minutes=duracion)
         self.central.manejar_llamada(self.numero, numero_receptor, fecha_inicio, duracion)
-    
-    def añadir_llamada(self, llamada, iniciada = False):
-        
+
+    def aniadir_llamada(self, llamada, iniciada = False):
         """
         Agrega una llamada a la lista de llamadas.
         
@@ -108,9 +145,8 @@ class TelefonoApp(Aplicacion):
             self.llamadas_iniciadas.appendleft(llamada)
         else:
             self.llamadas_recibidas.appendleft(llamada)
-        
-    def mostrar_historial_llamadas(self):
 
+    def mostrar_historial_llamadas(self):
         """
         Muestra el historial de llamadas del teléfono.
         
@@ -126,7 +162,7 @@ class TelefonoApp(Aplicacion):
             raise ValueError("No hay llamadas registradas.")
         llamadas = sorted(list(self.llamadas_iniciadas + self.llamadas_recibidas), key = lambda x: x.fecha, reverse=True)
         print(f"Historial de llamadas del telefono {self.numero}:")
-        
+
         for llamada in llamadas:
             if self.numero_en_contactos(llamada.emisor):
                 emisor = self.nombre_contacto(llamada.emisor)
@@ -143,7 +179,6 @@ class TelefonoApp(Aplicacion):
             print(f"Emisor: {emisor}, Receptor: {receptor}, Duracion: {llamada.duracion}, Fecha: {llamada.fecha} {',(Perdida)' if llamada.perdida else ''}")
 
     def terminar_llamada_en_curso(self):
-
         """
         Termina la llamada en curso del teléfono.
         
@@ -151,7 +186,7 @@ class TelefonoApp(Aplicacion):
             ValueError: Si no hay llamada en curso.
         """
         self.central.terminar_llamada(self.numero)
-    
+
     def get_ultima_llamada(self):
         """
         Devuelve la última llamada realizada o recibida por el teléfono.
@@ -167,9 +202,9 @@ class TelefonoApp(Aplicacion):
             return self.llamadas_iniciadas[0]
         elif self.llamadas_recibidas:
             return self.llamadas_recibidas[0]
-        return None   
-    def mostrar_contactos(self):
+        return None
 
+    def mostrar_contactos(self):
         """
         Muestra la lista de contactos registrados en el teléfono.
 
@@ -185,7 +220,7 @@ class TelefonoApp(Aplicacion):
             raise ValueError("No hay contactos registrados.")
         for i, contacto in enumerate(self.contactos.values()):
             print(f"{i+1}. {contacto}")
-    
+
     def menu_navegacion(self):
         """
         Muestra el menú de navegación de la aplicación de teléfono.
@@ -257,6 +292,7 @@ class TelefonoApp(Aplicacion):
                 print("Opción inválida")
                 input("Presione cualquier tecla para volver al menú de Teléfono...")
                 os.system("cls")
+
     def __str__ (self):
         """
         Retorna una representación en cadena de la aplicación Telefono.
