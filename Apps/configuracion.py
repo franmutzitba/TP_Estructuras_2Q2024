@@ -39,7 +39,7 @@ class Configuracion:
     contrasenia (str):
         La contraseña del dispositivo.
     """
-    def __init__(self, nombre, almacenamiento, central, numero, aplicaciones_instaladas, modo_red = ModoRed.LTE, modo_avion=False, contrasenia = None):
+    def __init__(self, nombre, almacenamiento, central, numero, aplicaciones_instaladas, modo_red = ModoRed.SIN_RED, modo_avion=False, contrasenia = None):
         self.nombre = nombre
         self.almacenamiento_disponible = almacenamiento - tamanio_a_bytes("1.5GB") #se resta el tamaño de las aplicaciones básicas
         self.central = central
