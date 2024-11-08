@@ -82,3 +82,39 @@ plt.ylabel('Category')
 plt.grid(True)
 plt.show()
 
+# Top 10 aplicaciones gratis con más descargas
+free_apps = [app for app in apps if app[6] == 'Free']
+free_apps_sorted = sorted(free_apps, key=lambda x: int(x[5].replace(',', '').replace('+', '')), reverse=True)[:10]
+
+top_10_free_apps_names = [app[0] for app in free_apps_sorted]
+top_10_free_apps_installs = [int(app[5].replace(',', '').replace('+', '')) for app in free_apps_sorted]
+
+plt.figure(figsize=(12, 8))
+plt.barh(top_10_free_apps_names, top_10_free_apps_installs, color='lightgreen')
+plt.title('Top 10 Free Apps by Number of Installs')
+plt.xlabel('Number of Installs')
+plt.ylabel('App Name')
+plt.gca().invert_yaxis()  # Invertir el eje y para que el top esté arriba
+plt.grid(True)
+plt.show()
+
+# Evolución de la cantidad de nuevas apps por año
+years = []
+
+for app in apps:
+    try:
+        year = int(app[10].split('-')[-1])  # Asumiendo que la fecha está en el formato 'dd-mm-yyyy'
+        years.append(year)
+    except (ValueError, IndexError):
+        continue  # Ignorar filas con datos no válidos
+
+years = np.array(years)
+unique_years, counts_years = np.unique(years, return_counts=True)
+
+plt.figure(figsize=(12, 8))
+plt.plot(unique_years, counts_years, marker='o', linestyle='-', color='b')
+plt.title('Evolution of the Number of New Apps per Year')
+plt.xlabel('Year')
+plt.ylabel('Number of New Apps')
+plt.grid(True)
+plt.show()

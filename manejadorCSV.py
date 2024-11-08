@@ -164,8 +164,9 @@ class ManejadorLlamadas(ManejadorCSV):
         self.exportar([['Emisor', 'Receptor', 'Duracion', 'Fecha Inicio', 'Perdida']])
         while self.central.registro_llamadas:
             llamada = self.central.registro_llamadas.popleft()
-            self.exportar([[llamada.get_emisor(), llamada.get_receptor(), llamada.get_duracion(), llamada.get_fecha(), llamada.get_perdida()]], "a")
-            
+            duracion = str(llamada.get_duracion())[:-7:] if len(str(llamada.get_duracion())[:-7:]) > 6 else str(llamada.get_duracion())
+            self.exportar([[llamada.get_emisor(), llamada.get_receptor(), duracion, llamada.get_fecha(), llamada.get_perdida()]], "a")
+
     def cargar_llamadas(self):
         """
         Carga las llamadas desde un archivo CSV y las registra en la central.

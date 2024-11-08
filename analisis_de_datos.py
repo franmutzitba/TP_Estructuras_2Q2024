@@ -32,17 +32,18 @@ class AnalisisDatos:
         """Menu Navegacion"""
         salir = False
         while not salir:
-            print("1. Gráfico de Barras de Categorías")
-            print("2. Gráfico de Pastel de Tipos")
-            print("3. Gráfico de Dispersión de Calificaciones y Reseñas")
-            print("4. Histograma de Calificaciones")
-            print("5. Gráfico de Dispersión de Instalaciones y Calificaciones")
-            print("6. Gráfico de Líneas de Tamaño Promedio por Categoría")
-            print("7. Gráfico de Barras Apiladas de Categorías y Tipos")
-            print("8. Gráfico de Boxplot de Calificaciones por Categoría")
-            print("9. Gráfico de Área de Evolución de Aplicaciones")
-            print("10. Gráfico de Violín de Calificaciones por Tipo")
-            print("11. Gráfico de Burbujas de Calificaciones, Reseñas y Tamaño")
+            print("1. Gráfico de Barras de Categorías") #Hacer este pero top 10
+            print("2. Gráfico de Pastel de Tipos") #Sacar NaN
+            print("3. Gráfico de Dispersión de Calificaciones y Reseñas") #Mmm
+            print("4. Histograma de Calificaciones") #Tira error
+            print("5. Gráfico de Dispersión de Instalaciones y Calificaciones") #Mmm
+            print("6. Gráfico de Líneas de Tamaño Promedio por Categoría") #Banco
+            print("7. Gráfico de Barras Apiladas de Categorías y Tipos") #Tira error
+            print("8. Gráfico de Boxplot de Calificaciones por Categoría") #Tira error
+            print("9. Gráfico de Área de Evolución de Aplicaciones") #Tira error
+            print("10. Gráfico de Violín de Calificaciones por Tipo") #Tira error
+            print("11. Gráfico de Burbujas de Calificaciones, Reseñas y Tamaño") #Mmm
+            #Hacer uno que sea top 10 apps gratis con más descargas
             print("12. Salir")
             opcion = input("Seleccione una opción: ")
             if opcion == '1':
@@ -76,7 +77,7 @@ class AnalisisDatos:
 
     def grafico_barras_categorias(self):
         """
-        Genera un gráfico de barras de las categorías de aplicaciones más comunes.
+        Genera un gráfico de barras de las categorías de aplicaciones más comunes. Top 10.
         """
         categorias = defaultdict(int)
         for row in self.data:
