@@ -136,6 +136,10 @@ class TelefonoApp(Aplicacion):
                 receptor = self.nombre_contacto(llamada.receptor)
             else:
                 receptor = llamada.receptor
+            if llamada.emisor == self.numero:
+                emisor = 'Usted'
+            else:
+                receptor = 'Usted'
             print(f"Emisor: {emisor}, Receptor: {receptor}, Duracion: {llamada.duracion}, Fecha: {llamada.fecha} {',(Perdida)' if llamada.perdida else ''}")
 
     def terminar_llamada_en_curso(self):

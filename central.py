@@ -158,14 +158,15 @@ class Central:
             ValueError: Si el número de celular no se encuentra activo en la Central.
             ValueError: Si no hay llamada en curso.
         """
-        
+
+
+        if not self.esta_ocupado(numero):
+            raise ValueError ("No hay llamada en curso")
         if not self.esta_registrado(numero):    
             raise ValueError (f"El celular {numero} no se encuentra registrado en la Central")
         if not self.esta_activo(numero):
             raise ValueError (f"El celular {numero} no se encuentra activo en la Central")    
-        if not self.esta_ocupado(numero):
-            raise ValueError ("No hay llamada en curso")
-    
+        
         
         llamada = self.registro_dispositivos[numero].aplicaciones["Telefono"].get_ultima_llamada()
         fecha_inicio = llamada.get_fecha()
@@ -197,8 +198,8 @@ class Central:
             raise ValueError(f"No se puede realizar la llamada al celular {receptor} al no estar registrado en la central")
         if not self.esta_activo(emisor):
             raise ValueError(f"No se puede realizar la llamada por el celular {emisor} al no estar activo el servicio")
-        if not self.esta_activo(receptor):
-            raise ValueError(f"No se puede realizar la llamada al celular {receptor} al no estar activo el servicio")
+        #if not self.esta_activo(receptor):
+        #    raise ValueError(f"No se puede realizar la llamada al celular {receptor} al no estar activo el servicio")
 
         print(f"{emisor} llamando a {receptor}...")
         if self.esta_ocupado(emisor):
@@ -207,6 +208,11 @@ class Central:
         if self.esta_ocupado(receptor):
             print(f"El dispositivo de numero {receptor} esta ocupado")
             llamada.set_perdida(True)
+            llamada.set_duracion(0)
+        if not self.esta_activo(receptor):
+            print(f"No se puede realizar la llamada al celular {receptor} al no estar activo el servicio")
+            llamada.set_perdida(True)
+            llamada.set_duracion(0)
         self.registrar_llamada(llamada)
 
     def manejar_mensaje(self, emisor, receptor):
