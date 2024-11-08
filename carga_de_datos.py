@@ -108,8 +108,8 @@ print("")
 ###########################
 input("Presione para realizar llamadas:")
 celular1.lanzar_app("Telefono").iniciar_llamada("48321234")
+celular3.lanzar_app("Telefono").iniciar_llamada("48321234") #El 3 llama al 2 que está ocupado
 celular1.lanzar_app("Telefono").terminar_llamada_en_curso()
-celular1.lanzar_app("Telefono").iniciar_llamada("45671230",150)
 
 
 

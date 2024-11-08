@@ -254,11 +254,11 @@ class Central:
         if self.esta_ocupado(receptor):
             print(f"El dispositivo de numero {receptor} esta ocupado")
             llamada.set_perdida(True)
-            llamada.set_duracion(0)
+            llamada.set_duracion(timedelta(0))
         if not self.esta_activo(receptor):
             print(f"No se puede realizar la llamada al celular {receptor} al no estar activo el servicio")
             llamada.set_perdida(True)
-            llamada.set_duracion(0)
+            llamada.set_duracion(timedelta(0))
         self.registrar_llamada(llamada)
 
     def manejar_mensaje(self, emisor, receptor):
