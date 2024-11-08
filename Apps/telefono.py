@@ -17,9 +17,28 @@ class TelefonoApp(Aplicacion):
         self.llamadas_recibidas = deque()
         
     def numero_en_contactos(self, numero):
+        """
+        Verifica si un número está en la lista de contactos.
+        
+        Args:
+            numero (str): El número de teléfono a verificar.
+        
+        Returns:
+            bool: True si el número está en la lista de contactos, False en caso contrario.
+        """
         return numero in self.contactos.keys()
 
     def nombre_contacto(self, numero):
+        
+        """
+        Obtiene el nombre del contacto dado un número de teléfono.
+        
+        Args:
+            numero (str): El número de teléfono del contacto.
+        
+        Returns:
+            str: El nombre del contacto o None si no existe.
+        """
         return self.contactos.get(numero)
 
     def iniciar_llamada_contacto(self, item, duracion):
@@ -49,20 +68,23 @@ class TelefonoApp(Aplicacion):
         self.iniciar_llamada(numero_receptor, int(duracion))
 
     def iniciar_llamada(self, numero_receptor, duracion=5):
+    
         """
-        Inicia una llamada a un número de receptor con una duración específica.
+        Inicia una llamada a un número receptor con una duración especificada.
 
         Args:
-            numero_receptor (str): El número del receptor.
-            duracion (int): La duración de la llamada en minutos. Por defecto es 5 minutos.
+            numero_receptor (str): Número de teléfono del receptor que debe tener 8 dígitos.
+            duracion (int, optional): Duración de la llamada en minutos. El valor por defecto es 5.
+
+        Raises:
+            ValueError: Si el número de receptor no tiene 8 dígitos.
+            ValueError: Si la duración es mayor a 1440 minutos (24 horas).
+            ValueError: Si se intenta llamar al mismo número del emisor.
 
         Returns:
             None
-            
-        Raises:
-            ValueError: Si la duración de la llamada es mayor a 1440 minutos (24 horas).
         """
-        if len(numero_receptor) != 8:
+        if len(numero_receptor) != 8 or not numero_receptor.isdigit():
             raise ValueError("Numero incorrecto")
         if duracion > 1440:
             raise ValueError("La duracion no puede ser mayor a 24hs (1440 minutos)")
@@ -74,13 +96,32 @@ class TelefonoApp(Aplicacion):
         self.central.manejar_llamada(self.numero, numero_receptor, fecha_inicio, duracion)
     
     def añadir_llamada(self, llamada, iniciada = False):
+        
+        """
+        Agrega una llamada a la lista de llamadas.
+        
+        Args:
+            llamada (Llamada): La llamada a agregar.
+            iniciada (bool, optional): True si la llamada fue iniciada por el usuario. False si la llamada fue recibida. El valor por defecto es False.
+        """
         if iniciada:
             self.llamadas_iniciadas.appendleft(llamada)
         else:
             self.llamadas_recibidas.appendleft(llamada)
         
     def mostrar_historial_llamadas(self):
-        """Muestra el historial de llamadas."""
+
+        """
+        Muestra el historial de llamadas del teléfono.
+        
+        Muestra una lista con las llamadas realizadas y recibidas del teléfono,
+        ordenadas de manera cronológica inversa. Si una llamada fue realizada
+        o recibida por un contacto, se muestra el nombre del contacto en lugar
+        del número de teléfono.
+        
+        Raises:
+            ValueError: Si no hay llamadas registradas.
+        """
         if not self.llamadas_iniciadas and not self.llamadas_recibidas:
             raise ValueError("No hay llamadas registradas.")
         llamadas = sorted(list(self.llamadas_iniciadas + self.llamadas_recibidas), key = lambda x: x.fecha, reverse=True)
@@ -98,10 +139,24 @@ class TelefonoApp(Aplicacion):
             print(f"Emisor: {emisor}, Receptor: {receptor}, Duracion: {llamada.duracion}, Fecha: {llamada.fecha} {',(Perdida)' if llamada.perdida else ''}")
 
     def terminar_llamada_en_curso(self):
-        """Termina la llamada en curso."""
+
+        """
+        Termina la llamada en curso del teléfono.
+        
+        Raises:
+            ValueError: Si no hay llamada en curso.
+        """
         self.central.terminar_llamada(self.numero)
     
     def get_ultima_llamada(self):
+        """
+        Devuelve la última llamada realizada o recibida por el teléfono.
+        
+        Si no hay llamadas, devuelve None.
+        
+        Returns:
+            Llamada: La última llamada o None si no hay llamadas.
+        """
         if self.llamadas_iniciadas and self.llamadas_recibidas:
             return max(self.llamadas_iniciadas[0], self.llamadas_recibidas[0], key=lambda x: x.fecha)
         elif self.llamadas_iniciadas:
@@ -110,7 +165,18 @@ class TelefonoApp(Aplicacion):
             return self.llamadas_recibidas[0]
         return None   
     def mostrar_contactos(self):
-        """Muestra los contactos."""
+
+        """
+        Muestra la lista de contactos registrados en el teléfono.
+
+        Si no hay contactos registrados, lanza una excepción ValueError.
+
+        Raises:
+            ValueError: Si no hay contactos registrados.
+
+        Prints:
+            La lista de contactos numerados.
+        """
         if not self.contactos.values():
             raise ValueError("No hay contactos registrados.")
         for i, contacto in enumerate(self.contactos.values()):
@@ -188,4 +254,10 @@ class TelefonoApp(Aplicacion):
                 input("Presione cualquier tecla para volver al menú de Teléfono...")
                 os.system("cls")
     def __str__ (self):
+        """
+        Retorna una representación en cadena de la aplicación Telefono.
+
+        Returns:
+            str: La representación en cadena de la aplicación Telefono.
+        """
         return f"Aplicacion Telefono del numero: {self.numero}"

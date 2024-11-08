@@ -45,6 +45,12 @@ class Central:
         return self.registro_dispositivos[numero].aplicaciones["Configuracion"].configuracion.modo_red != ModoRed.SIN_RED
 
     def registrar_llamada(self, llamada):
+        """
+        Registra una llamada en la central y en los dispositivos correspondientes.
+        
+        Args:
+            llamada (Llamada): Llamada a registrar en la central y en los dispositivos.
+        """
         self.registro_llamadas.appendleft(llamada)
         emisor = llamada.get_emisor()
         receptor = llamada.get_receptor()
@@ -125,6 +131,14 @@ class Central:
             # Tambien fueron los ultimos en enntrar por eso pila
 
     def esta_ocupado(self, numero):
+        """Verifica si el número de celular se encuentra ocupado en una llamada en curso.
+        
+        Args:
+            numero (str): Número de teléfono a verificar.
+        
+        Returns:
+            bool: True si el número de teléfono se encuentra en una llamada en curso, False en caso contrario.
+        """
         fecha_actual = datetime.now()
         llamada = self.registro_dispositivos[numero].aplicaciones["Telefono"].get_ultima_llamada()
         if llamada:
@@ -133,6 +147,18 @@ class Central:
 
     def terminar_llamada(self, numero):
 
+        """
+        Termina la llamada en curso de un número de celular.
+        
+        Args:
+            numero (str): Número de teléfono para el cual se desea terminar la llamada en curso.
+        
+        Raises:
+            ValueError: Si el número de celular no está registrado.
+            ValueError: Si el número de celular no se encuentra activo en la Central.
+            ValueError: Si no hay llamada en curso.
+        """
+        
         if not self.esta_registrado(numero):    
             raise ValueError (f"El celular {numero} no se encuentra registrado en la Central")
         if not self.esta_activo(numero):
@@ -151,6 +177,20 @@ class Central:
         print(f"Se termino la llamada en curso entre {llamada.emisor} y {llamada.receptor}")
 
     def manejar_llamada(self, emisor, receptor, fecha_inicio:datetime, duracion:timedelta):
+        """
+        Maneja una llamada que se produce en la central, la registra y la almacena en el registro de llamadas.
+        
+        Args:
+            emisor (str): Número de teléfono del emisor de la llamada.
+            receptor (str): Número de teléfono del receptor de la llamada.
+            fecha_inicio (datetime): Fecha y hora en que se inicio la llamada.
+            duracion (timedelta): Duración de la llamada.
+        
+        Raises:
+            ValueError: Si el emisor o receptor no se encuentra registrado en la central.
+            ValueError: Si el emisor o receptor no se encuentra activo en la central.
+            ValueError: Si el emisor o receptor se encuentra ocupado.
+        """
         if not self.esta_registrado(emisor):
             raise ValueError(f"No se puede realizar la llamada por el celular {emisor} al no estar registrado en la central")
         if not self.esta_registrado(receptor):
