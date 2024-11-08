@@ -5,7 +5,7 @@ archivos CSV
 
 import csv
 from collections import deque
-from datetime import datetime
+from datetime import datetime, timedelta 
 import numpy as np
 from Apps.mail import CuentaMail, Mail
 from comunicacion import Mensaje, Llamada
@@ -161,13 +161,11 @@ class ManejadorLlamadas(ManejadorCSV):
         """
         Exporta las llamadas a un archivo CSV.
         """
-        self.exportar([['Receptor', 'Emisor', 'Duracion', 'Fecha Inicio', 'Recibida']])
-        for receptor, emisores in self.central.registro_llamadas.items():
-            for emisor, llamadas in emisores.items():
-                for llamada in llamadas:
-                    duracion = str(llamada.get_duracion())[:-7:] if len(str(llamada.get_duracion())[:-7:]) > 6 else str(llamada.get_duracion())
-                    self.exportar([[receptor, emisor, duracion, llamada.get_fecha_inicio(), not llamada.get_perdida()]], "a")
-
+        self.exportar([['Emisor', 'Receptor', 'Duracion', 'Fecha Inicio', 'Perdida']])
+        while self.central.registro_llamadas:
+            llamada = self.central.registro_llamadas.pop()
+            self.exportar([[llamada.get_emisor(), llamada.get_receptor(), llamada.get_duracion(), llamada.get_fecha(), llamada.get_perdida()]], "a")
+            
     def cargar_llamadas(self):
         """
         Carga las llamadas desde un archivo CSV y las registra en la central.
@@ -176,7 +174,9 @@ class ManejadorLlamadas(ManejadorCSV):
         if not lista_llamadas:
             return None
         for llamada in lista_llamadas:
-            self.central.registrar_llamada(Llamada(llamada[1], llamada[0], datetime.strptime(llamada[2],'%H:%M:%S').time(), datetime.fromisoformat(llamada[3]), llamada[4] == "False"))
+            duracion = datetime.strptime(llamada[2],'%H:%M:%S').time()
+            duracion_en_formato = timedelta(hours=duracion.hour, minutes=duracion.minute, seconds=duracion.second)
+            self.central.registrar_llamada(Llamada(llamada[0], llamada[1], duracion_en_formato , datetime.fromisoformat(llamada[3]), llamada[4] == "True"))
 
 class ManejadorContactos(ManejadorCSV):
     """
@@ -292,6 +292,7 @@ class ManejadorDispositivos(ManejadorCSV):
 
             for aplicacion in dispositivo[10:]:
                 celular.aplicaciones["AppStore"].descargar_app(aplicacion, carga_datos = True)
+            self.central.registrar_dispositivo(dispositivo[2], celular)
             lista_celulares.append(celular)
 
         return lista_celulares

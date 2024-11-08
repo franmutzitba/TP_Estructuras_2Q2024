@@ -5,82 +5,22 @@ Módulo que contiene la clase TelefonoApp. Esta clase representa la aplicación 
 import datetime
 import os
 from Apps.aplicacion import Aplicacion
+from collections import deque
 
 class TelefonoApp(Aplicacion):
-    """
-    Clase que representa la aplicación de Teléfono.
-    Hereda de la clase Aplicacion.
-    
-    Atributos:
-    ----------
-    numero (str): 
-        El número de teléfono del dispositivo.
-    contactos (dict):
-        Diccionario que almacena los contactos con el número de teléfono como clave y
-        el nombre como valor.
-    central (Central):
-        La instancia de la central telefónica.
-    
-    Métodos:
-    --------
-    __init__(numero, central, contactos):
-        Inicializa la clase TelefonoApp con un número, una central y una instancia de ContactosApp.
-    numero_en_contactos(numero):
-        Verifica si un número está en la lista de contactos.
-    nombre_contacto(numero):
-        Obtiene el nombre del contacto asociado a un número de teléfono.
-    iniciar_llamada_contacto(item, duracion):
-        Inicia una llamada a un contacto por su índice en la lista de contactos.
-    iniciar_llamada(numero_receptor, duracion=5):
-        Inicia una llamada a un número de receptor con una duración específica.
-    mostrar_historial_llamadas():
-        Muestra el historial de llamadas.
-    terminar_llamada_en_curso():
-        Termina la llamada en curso.
-    fecha_en_tupla(tupla):
-        Convierte la fecha de una tupla en un objeto datetime.
-    menu_navegacion():
-        Muestra el menú de navegación de la aplicación de teléfono.
-    """
-
     def __init__(self, numero, central, contactos):
-        """
-        Inicializa la clase TelefonoApp con un número, una central y una instancia 
-        de ContactosApp.
-
-        Args:
-            numero (str): El número de teléfono del dispositivo.
-            central (Central): La instancia de la central telefónica.
-            contactos (ContactosApp): La instancia de la aplicación de contactos.
-        """
         super().__init__(nombre="Telefono", tamanio="200 MB", esencial=True)
         self.numero = numero
-        self.contactos = contactos  # pedir la instancia de contactos creada en ese celular
+        self.contactos = contactos.agenda  # pedir la instancia de contactos creada en ese celular
         self.central = central
-
+        self.llamadas_iniciadas = deque()
+        self.llamadas_recibidas = deque()
+        
     def numero_en_contactos(self, numero):
-        """
-        Verifica si un número está en la lista de contactos.
-
-        Args:
-            numero (str): El número de teléfono a verificar.
-
-        Returns:
-            bool: True si el número está en la lista de contactos, False en caso contrario.
-        """
-        return numero in self.contactos.agenda.keys()
+        return numero in self.contactos.keys()
 
     def nombre_contacto(self, numero):
-        """
-        Obtiene el nombre del contacto asociado a un número de teléfono.
-
-        Args:
-            numero (str): El número de teléfono del contacto.
-
-        Returns:
-            str: El nombre del contacto, o None si el número no está en la lista de contactos.
-        """
-        return self.contactos.agenda.get(numero)
+        return self.contactos.get(numero)
 
     def iniciar_llamada_contacto(self, item, duracion):
         """
@@ -103,9 +43,9 @@ class TelefonoApp(Aplicacion):
         if not duracion.isdigit():
             raise ValueError("La duración de la llamada debe ser un número entero")
         indice = int(item) - 1
-        if indice < 0 or indice >= len(self.contactos.agenda):
+        if indice < 0 or indice >= len(self.contactos):
             raise ValueError("El contacto seleccionado no existe")
-        numero_receptor = list(self.contactos.agenda.keys())[indice]
+        numero_receptor = list(self.contactos.keys())[indice]
         self.iniciar_llamada(numero_receptor, int(duracion))
 
     def iniciar_llamada(self, numero_receptor, duracion=5):
@@ -122,68 +62,60 @@ class TelefonoApp(Aplicacion):
         Raises:
             ValueError: Si la duración de la llamada es mayor a 1440 minutos (24 horas).
         """
-        if not isinstance(numero_receptor, str):
+        if len(numero_receptor) != 8:
             raise ValueError("Numero incorrecto")
-        if not isinstance(duracion, int):
-            raise ValueError("La duracion debe ser un número entero")
         if duracion > 1440:
             raise ValueError("La duracion no puede ser mayor a 24hs (1440 minutos)")
         if numero_receptor == self.numero:
             raise ValueError("No es posible llamarse a si mismo")
 
-        hora_inicio = datetime.datetime.now()
+        fecha_inicio = datetime.datetime.now()
         duracion = datetime.timedelta(minutes=duracion)
-        self.central.manejar_llamada(self.numero, numero_receptor, hora_inicio, duracion)
-
+        self.central.manejar_llamada(self.numero, numero_receptor, fecha_inicio, duracion)
+    
+    def añadir_llamada(self, llamada, iniciada = False):
+        if iniciada:
+            self.llamadas_iniciadas.appendleft(llamada)
+        else:
+            self.llamadas_recibidas.appendleft(llamada)
+        
     def mostrar_historial_llamadas(self):
         """Muestra el historial de llamadas."""
-        #cuando se termine lo comentamos bien
-        historial_personal = []
-        for historial_receptor in self.central.registro_llamadas.values(): #guarda todas las llamadas en la lista
-            for historial_emisor_receptor in historial_receptor.values():
-                for llamada in historial_emisor_receptor:
-                    if llamada.emisor == self.numero or llamada.receptor == self.numero:
-                        historial_personal.append(llamada)
-
-        historial_organizado = []               #cambia los numeros por contactos cuando corresponde
-        for llamada in historial_personal:
-            if llamada.perdida:
-                tipo = "Llamada perdida"
-            else:
-                tipo = "Llamada realizada"
-
-            if llamada.emisor == self.numero:
-                emisor = "Usted"
-                if llamada.receptor in self.contactos.agenda:
-                    receptor = self.contactos.agenda[llamada.receptor]     #busca el nombre del contacto
-                else:
-                    receptor = llamada.receptor
-                datos_llamada = (llamada.fecha, emisor, receptor, tipo, llamada.duracion)
-                historial_organizado.append(datos_llamada)
-            elif llamada.receptor == self.numero:
-                receptor = "Usted"
-                if llamada.emisor in self.contactos.agenda:
-                    emisor = self.contactos.agenda[llamada.emisor]
-                else:
-                    emisor = llamada.emisor
-                datos_llamada = (llamada.fecha, emisor, receptor, tipo, llamada.duracion)
-                historial_organizado.append(datos_llamada)
-
-        historial_en_orden = sorted(historial_organizado, key=self.fecha_en_tupla)
-
+        if not self.llamadas_iniciadas and not self.llamadas_recibidas:
+            raise ValueError("No hay llamadas registradas.")
+        llamadas = sorted(list(self.llamadas_iniciadas + self.llamadas_recibidas), key = lambda x: x.fecha, reverse=True)
         print(f"Historial de llamadas del telefono {self.numero}:")
-        for llamada in historial_en_orden:
-            print(f"Fecha: {llamada[0]}, Emisor: {llamada[1]}, Receptor: {llamada[2]}, Tipo de llamada: {llamada[3]}, Duracion: {llamada[4]}")
+        
+        for llamada in llamadas:
+            if self.numero_en_contactos(llamada.emisor):
+                emisor = self.nombre_contacto(llamada.emisor)
+            else:
+                emisor = llamada.emisor
+            if self.numero_en_contactos(llamada.receptor):
+                receptor = self.nombre_contacto(llamada.receptor)
+            else:
+                receptor = llamada.receptor
+            print(f"Emisor: {emisor}, Receptor: {receptor}, Duracion: {llamada.duracion}, Fecha: {llamada.fecha} {',(Perdida)' if llamada.perdida else ''}")
 
     def terminar_llamada_en_curso(self):
         """Termina la llamada en curso."""
         self.central.terminar_llamada(self.numero)
-
-    @staticmethod
-    def fecha_en_tupla(tupla):
-        """Convierte la fecha de una tupla en un objeto datetime."""
-        return tupla[0]
-
+    
+    def get_ultima_llamada(self):
+        if self.llamadas_iniciadas and self.llamadas_recibidas:
+            return max(self.llamadas_iniciadas[0], self.llamadas_recibidas[0], key=lambda x: x.fecha)
+        elif self.llamadas_iniciadas:
+            return self.llamadas_iniciadas[0]
+        elif self.llamadas_recibidas:
+            return self.llamadas_recibidas[0]
+        return None   
+    def mostrar_contactos(self):
+        """Muestra los contactos."""
+        if not self.contactos.values():
+            raise ValueError("No hay contactos registrados.")
+        for i, contacto in enumerate(self.contactos.values()):
+            print(f"{i+1}. {contacto}")
+    
     def menu_navegacion(self):
         """
         Muestra el menú de navegación de la aplicación de teléfono.
@@ -193,6 +125,7 @@ class TelefonoApp(Aplicacion):
         print(f"Bienvenido a la aplicación de Teléfono del número {self.numero}")
         salir = False
         while not salir:
+            
             print("Menu de navegacion de la aplicacion Telefono:")
             print("1. Marcar número y llamar")
             print("2. Iniciar llamada a contacto")
@@ -204,20 +137,25 @@ class TelefonoApp(Aplicacion):
                 os.system("cls")
                 print("Marcar número y llamar")
                 receptor = input("Ingrese el número al que desea llamar: ")
-                duracion = int(input("Ingrese la duracion de la llamada en minutos: "))
+                duracion = input("Ingrese la duracion de la llamada en minutos: ")
+                while not duracion.isdigit():
+                    print("La duración debe ser un número entero")
+                    duracion = input("Ingrese la duracion de la llamada en minutos: ")  
                 try:
-                    self.iniciar_llamada(receptor, duracion)
+                    self.iniciar_llamada(receptor, int(duracion))
                 except ValueError as e:
                     print(e)
                 input("Presione cualquier tecla para volver al menú de Teléfono...")
                 os.system('cls')
             elif opcion == "2":
                 os.system("cls")
-                print("Iniciar llamada a contacto")
-                print(self.contactos)
-                item_receptor = input("Ingrese el indice del contacto al que desea llamar: ")
-                duracion = input("Ingrese la duracion de la llamada en minutos: ")
+                print("Iniciar llamada a contacto:")
+                print("Contactos:")
                 try:
+                    self.mostrar_contactos()
+                    item_receptor = input("Ingrese el indice del contacto al que desea llamar: ")
+                    duracion = input("Ingrese la duracion de la llamada en minutos: ")
+                    print("")
                     self.iniciar_llamada_contacto(item_receptor, duracion)
                 except ValueError as e:
                     print(e)
@@ -248,3 +186,6 @@ class TelefonoApp(Aplicacion):
             else:
                 print("Opción inválida")
                 input("Presione cualquier tecla para volver al menú de Teléfono...")
+                os.system("cls")
+    def __str__ (self):
+        return f"Aplicacion Telefono del numero: {self.numero}"

@@ -24,8 +24,8 @@ if "__main__" == __name__:
     manejador_cuentas_mail.cargar_cuentas()
     manejador_mails.cargar_mails()
     manejador_contactos.cargar_contactos()
+    
     os.system("cls")
-
     salir = False
     while not salir:
         print("Bienvenido al menu de navegacion de celulares")
@@ -35,6 +35,7 @@ if "__main__" == __name__:
         print(" 4. Salir")
         opcion = input("Ingrese la opcion deseada: ")
         if opcion == "1":
+            os.system("cls")
             try:
                 if not celulares:
                     raise ValueError("No hay celulares registrados")
@@ -55,6 +56,7 @@ if "__main__" == __name__:
             os.system("cls")
 
         elif opcion == "2":
+            os.system("cls")
             try:
                 nombre = input("Ingrese el nombre del celular: ")
                 modelo = input("Ingrese el modelo del celular: ")
@@ -72,10 +74,12 @@ if "__main__" == __name__:
             input("Presione para volver al menu de navegacion... ")
             os.system("cls")
         elif opcion == "3":
+            os.system("cls")
             analisis_de_datos = AnalisisDatos('Play Store Data.csv')
             analisis_de_datos.menu_navegacion()
             os.system("cls")
         elif opcion == "4":
+            os.system("cls")
             salir = True
             manejador_celulares.exportar_dispositivos()
             manejador_sms.exportar_mensajes()
@@ -87,6 +91,7 @@ if "__main__" == __name__:
             print("")
             print("Gracias por utilizar este programa!")
         else:
+            os.system("cls")
             print("Opción no válida, intente nuevamente")
             input("Presione cualquier tecla para volver al menú del celular...")
             os.system('cls')

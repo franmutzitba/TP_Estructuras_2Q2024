@@ -142,10 +142,10 @@ class MensajesApp(Aplicacion):
         Returns:
             None
         """
-        if self.central.manejar_mensaje(self.numero_cel, receptor):
-            mensaje = self.crear_mensaje(receptor, texto)
-            self.central.registrar_mensaje_nuevo(mensaje)
-            print(f"Mensaje enviado correctamente al numero {receptor}")
+        self.central.manejar_mensaje(self.numero_cel, receptor)
+        mensaje = self.crear_mensaje(receptor, texto)
+        self.central.registrar_mensaje_nuevo(mensaje)
+        print(f"Mensaje enviado correctamente al numero {receptor}")
 
     def recibir_sms(self, mensaje: Mensaje):
         """
