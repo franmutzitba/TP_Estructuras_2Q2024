@@ -278,6 +278,7 @@ class MensajesApp(Aplicacion):
             print("5. Salir")
             opcion = input("Ingrese el número de la opción deseada: ")
             if opcion == "1":
+                os.system('cls')
                 print("1. Enviar mensaje a contacto")
                 print("2. Enviar mensaje a numero ")
                 opcion2 = input("Ingrese el número de la opción deseada: ")

@@ -112,7 +112,7 @@ class Celular:
             ValueError: Si el dispositivo ya se encuentra encendido
         """
         if self.encendido:
-            raise ValueError(f" El dispositivo {self.aplicaciones['Configuracion'].get_nombre()} ya se encuentra encendido ")
+            raise ValueError(f"El dispositivo - {self.aplicaciones['Configuracion'].get_nombre()} - ya se encuentra encendido ")
         print(f"Se ha encencido el dispositivo - {self.aplicaciones['Configuracion'].get_nombre()} -")
         self.encendido = True
         if not self.central.esta_registrado(self.aplicaciones["Configuracion"].get_numero()):

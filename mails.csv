@@ -1,4 +1,4 @@
-Emisor,Receptor,Asunto,Texto,Fecha,Leido
+Cuerpo,Emisor,Receptor,Asunto,Fecha,Leido
 Hola,ahoffmann@itba.edu.ar,fmutz@itba.edu.ar,Reunión,2024-05-01 10:00:00.923994,True
 Hola,fmutz@itba.edu.ar,ahoffmann@itba.edu.ar,Reunión,2024-05-01 10:00:00.923994,False
 "123,probando",ellabra@gmail.com,ahoffmann@itba.edu.ar,Hola,2024-11-07 18:15:35.255308,False

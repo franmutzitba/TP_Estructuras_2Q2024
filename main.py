@@ -28,13 +28,14 @@ if "__main__" == __name__:
 
     salir = False
     while not salir:
-        print("Bienvenido al menu de navegacion de celulares")
+        print("Bienvenido al menú de navegación de celulares")
         print(" 1. Manejar un celular existente")
         print(" 2. Agregar un nuevo celular")
-        print(" 3. Menu de analisis de datos")
+        print(" 3. Menú de análisis de datos")
         print(" 4. Salir")
-        opcion = input("Ingrese la opcion deseada: ")
+        opcion = input("Ingrese la opción deseada: ")
         if opcion == "1":
+            os.system("cls")
             try:
                 if not celulares:
                     raise ValueError("No hay celulares registrados")

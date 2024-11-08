@@ -177,13 +177,13 @@ class ConfigApp(Aplicacion):
                         o apagarlo cuando ya está apagado.
         """
 
-        if self.configuracion.modo_red == ModoRed.SOLO_VOZ_Y_SMS and valor:
+        if (self.configuracion.modo_red == ModoRed.SOLO_VOZ_Y_SMS or self.configuracion.modo_red == ModoRed.LTE) and valor:
             raise ValueError("El servicio ya se encuentra encendido")
         if self.configuracion.modo_red == ModoRed.SIN_RED and not valor:
             raise ValueError("El servicio ya se encuentra apagado")
 
         self.configuracion.modo_red = ModoRed.SOLO_VOZ_Y_SMS if valor else ModoRed.SIN_RED
-        if valor: #HAY Q VER ESTO
+        if valor:
             self.configuracion.modo_avion = False
             try:
                 self.configuracion.central.registrar_mensajes(self.configuracion.numero)
@@ -212,7 +212,11 @@ class ConfigApp(Aplicacion):
         if self.configuracion.modo_red != ModoRed.LTE and not valor:
             raise ValueError("Los datos ya se encuentran apagados")
 
-        self.configuracion.modo_red = ModoRed.LTE if valor else ModoRed.SOLO_VOZ_Y_SMS
+        if valor:
+            self.configuracion.modo_avion = False
+            self.configuracion.modo_red = ModoRed.LTE
+        else:
+            self.configuracion.modo_red = ModoRed.SOLO_VOZ_Y_SMS
         print(f"Los datos se han {'encendido' if valor is True else 'apagado'}")
 
     def set_modo_avion(self, valor:bool):
