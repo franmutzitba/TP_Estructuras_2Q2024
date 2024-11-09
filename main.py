@@ -4,7 +4,8 @@ Archivo principal del proyecto, donde se prueban las clases y métodos implement
 
 #from Apps.mail import MailApp, CuentaMail
 import os
-from manejadorCSV import *
+from manejadorCSV import ManejadorDispositivos, ManejadorSMS, ManejadorLlamadas
+from manejadorCSV import ManejadorCuentasMail, ManejadorContactos, ManejadorMails
 from analisis_de_datos import AnalisisDatos
 
 if "__main__" == __name__:
