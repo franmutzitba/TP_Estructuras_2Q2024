@@ -53,24 +53,25 @@ class AnalisisDatos:
     def __init__(self, nombre_archivo):
         self.manejador = ManejadorCSV(nombre_archivo)
         self.data = self.manejador.leer_archivo()
-            
+      
     def menu_navegacion(self):
-
+        """Menu Navegacion"""
         salir = False
         while not salir:
-            print("1. Gráfico de Barras de Categorías")
-            print("2. Gráfico de Pastel de Tipos")
-            print("3. Gráfico de Dispersión de Calificaciones y Reseñas")
-            print("4. Histograma de Calificaciones")
-            print("5. Gráfico de Dispersión de Instalaciones y Calificaciones")
-            print("6. Gráfico de Líneas de Tamaño Promedio por Categoría")
-            print("7. Gráfico de Barras Apiladas de Categorías y Tipos")
-            print("8. Gráfico de Boxplot de Calificaciones por Categoría")
-            print("9. Gráfico de Área de Evolución de Aplicaciones")
-            print("10. Gráfico de Violín de Calificaciones por Tipo")
-            print("11. Gráfico de Burbujas de Calificaciones, Reseñas y Tamaño")
-            print("12. Salir")
-            opcion = input("Seleccione una opción: ") 
+            print("1. Gráfico de Barras de Categorías") #Hacer este pero top 10
+            print("2. Gráfico de Pastel de Tipos") #Sacar NaN
+            print("3. Gráfico de Dispersión de Calificaciones y Reseñas") #Mmm
+            print("4. Histograma de Calificaciones") #Tira error
+            print("5. Gráfico de Dispersión de Instalaciones y Calificaciones") #Mmm
+            print("6. Gráfico de Líneas de Tamaño Promedio por Categoría") #Banco
+            print("7. Gráfico de Barras Apiladas de Categorías y Tipos") #Tira error
+            print("8. Gráfico de Boxplot de Calificaciones por Categoría") #Tira error
+            print("9. Gráfico de Área de Evolución de Aplicaciones") #Tira error
+            print("10. Gráfico de Violín de Calificaciones por Tipo") #Tira error
+            print("11. Gráfico de Burbujas de Calificaciones, Reseñas y Tamaño") #Mmm
+            print("0. Salir")
+            #Hacer uno que sea top 10 apps gratis con más descargas
+            opcion = input("Seleccione una opción: ")
             if opcion == '1':
                 self.grafico_barras_categorias()
             elif opcion == '2':
@@ -98,7 +99,7 @@ class AnalisisDatos:
                 salir = True
             else:
                 print("Opción inválida. Inténtelo de nuevo.")
-            opcion = input("Seleccione una opción: ")
+                opcion = input("Seleccione una opción correcta: ")
         
 
     def grafico_barras_categorias(self):
@@ -124,7 +125,8 @@ class AnalisisDatos:
         """
         tipos = defaultdict(int)
         for row in self.data:
-            tipos[row[6]] += 1
+            if row[6] != 'NaN':
+                tipos[row[6]] += 1
         
         plt.figure(figsize=(8, 8))
         plt.pie(tipos.values(), labels=tipos.keys(), autopct='%1.1f%%', startangle=140, colors=['lightgreen', 'lightcoral'])
@@ -154,7 +156,7 @@ class AnalisisDatos:
         """
         Genera un histograma de las calificaciones de las aplicaciones.
         """
-        data= self.data.pop(0)
+        data= self.data[1:]
         calificaciones = [float(row[2]) for row in data if row[2] != 'NaN']
         
         plt.figure(figsize=(10, 6))
@@ -212,7 +214,7 @@ class AnalisisDatos:
         """
         Genera un gráfico de barras apiladas de la distribución de aplicaciones por categoría y tipo (Gratis vs. Pagadas).
         """
-        data= self.data.pop(0)
+        data= self.data[1:]
         categorias = defaultdict(lambda: {'Free': 0, 'Paid': 1})
         for row in data:
             if len(row) > 6 and row[6] in ['Free', 'Paid']:
@@ -237,7 +239,7 @@ class AnalisisDatos:
         """
         Genera un gráfico de caja y bigotes (boxplot) de las calificaciones por categoría.
         """
-        data= self.data.pop(0)
+        data= self.data[1:]
         calificaciones = defaultdict(list)
         for row in data:
             if row[2] != 'NaN':
@@ -256,7 +258,7 @@ class AnalisisDatos:
         """
         Genera un gráfico de área de la evolución del número de aplicaciones por año.
         """
-        data= self.data.pop(0)
+        data= self.data[1:]
         aplicaciones_por_ano = defaultdict(int)
         for row in data:
             fecha = datetime.strptime(row[10], "%B %d, %Y")
@@ -276,7 +278,7 @@ class AnalisisDatos:
         """
         Genera un gráfico de violín de las calificaciones por tipo de aplicación (Gratis vs. Pagadas).
         """
-        data= self.data.pop(0)
+        data= self.data[1:]
         calificaciones = defaultdict(list)
         for row in data:
             if row[2] != 'NaN':
