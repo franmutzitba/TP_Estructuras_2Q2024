@@ -323,8 +323,29 @@ class AnalisisDatos:
         plt.ylabel('Calificación')
         plt.xscale('log')
         plt.show()
+        
+    def top_10_apps(self):
+        """
+        Genera un gráfico de barras con las 10 aplicaciones más descargadas.
+        """
+        # Top 10 aplicaciones gratis con más descargas
+        apps_gratis = [app for app in self.data if app[6] == 'Free']
+        apps_gratis_sorted = sorted(apps_gratis, key=lambda x: int(x[5].replace(',', '').replace('+', '')), reverse=True)[:10]
+
+        top_10_apps_gratis_nombres = [app[0] for app in apps_gratis_sorted]
+        top_10_apps_gratis_installs = [int(app[5].replace(',', '').replace('+', '')) / 1000000 for app in apps_gratis_sorted]
+
+        plt.figure(figsize=(14, 6))
+        plt.barh(top_10_apps_gratis_nombres, top_10_apps_gratis_installs, color='lightgreen')
+        plt.title('Top 10 Apps Gratis con más descargas')
+        plt.xlabel('Número de Descargas (en millones)')
+        plt.ylabel('App')
+        plt.gca().invert_yaxis()  # Invertir el eje y para que el top esté arriba
+        plt.grid(True)
+        plt.show()     
 
 # Llamar a las funciones para generar los gráficos
 if __name__ == '__main__':
     analisis = AnalisisDatos('Play Store Data.csv')
+    analisis.top_10_apps()
     analisis.menu_navegacion()

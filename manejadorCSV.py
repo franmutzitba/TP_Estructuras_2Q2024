@@ -319,11 +319,12 @@ class ManejadorMails(ManejadorCSV):
         Carga los mails desde un archivo CSV y los registra en la bandeja de entrada
         o enviados de cada cuenta, segun si es el receptor o emisor, respectivamente.
         """
-        formato_fecha = "%Y-%m-%d %H:%M:%S"
+        formato_fecha = "%Y-%m-%d %H:%M:%S.%f"
         lista_mails = self.leer_archivo(True)
         for mail in lista_mails:
-            fecha_formateada = mail[4][:-7] if len(mail[4]) > 19 else mail[4]
-            mail = Mail(cuerpo = mail[0], emisor = mail[1], receptor = mail[2], asunto = mail[3], fecha = datetime.strptime(fecha_formateada, formato_fecha), leido = mail[5]=="True")
+            mail = Mail(cuerpo = mail[0], emisor = mail[1], receptor = mail[2], asunto = mail[3], fecha = datetime.strptime(mail[4], formato_fecha), leido = mail[5]=="True")
+            # fecha_formateada = mail[4][:-7] if len(mail[4]) > 19 else mail[4]
+            # mail = Mail(cuerpo = mail[0], emisor = mail[1], receptor = mail[2], asunto = mail[3], fecha = datetime.strptime(fecha_formateada, formato_fecha), leido = mail[5]=="True")
             CuentaMail.cuentas[mail.receptor].bandeja_entrada.append(mail)
             CuentaMail.cuentas[mail.emisor].bandeja_enviados.append(mail)
 

@@ -135,16 +135,16 @@ except ValueError as e:
 input("Presione para enviar mails:")
 celular1.lanzar_app("Configuracion").set_datos(True)
 celular1.lanzar_app("Mail").iniciar_sesion("fmutz@itba.edu.ar", "Datos2024*")
-celular1.lanzar_app("Mail").enviar_mail(Mail("Cuerpo de prueba 1", "fmutz@itba.edu.ar", "ahoffmann@itba.edu.ar", "Prueba 1", datetime.strptime("2022-07-01 12:00:00.000000", '%Y-%m-%d %H:%M:%S.%f')))
-celular1.lanzar_app("Mail").enviar_mail(Mail("Cuerpo de prueba 2", "fmutz@itba.edu.ar", "ahoffmann@itba.edu.ar", "Prueba 2",datetime.strptime("2022-12-01 12:00:00.000000", '%Y-%m-%d %H:%M:%S.%f')))
-celular1.lanzar_app("Mail").enviar_mail(Mail("Cuerpo de prueba 3", "fmutz@itba.edu.ar", "ellabra@itba.edu.ar", "Prueba 3", datetime.strptime("2022-01-01 12:00:00.000000", '%Y-%m-%d %H:%M:%S.%f')))
+celular1.lanzar_app("Mail").enviar_mail(Mail("Cuerpo de prueba 1", "fmutz@itba.edu.ar", "ahoffmann@itba.edu.ar", "Prueba 1", datetime.strptime("2022-07-01 12:00:00.000001", '%Y-%m-%d %H:%M:%S.%f')))
+celular1.lanzar_app("Mail").enviar_mail(Mail("Cuerpo de prueba 2", "fmutz@itba.edu.ar", "ahoffmann@itba.edu.ar", "Prueba 2",datetime.strptime("2022-12-01 12:00:00.000001", '%Y-%m-%d %H:%M:%S.%f')))
+celular1.lanzar_app("Mail").enviar_mail(Mail("Cuerpo de prueba 3", "fmutz@itba.edu.ar", "ellabra@itba.edu.ar", "Prueba 3", datetime.strptime("2022-01-01 12:00:00.000001", '%Y-%m-%d %H:%M:%S.%f')))
 
 celular1.lanzar_app("Mail").cerrar_sesion()
 
 #Inicio sesion con la cuenta de Alec en el celular de franco
 celular1.lanzar_app("Mail").iniciar_sesion("ahoffmann@itba.edu.ar", "Datos2024*")
-celular1.lanzar_app("Mail").enviar_mail(Mail("Cuerpo de prueba 4", "ahoffmann@itba.edu.ar", "fmutz@itba.edu.ar", "Prueba 4", datetime.strptime("2023-06-01 12:00:00.000000", '%Y-%m-%d %H:%M:%S.%f')))
-celular1.lanzar_app("Mail").enviar_mail(Mail("Cuerpo de prueba 5", "ahoffmann@itba.edu.ar", "fmutz@itba.edu.ar", "Prueba 5", datetime.strptime("2020-06-01 12:00:00.000000", '%Y-%m-%d %H:%M:%S.%f')))
+celular1.lanzar_app("Mail").enviar_mail(Mail("Cuerpo de prueba 4", "ahoffmann@itba.edu.ar", "fmutz@itba.edu.ar", "Prueba 4", datetime.strptime("2023-06-01 12:00:00.000001", '%Y-%m-%d %H:%M:%S.%f')))
+celular1.lanzar_app("Mail").enviar_mail(Mail("Cuerpo de prueba 5", "ahoffmann@itba.edu.ar", "fmutz@itba.edu.ar", "Prueba 5", datetime.strptime("2020-06-01 12:00:00.000001", '%Y-%m-%d %H:%M:%S.%f')))
 celular1.lanzar_app("Mail").cerrar_sesion()
 
 
