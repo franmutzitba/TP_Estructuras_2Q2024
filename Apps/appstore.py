@@ -43,7 +43,7 @@ class AppStore(Aplicacion):
     aplicaciones_disponibles(self):
         Devuelve una lista de las aplicaciones disponibles en la tienda.
     """
-    manejadorCSV = ManejadorCSV("appstore.csv")
+    manejadorCSV = ManejadorCSV("z_appstore.csv")
     desarolladas = {"Calculadora":CalculadoraApp}
 
     def __init__(self, aplicaciones_celular, configuracion: ConfigApp):

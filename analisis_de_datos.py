@@ -16,6 +16,7 @@ Usage:
 - Ensure the CSV file is available and the ManejadorCSV class is implemented.
 - Call the desired function with the path to the CSV file to generate the corresponding plot.
     """
+import os
 from datetime import datetime
 from collections import defaultdict
 import matplotlib.pyplot as plt
@@ -58,6 +59,7 @@ class AnalisisDatos:
         """Menu Navegacion"""
         salir = False
         while not salir:
+            os.system('cls')
             print("1. Gráfico de Barras de Categorías") #Hacer este pero top 10
             print("2. Gráfico de Pastel de Tipos") #Sacar NaN
             print("3. Gráfico de Dispersión de Calificaciones y Reseñas") #Mmm
@@ -72,6 +74,7 @@ class AnalisisDatos:
             print("0. Salir")
             #Hacer uno que sea top 10 apps gratis con más descargas
             opcion = input("Seleccione una opción: ")
+            os.system('cls')
             if opcion == '1':
                 self.grafico_barras_categorias()
             elif opcion == '2':
@@ -96,10 +99,13 @@ class AnalisisDatos:
                 self.grafico_burbujas_calificaciones_resenas_tamano()
             elif opcion == '0':
                 print("Saliendo de analisis de datos...")
+                input("Presione para volver al menu de navegacion... ")
+                os.system('cls')
                 salir = True
             else:
                 print("Opción inválida. Inténtelo de nuevo.")
                 opcion = input("Seleccione una opción correcta: ")
+                os.system('cls')
         
 
     def grafico_barras_categorias(self):

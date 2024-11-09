@@ -10,12 +10,12 @@ from analisis_de_datos import AnalisisDatos
 
 if "__main__" == __name__:
     from celular import Celular
-    manejador_celulares = ManejadorDispositivos("celulares.csv", Celular.central)
-    manejador_sms = ManejadorSMS("archivo_sms.csv", Celular.central)
-    manejador_llamadas = ManejadorLlamadas("archivo_llamadas.csv", Celular.central)
-    manejador_cuentas_mail = ManejadorCuentasMail("cuentas_mail.csv")
-    manejador_contactos = ManejadorContactos("contactos.csv", Celular.central)
-    manejador_mails = ManejadorMails("mails.csv")
+    manejador_celulares = ManejadorDispositivos("z_celulares.csv", Celular.central)
+    manejador_sms = ManejadorSMS("z_archivo_sms.csv", Celular.central)
+    manejador_llamadas = ManejadorLlamadas("z_archivo_llamadas.csv", Celular.central)
+    manejador_cuentas_mail = ManejadorCuentasMail("z_cuentas_mail.csv")
+    manejador_contactos = ManejadorContactos("z_contactos.csv", Celular.central)
+    manejador_mails = ManejadorMails("z_mails.csv")
 
     #Cargamos los datos de los archivos csv
 
