@@ -15,12 +15,12 @@ from comunicacion import Mail
 ###########################
 ####### Manejadores #######
 ###########################
-manejador_celulares = ManejadorDispositivos("celulares2.csv", Celular.central)
-manejador_sms = ManejadorSMS("archivo_sms2.csv", Celular.central)
-manejador_llamadas = ManejadorLlamadas("archivo_llamadas2.csv", Celular.central)
-manejador_cuentas_mail = ManejadorCuentasMail("cuentas_mail2.csv")
-manejador_contactos = ManejadorContactos("contactos2.csv", Celular.central)
-manejador_mails = ManejadorMails("mails2.csv")
+manejador_celulares = ManejadorDispositivos("celulares.csv", Celular.central)
+manejador_sms = ManejadorSMS("archivo_sms.csv", Celular.central)
+manejador_llamadas = ManejadorLlamadas("archivo_llamadas.csv", Celular.central)
+manejador_cuentas_mail = ManejadorCuentasMail("cuentas_mail.csv")
+manejador_contactos = ManejadorContactos("contactos.csv", Celular.central)
+manejador_mails = ManejadorMails("mails.csv")
 
 
 

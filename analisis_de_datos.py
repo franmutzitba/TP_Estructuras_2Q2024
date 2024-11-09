@@ -23,29 +23,54 @@ import numpy as np
 from manejadorCSV import ManejadorCSV
 
 class AnalisisDatos:
-    """Clase para realizar análisis de datos y generar gráficos a partir de un archivo CSV."""
+    
+    """
+    Clase para realizar análisis de datos de aplicaciones y generar diferentes tipos de gráficos.
+    Atributos:
+    ----------
+    manejador : ManejadorCSV
+        Instancia de la clase ManejadorCSV para manejar la lectura del archivo CSV.
+    data : list
+        Lista de datos leídos del archivo CSV.
+    Métodos:
+    --------
+    __init__(nombre_archivo):
+        Inicializa la clase con el nombre del archivo CSV.
+    menu_navegacion():
+        Muestra un menú de navegación para seleccionar diferentes tipos de gráficos.
+    grafico_barras_categorias():
+    grafico_pastel_tipos():
+    grafico_dispersion_calificaciones_resenas():
+    histograma_calificaciones():
+    grafico_dispersion_installs_calificaciones():
+    grafico_lineas_tamano_promedio_categoria():
+    grafico_barras_apiladas_categoria_tipo():
+    grafico_boxplot_calificaciones_categoria():
+    grafico_area_evolucion_aplicaciones():
+    grafico_violin_calificaciones_tipo():
+    grafico_burbujas_calificaciones_resenas_tamano():
+    """
     def __init__(self, nombre_archivo):
         self.manejador = ManejadorCSV(nombre_archivo)
         self.data = self.manejador.leer_archivo()
-
+            
     def menu_navegacion(self):
-        """Menu Navegacion"""
+
         salir = False
         while not salir:
-            print("1. Gráfico de Barras de Categorías") #Hacer este pero top 10
-            print("2. Gráfico de Pastel de Tipos") #Sacar NaN
-            print("3. Gráfico de Dispersión de Calificaciones y Reseñas") #Mmm
-            print("4. Histograma de Calificaciones") #Tira error
-            print("5. Gráfico de Dispersión de Instalaciones y Calificaciones") #Mmm
-            print("6. Gráfico de Líneas de Tamaño Promedio por Categoría") #Banco
-            print("7. Gráfico de Barras Apiladas de Categorías y Tipos") #Tira error
-            print("8. Gráfico de Boxplot de Calificaciones por Categoría") #Tira error
-            print("9. Gráfico de Área de Evolución de Aplicaciones") #Tira error
-            print("10. Gráfico de Violín de Calificaciones por Tipo") #Tira error
-            print("11. Gráfico de Burbujas de Calificaciones, Reseñas y Tamaño") #Mmm
-            #Hacer uno que sea top 10 apps gratis con más descargas
+            print("1. Gráfico de Barras de Categorías")
+            print("2. Gráfico de Pastel de Tipos")
+            print("3. Gráfico de Dispersión de Calificaciones y Reseñas")
+            print("4. Histograma de Calificaciones")
+            print("5. Gráfico de Dispersión de Instalaciones y Calificaciones")
+            print("6. Gráfico de Líneas de Tamaño Promedio por Categoría")
+            print("7. Gráfico de Barras Apiladas de Categorías y Tipos")
+            print("8. Gráfico de Boxplot de Calificaciones por Categoría")
+            print("9. Gráfico de Área de Evolución de Aplicaciones")
+            print("10. Gráfico de Violín de Calificaciones por Tipo")
+            print("11. Gráfico de Burbujas de Calificaciones, Reseñas y Tamaño")
             print("12. Salir")
-            opcion = input("Seleccione una opción: ")
+            opcion = input("Seleccione una opción: ") 
             if opcion == '1':
                 self.grafico_barras_categorias()
             elif opcion == '2':
@@ -74,16 +99,17 @@ class AnalisisDatos:
             else:
                 print("Opción inválida. Inténtelo de nuevo.")
             opcion = input("Seleccione una opción: ")
+        
 
     def grafico_barras_categorias(self):
         """
-        Genera un gráfico de barras de las categorías de aplicaciones más comunes. Top 10.
+        Genera un gráfico de barras de las categorías de aplicaciones más comunes.
         """
         categorias = defaultdict(int)
         for row in self.data:
             categorias[row[1]] += 1
-        categorias = dict(sorted(categorias.items(), key=lambda item: item[1], reverse=True))
-
+        categorias = dict(sorted(categorias.items(), key=lambda item: item[1], reverse=True)[:10]) #me quedo con las 10 categorias mas comunes
+    
         plt.figure(figsize=(10, 6))
         plt.bar(categorias.keys(), categorias.values(), color='skyblue')
         plt.title('Categorías de Aplicaciones Más Comunes')
@@ -99,7 +125,7 @@ class AnalisisDatos:
         tipos = defaultdict(int)
         for row in self.data:
             tipos[row[6]] += 1
-
+        
         plt.figure(figsize=(8, 8))
         plt.pie(tipos.values(), labels=tipos.keys(), autopct='%1.1f%%', startangle=140, colors=['lightgreen', 'lightcoral'])
         plt.title('Distribución de Tipos de Aplicaciones (Gratis vs. Pagadas)')
@@ -115,7 +141,7 @@ class AnalisisDatos:
             if row[2] != 'NaN' and row[3].isdigit():
                 calificaciones.append(float(row[2]))
                 resenas.append(int(row[3]))
-
+        
         plt.figure(figsize=(10, 6))
         plt.scatter(resenas, calificaciones, alpha=0.5, c='blue')
         plt.title('Relación entre Calificaciones y Número de Reseñas')
@@ -130,7 +156,7 @@ class AnalisisDatos:
         """
         data= self.data.pop(0)
         calificaciones = [float(row[2]) for row in data if row[2] != 'NaN']
-
+        
         plt.figure(figsize=(10, 6))
         plt.hist(calificaciones, bins=np.arange(0, 5.5, 0.5), color='purple', edgecolor='black')
         plt.title('Distribución de Calificaciones de las Aplicaciones')
@@ -151,7 +177,7 @@ class AnalisisDatos:
                     calificaciones.append(float(row[2]))
                 except ValueError:
                     continue
-
+    
         plt.figure(figsize=(10, 6))
         plt.scatter(installs, calificaciones, alpha=0.5, c='green')
         plt.title('Relación entre Cantidad de Instalaciones y Calificaciones')
@@ -170,10 +196,10 @@ class AnalisisDatos:
                 tamanos[row[1]].append(float(row[4].replace('M', '')))
             elif 'k' in row[4]:
                 tamanos[row[1]].append(float(row[4].replace('k', '')) / 1000)
-
+        
         tamanos_promedio = {categoria: np.mean(tamanos[categoria]) for categoria in tamanos}
         tamanos_promedio = dict(sorted(tamanos_promedio.items(), key=lambda item: item[1]))
-
+        
         plt.figure(figsize=(10, 6))
         plt.plot(list(tamanos_promedio.keys()), list(tamanos_promedio.values()), marker='o', color='orange')
         plt.title('Tamaño Promedio de las Aplicaciones por Categoría')
@@ -191,12 +217,12 @@ class AnalisisDatos:
         for row in data:
             if len(row) > 6 and row[6] in ['Free', 'Paid']:
                 categorias[row[1]][row[6]] += 1
-
+        
         categorias_ordenadas = sorted(categorias.items(), key=lambda item: sum(item[1].values()), reverse=True)
         categorias, valores = zip(*categorias_ordenadas)
         free = [v['Free'] for v in valores]
         paid = [v['Paid'] for v in valores]
-
+        
         plt.figure(figsize=(10, 6))
         plt.bar(categorias, free, label='Free', color='lightgreen')
         plt.bar(categorias, paid, bottom=free, label='Paid', color='lightcoral')
@@ -216,9 +242,9 @@ class AnalisisDatos:
         for row in data:
             if row[2] != 'NaN':
                 calificaciones[row[1]].append(float(row[2]))
-
+        
         categorias, valores = zip(*calificaciones.items())
-
+        
         plt.figure(figsize=(10, 6))
         plt.boxplot(valores, labels=categorias, vert=False)
         plt.title('Distribución de Calificaciones por Categoría')
@@ -235,9 +261,9 @@ class AnalisisDatos:
         for row in data:
             fecha = datetime.strptime(row[10], "%B %d, %Y")
             aplicaciones_por_ano[fecha.year] += 1
-
+        
         anos, valores = zip(*sorted(aplicaciones_por_ano.items()))
-
+        
         plt.figure(figsize=(10, 6))
         plt.fill_between(anos, valores, color='skyblue', alpha=0.5)
         plt.plot(anos, valores, color='Slateblue', alpha=0.6, linewidth=2)
@@ -255,9 +281,9 @@ class AnalisisDatos:
         for row in data:
             if row[2] != 'NaN':
                 calificaciones[row[6]].append(float(row[2]))
-
+        
         tipos, valores = zip(*calificaciones.items())
-
+        
         plt.figure(figsize=(10, 6))
         plt.violinplot(valores, showmeans=True)
         plt.title('Distribución de Calificaciones por Tipo de Aplicación')
@@ -281,7 +307,7 @@ class AnalisisDatos:
                     tamanos.append(float(row[4].replace('M', '')))
                 elif 'k' in row[4]:
                     tamanos.append(float(row[4].replace('k', '')) / 1000)
-
+        
         plt.figure(figsize=(10, 6))
         plt.scatter(resenas, calificaciones, s=np.array(tamanos) * 10, alpha=0.5, c='purple')
         plt.title('Relación entre Calificaciones, Número de Reseñas y Tamaño de la Aplicación')
