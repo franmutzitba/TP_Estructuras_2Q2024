@@ -43,7 +43,7 @@ if "__main__" == __name__:
                 for celular in celulares:
                     print(f"{celulares.index(celular)+1}. {celular.aplicaciones['Configuracion'].configuracion.nombre}: {celular.aplicaciones['Configuracion'].configuracion.numero}")
                 indice = input("Ingrese el indice del celular a navegar: ")
-                while not indice.isdigit() or int(indice) > len(celulares):
+                while not indice.isdigit() or int(indice) > len(celulares) or int(indice) < 1:
                     indice = input("Ingrese el indice del celular a navegar: ")
                 os.system("cls")
                 celulares[int(indice)-1].menu_navegacion()
