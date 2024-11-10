@@ -242,6 +242,8 @@ class TelefonoApp(Aplicacion):
                 os.system("cls")
                 print("Marcar número y llamar")
                 receptor = input("Ingrese el número al que desea llamar: ")
+                while not receptor.isdigit() or len(receptor) != 8:
+                    receptor = input("Numero incorrecto! Ingrese el número al que desea llamar: ") 
                 duracion = input("Ingrese la duracion de la llamada en minutos: ")
                 while not duracion.isdigit():
                     print("La duración debe ser un número entero")
