@@ -290,8 +290,9 @@ class MensajesApp(Aplicacion):
                         if len(lista) > 1:
                             print(f"Numeros del contacto: {receptor}")
                             i=1
-                            while lista:
-                                print(f"{i} - {lista.pop()}")
+                            lista2 = lista.copy()
+                            while lista2:
+                                print(f"{i} - {lista2.pop()}")
                                 i+=1
                             indice = input("Ingrese el indice del contacto deseado: ")
                             while not MensajesApp.validar_indice(indice,len(lista)): #Puedo hacer un metodo de validacion

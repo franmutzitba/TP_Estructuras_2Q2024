@@ -218,8 +218,8 @@ class TelefonoApp(Aplicacion):
         """
         if not self.contactos.values():
             raise ValueError("No hay contactos registrados.")
-        for i, contacto in enumerate(self.contactos.values()):
-            print(f"{i+1}. {contacto}")
+        for i, (numero, contacto) in enumerate(self.contactos.items()):
+            print(f"{i+1}. {contacto}: {numero}")
 
     def menu_navegacion(self):
         """

@@ -60,6 +60,8 @@ class ContactosApp(Aplicacion):
             raise ValueError("El número de teléfono debe contener solo dígitos")
         if not nombre:
             raise ValueError("El nombre del contacto no puede estar vacío")
+        if numero in self.agenda:
+            raise ValueError("El número de teléfono ya está registrado en la agenda")
         self.agenda[numero] = nombre
 
     def eliminar_contacto(self, numero):
