@@ -125,8 +125,8 @@ class MensajesApp(Aplicacion):
 
         lista=deque()
         i=1
-        for numero, nombre in self.contactos.items():
-            if nombre == nombre:
+        for numero, nombre_2 in self.contactos.items():
+            if nombre == nombre_2:
                 lista.append(numero)
                 i+=1
         return lista
@@ -293,7 +293,7 @@ class MensajesApp(Aplicacion):
                             print(f"Numeros del contacto: {receptor}")
                             lista2 = lista.copy()
                             while lista2:
-                                print(lista2)
+                                print(lista2.pop())
                             indice = input("Ingrese el indice del contacto deseado: ")
                             while not MensajesApp.validar_indice(indice,len(lista)): #Puedo hacer un metodo de validacion
                                 indice = input("Entrada incorrecta. Ingrese el indice del contacto deseado: ")
