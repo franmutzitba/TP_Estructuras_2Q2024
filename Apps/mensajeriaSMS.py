@@ -124,11 +124,9 @@ class MensajesApp(Aplicacion):
         """
 
         lista=deque()
-        i=1
         for numero, nombre_2 in self.contactos.items():
             if nombre == nombre_2:
                 lista.append(numero)
-                i+=1
         return lista
 
     def enviar_sms(self, receptor, texto):
@@ -291,15 +289,16 @@ class MensajesApp(Aplicacion):
                         lista = self.numeros_de_nombre(receptor)
                         if len(lista) > 1:
                             print(f"Numeros del contacto: {receptor}")
-                            lista2 = lista.copy()
-                            while lista2:
-                                print(lista2.pop())
+                            i=0
+                            while lista:
+                                print(f"{i} -{lista.pop()}")
+                                i+=1
                             indice = input("Ingrese el indice del contacto deseado: ")
                             while not MensajesApp.validar_indice(indice,len(lista)): #Puedo hacer un metodo de validacion
                                 indice = input("Entrada incorrecta. Ingrese el indice del contacto deseado: ")
                         else:
                             indice = 1
-                        numero = lista[indice-1]
+                        numero = lista[int(indice)-1]
                         texto = input("Ingrese el mensaje a enviar: ")
                         if not texto:
                             raise ValueError("No se pueden enviar mensajes vacios")

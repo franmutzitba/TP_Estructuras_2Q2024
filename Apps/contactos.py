@@ -96,6 +96,8 @@ class ContactosApp(Aplicacion):
                 print("Agendar contacto")
                 nombre = input("Ingrese el nombre del contacto: ")
                 numero = input("Ingrese el número de teléfono: ")
+                while len(numero) != 8:
+                    numero = input("El número de teléfono debe tener 8 dígitos. Ingrese nuevamente: ")
                 try:
                     self.agregar_contacto(numero, nombre)
                     print(f"Contacto de {nombre} agregado con éxito")
