@@ -289,9 +289,9 @@ class MensajesApp(Aplicacion):
                         lista = self.numeros_de_nombre(receptor)
                         if len(lista) > 1:
                             print(f"Numeros del contacto: {receptor}")
-                            i=0
+                            i=1
                             while lista:
-                                print(f"{i} -{lista.pop()}")
+                                print(f"{i} - {lista.pop()}")
                                 i+=1
                             indice = input("Ingrese el indice del contacto deseado: ")
                             while not MensajesApp.validar_indice(indice,len(lista)): #Puedo hacer un metodo de validacion
@@ -306,11 +306,11 @@ class MensajesApp(Aplicacion):
 
                     elif opcion2 == "2":
                         os.system('cls')
-                        receptor = input("Ingrese el número de teléfono del receptor: ")
+                        numero = input("Ingrese el número de teléfono del receptor: ")
                         texto = input("Ingrese el mensaje a enviar: ")
                         if not texto:
                             raise ValueError("No se pueden enviar mensajes vacios")
-                        self.enviar_sms(receptor, texto)
+                        self.enviar_sms(numero, texto)
                     else:
                         os.system('cls')
                         print("Opción inválida, intente nuevamente")
