@@ -70,6 +70,7 @@ class AnalisisDatos:
         Genera un gráfico de barras de las categorías de aplicaciones más comunes.
         """
         categorias = defaultdict(int)
+        self.data.pop(0)
         for row in self.data:
             categorias[row[1]] += 1
         categorias = dict(sorted(categorias.items(), key=lambda item: item[1], reverse=True)[:10]) #me quedo con las 10 categorias mas comunes
