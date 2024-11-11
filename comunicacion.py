@@ -183,15 +183,10 @@ class Mail(Comunicacion):
         super().__init__(emisor, receptor, 'Mail')
         if not isinstance(cuerpo, str) or not isinstance(emisor, str) or not isinstance(receptor, str) or not isinstance(asunto, str) or not isinstance(leido, bool):
             raise ValueError("Los atributos del Mail deben ser del tipo correcto")
-        try:
-            fecha = datetime.strptime(fecha, '%Y-%m-%d %H:%M:%S.%f')
-        except:
-            pass
-        finally:
-            self.cuerpo = cuerpo
-            self.asunto = asunto
-            self.fecha = fecha
-            self.leido = leido
+        self.cuerpo = cuerpo
+        self.asunto = asunto
+        self.fecha = fecha
+        self.leido = leido
 
     def __str__(self):
         return f"Fecha:{self.fecha}\nEmisor: {self.emisor}\nReceptor: {self.receptor}\nAsunto: {self.asunto}\nCuerpo: {self.cuerpo}\n"
