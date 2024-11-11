@@ -55,7 +55,7 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
         super().__init__(nombre = "Mail", tamanio = "100 MB", esencial = True)
         self.numero = numero
         self.central = central
-        self.cuenta_mail = None
+        self.cuenta_mail = None #Contiene el solo el email de la cuenta
         self.cuenta_iniciada = False
 
     def ver_bandeja_entrada(self, criterio):
@@ -163,7 +163,7 @@ class MailApp(Aplicacion): #Pertenece a cada telefono
 
         if self.cuenta_iniciada:
             raise ValueError("Ya hay una sesión iniciada")
-        
+
         if mail in CuentaMail.cuentas and CuentaMail.cuentas[mail].contrasenia == contrasenia:
             self.cuenta_mail = mail
             self.cuenta_iniciada = True
@@ -335,6 +335,8 @@ class CuentaMail:
     validar_contrasenia(contrasenia):
         Valida si una contraseña cumple con los requisitos de seguridad.
     """
+    #Atributo de clase que almacena todas las cuentas de correo creadas
+    #Contiene el mail como clave y la cuenta como valor
     cuentas = {}
 
     def __init__(self, mail, contrasenia):

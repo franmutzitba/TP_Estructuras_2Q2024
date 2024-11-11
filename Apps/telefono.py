@@ -46,7 +46,7 @@ class TelefonoApp(Aplicacion):
     menu_navegacion(self):
         Muestra el menú de navegación de la aplicación de teléfono.
     """
-    
+
     def __init__(self, numero, central, contactos):
         super().__init__(nombre="Telefono", tamanio="200 MB", esencial=True)
         self.numero = numero
