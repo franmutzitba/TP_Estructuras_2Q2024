@@ -63,7 +63,7 @@ class Central:
     def __init__(self):
         self.registro_llamadas = deque()
         self.registro_dispositivos = {} #diccionario que contiene el numero en la key y el objeto celular en el valor
-        self.registro_mensajes =  {} #Colas de mensajes
+        self.registro_mensajes =  {} #Diccionario que contiene el numero en la key y una pila de mensajes en el valor
 
     def registrar_dispositivo(self, numero, celular):
         """

@@ -124,11 +124,9 @@ class MensajesApp(Aplicacion):
         """
 
         lista=deque()
-        i=1
-        for numero, nombre in self.contactos.items():
-            if nombre == nombre:
+        for numero, nombre_2 in self.contactos.items():
+            if nombre == nombre_2:
                 lista.append(numero)
-                i+=1
         return lista
 
     def enviar_sms(self, receptor, texto):
@@ -278,6 +276,7 @@ class MensajesApp(Aplicacion):
             print("5. Salir")
             opcion = input("Ingrese el número de la opción deseada: ")
             if opcion == "1":
+                os.system('cls')
                 print("1. Enviar mensaje a contacto")
                 print("2. Enviar mensaje a numero ")
                 opcion2 = input("Ingrese el número de la opción deseada: ")
@@ -290,15 +289,17 @@ class MensajesApp(Aplicacion):
                         lista = self.numeros_de_nombre(receptor)
                         if len(lista) > 1:
                             print(f"Numeros del contacto: {receptor}")
+                            i=1
                             lista2 = lista.copy()
                             while lista2:
-                                print(lista2)
+                                print(f"{i} - {lista2.pop()}")
+                                i+=1
                             indice = input("Ingrese el indice del contacto deseado: ")
                             while not MensajesApp.validar_indice(indice,len(lista)): #Puedo hacer un metodo de validacion
                                 indice = input("Entrada incorrecta. Ingrese el indice del contacto deseado: ")
                         else:
                             indice = 1
-                        numero = lista[indice-1]
+                        numero = lista[int(indice)-1]
                         texto = input("Ingrese el mensaje a enviar: ")
                         if not texto:
                             raise ValueError("No se pueden enviar mensajes vacios")
@@ -306,11 +307,11 @@ class MensajesApp(Aplicacion):
 
                     elif opcion2 == "2":
                         os.system('cls')
-                        receptor = input("Ingrese el número de teléfono del receptor: ")
+                        numero = input("Ingrese el número de teléfono del receptor: ")
                         texto = input("Ingrese el mensaje a enviar: ")
                         if not texto:
                             raise ValueError("No se pueden enviar mensajes vacios")
-                        self.enviar_sms(receptor, texto)
+                        self.enviar_sms(numero, texto)
                     else:
                         os.system('cls')
                         print("Opción inválida, intente nuevamente")

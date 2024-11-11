@@ -46,7 +46,7 @@ class TelefonoApp(Aplicacion):
     menu_navegacion(self):
         Muestra el menú de navegación de la aplicación de teléfono.
     """
-    
+
     def __init__(self, numero, central, contactos):
         super().__init__(nombre="Telefono", tamanio="200 MB", esencial=True)
         self.numero = numero
@@ -218,8 +218,8 @@ class TelefonoApp(Aplicacion):
         """
         if not self.contactos.values():
             raise ValueError("No hay contactos registrados.")
-        for i, contacto in enumerate(self.contactos.values()):
-            print(f"{i+1}. {contacto}")
+        for i, (numero, contacto) in enumerate(self.contactos.items()):
+            print(f"{i+1}. {contacto}: {numero}")
 
     def menu_navegacion(self):
         """
@@ -242,6 +242,8 @@ class TelefonoApp(Aplicacion):
                 os.system("cls")
                 print("Marcar número y llamar")
                 receptor = input("Ingrese el número al que desea llamar: ")
+                while not receptor.isdigit() or len(receptor) != 8:
+                    receptor = input("Numero incorrecto! Ingrese el número al que desea llamar: ") 
                 duracion = input("Ingrese la duracion de la llamada en minutos: ")
                 while not duracion.isdigit():
                     print("La duración debe ser un número entero")
