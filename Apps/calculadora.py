@@ -156,8 +156,8 @@ class CalculadoraApp(Aplicacion):
                     num1 = (input("Ingrese el primer número: "))
 
                 num2 = (input("Ingrese el segundo número: "))
-                while not self.validar_numero(num2):
-                    print("El segundo número debe ser un número")
+                while not self.validar_numero(num2) or float(num2) == 0:
+                    print("El segundo número debe ser un número distinto de cero")
                     num2 = (input("Ingrese el segundo número: "))
                 print(f"El resultado de la division es: {self.division(float(num1), float(num2))}")
                 input("Presione cualquier tecla para volver al menu de navegación de la aplicacion Calculadora...")
