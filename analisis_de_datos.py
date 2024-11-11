@@ -35,8 +35,7 @@ class AnalisisDatos:
             print("3. Histograma de Calificaciones")
             print("4. Gráfico de Líneas de Tamaño Promedio por Categoría")
             print("5. Gráfico de Barras Apiladas de Categorías y Tipos")
-            print("6. Gráfico de Barars de Calificaciones promedio por Categoría")
-            print("7. Top 5 Apps Gratis con más Descargas")
+            print("6. Gráfico de Barras de Calificaciones promedio por Categoría")
             print("0. Salir")
             #Hacer uno que sea top 10 apps gratis con más descargas
             opcion = input("Seleccione una opción: ")
@@ -53,8 +52,6 @@ class AnalisisDatos:
                 self.grafico_barras_apiladas_categoria_tipo()
             elif opcion == '6':
                 self.calificacion_promedio_top_categorias()
-            elif opcion == '7':
-                self.top_5_apps()
             elif opcion == '0':
                 print("Saliendo de analisis de datos...")
                 input("Presione para volver al menu de navegacion... ")
@@ -156,26 +153,6 @@ class AnalisisDatos:
         plt.ylabel('Número de Aplicaciones')
         plt.xticks(rotation=90)
         plt.legend()
-        plt.show()
-
-    def top_5_apps(self):
-        """
-        Genera un gráfico de barras con las 5 aplicaciones más descargadas.
-        """
-        # Top 5 aplicaciones gratis con más descargas
-        apps_gratis = [app for app in self.data if app[6] == 'Free']
-        apps_gratis_sorted = sorted(apps_gratis, key=lambda x: int(x[5].replace(',', '').replace('+', '')), reverse=True)[:5]
-
-        top_5_apps_gratis_nombres = [app[0] for app in apps_gratis_sorted]
-        top_5_apps_gratis_installs = [int(app[5].replace(',', '').replace('+', '')) / 1000000 for app in apps_gratis_sorted]
-
-        plt.figure(figsize=(14, 6))
-        plt.barh(top_5_apps_gratis_nombres, top_5_apps_gratis_installs, color='lightgreen')
-        plt.title('Top 5 Apps Gratis con más descargas')
-        plt.xlabel('Número de Descargas (en millones)')
-        plt.ylabel('App')
-        plt.gca().invert_yaxis()  # Invertir el eje y para que el top esté arriba
-        plt.grid(True)
         plt.show()
 
     def calificacion_promedio_top_categorias(self):
