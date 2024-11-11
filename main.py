@@ -53,7 +53,6 @@ if "__main__" == __name__:
                 print(f"Error: {e}")
 
             input("Presione para volver al menu de navegacion... ")
-            #print(celulares[int(indice)-1].central.)
             os.system("cls")
 
         elif opcion == "2":
