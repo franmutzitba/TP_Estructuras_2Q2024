@@ -4,6 +4,7 @@ Módulo que contiene la clase ContactosApp, que representa la aplicación de Con
 
 import os
 from Apps.aplicacion import Aplicacion
+from funciones_utiles import validar_numero
 
 class ContactosApp(Aplicacion):
     """
@@ -56,7 +57,7 @@ class ContactosApp(Aplicacion):
             numero (str): El número de teléfono del contacto.
             nombre (str): El nombre del contacto.
         """
-        if not numero.isdigit():
+        if not validar_numero(numero):
             raise ValueError("El número de teléfono debe contener solo dígitos")
         if not nombre:
             raise ValueError("El nombre del contacto no puede estar vacío")
@@ -98,8 +99,8 @@ class ContactosApp(Aplicacion):
                 print("Agendar contacto")
                 nombre = input("Ingrese el nombre del contacto: ")
                 numero = input("Ingrese el número de teléfono: ")
-                while len(numero) != 8:
-                    numero = input("El número de teléfono debe tener 8 dígitos. Ingrese nuevamente: ")
+                while not validar_numero(numero):
+                    numero = input("El formato del número es inválido. Ingrese nuevamente: ")
                 try:
                     self.agregar_contacto(numero, nombre)
                     print(f"Contacto de {nombre} agregado con éxito")

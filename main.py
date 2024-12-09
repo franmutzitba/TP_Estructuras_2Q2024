@@ -5,37 +5,62 @@ Archivo principal del proyecto, donde se prueban las clases y métodos implement
 #from Apps.mail import MailApp, CuentaMail
 import os
 from manejadorCSV import ManejadorDispositivos, ManejadorSMS, ManejadorLlamadas
-from manejadorCSV import ManejadorCuentasMail, ManejadorContactos, ManejadorMails
+from manejadorCSV import ManejadorCuentasMail, ManejadorContactos, ManejadorMails, ManejadorCentrales
 from analisis_de_datos import AnalisisDatos
 
 if "__main__" == __name__:
     from celular import Celular
-    manejador_celulares = ManejadorDispositivos("z_celulares.csv", Celular.central)
-    manejador_sms = ManejadorSMS("z_archivo_sms.csv", Celular.central)
-    manejador_llamadas = ManejadorLlamadas("z_archivo_llamadas.csv", Celular.central)
+    from central import Central
+
+    manejador_celulares = ManejadorDispositivos("z_celulares.csv")
+    manejador_sms = ManejadorSMS("z_archivo_sms.csv")
+    manejador_llamadas = ManejadorLlamadas("z_archivo_llamadas.csv")
+    manejador_contactos = ManejadorContactos("z_contactos.csv")
     manejador_cuentas_mail = ManejadorCuentasMail("z_cuentas_mail.csv")
-    manejador_contactos = ManejadorContactos("z_contactos.csv", Celular.central)
     manejador_mails = ManejadorMails("z_mails.csv")
+    manejador_centrales = ManejadorCentrales("z_centrales.csv")
 
     #Cargamos los datos de los archivos csv
 
+    centrales = manejador_centrales.cargar_centrales()
     celulares = manejador_celulares.cargar_dispositivos()
     manejador_sms.cargar_mensajes()
     manejador_llamadas.cargar_llamadas()
     manejador_cuentas_mail.cargar_cuentas()
     manejador_mails.cargar_mails()
     manejador_contactos.cargar_contactos()
+    # except ValueError as e :
+    #     print("Peron")
+    #     print(e)
+    #     print(Central.centrales.values())
+    #     input("Ingrese hola:")
 
     os.system("cls")
     salir = False
     while not salir:
         print("Bienvenido al menu de navegacion de celulares")
-        print(" 1. Manejar un celular existente")
-        print(" 2. Agregar un nuevo celular")
-        print(" 3. Menu de analisis de datos")
-        print(" 4. Salir")
+        print(" 1. Agregar una nueva central")
+        print(" 2. Manejar un celular existente")
+        print(" 3. Agregar un nuevo celular")
+        print(" 4. Menu de analisis de datos")
+        print(" 5. Salir")
         opcion = input("Ingrese la opcion deseada: ")
         if opcion == "1":
+            os.system("cls")
+            try:
+                prefijo = input("Ingrese el prefijo de la nueva central")
+                centrales.append(Central(prefijo))
+                print("Central cargada con exito")
+            except ValueError as e:
+                print(e)
+            except Exception as e:
+                print(f"Error al agregar un nuevo: {e}")
+
+            input("Presione para volver al menu de navegacion... ")
+            os.system("cls")
+    
+
+        elif opcion == "2":
             os.system("cls")
             try:
                 if not celulares:
@@ -55,7 +80,7 @@ if "__main__" == __name__:
             input("Presione para volver al menu de navegacion... ")
             os.system("cls")
 
-        elif opcion == "2":
+        elif opcion == "3":
             os.system("cls")
             try:
                 nombre = input("Ingrese el nombre del celular: ")
@@ -65,7 +90,7 @@ if "__main__" == __name__:
                 ram = input("Ingrese la cantidad de RAM del celular: ")
                 almacenamiento = input("Ingrese la cantidad de almacenamiento del celular: ")
                 celulares.append(Celular(nombre, modelo, numero, sistema_operativo, ram, almacenamiento))
-                print("Celular agregado con exito!!")
+                print("Celular agregado con exito!")
             except ValueError as e:
                 print(e)
             except Exception as e:
@@ -73,7 +98,8 @@ if "__main__" == __name__:
 
             input("Presione para volver al menu de navegacion... ")
             os.system("cls")
-        elif opcion == "3":
+
+        elif opcion == "4":
             os.system("cls")
             try:
                 analisis_de_datos = AnalisisDatos('Play Store Data.csv')
@@ -81,7 +107,8 @@ if "__main__" == __name__:
             except Exception as e:
                 print(f"Error al analizar los datos: {e}")
             os.system("cls")
-        elif opcion == "4":
+
+        elif opcion == "5":
             os.system("cls")
             try:
                 salir = True

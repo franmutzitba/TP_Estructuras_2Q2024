@@ -1,5 +1,5 @@
 Nombre,Modelo,Numero,Sistema Operativo,Memoria RAM,Almacenamiento,ID,Encendido,Bloqueado,Contraseña,Aplicaciones
-iPhone de Franco,iPhone 13,46579361,iOS,4GB,64GB,ec8548bb-2396-49cb-90a2-304dfcdf51f8,True,True,None
-Samsung de Eze,Samsung Galaxy S21,48321234,Android,6GB,128GB,ec8548bb-2396-49cb-90a2-304dfcdf51f8,True,False,None
-Oneplus de Manuel,Oneplus 9T,22349876,Android,4GB,32GB,ec8548bb-2396-49cb-90a2-304dfcdf51f8,True,False,None
-Huawei de Alec,Huawei P40,45671230,Android,8GB,256GB,ec8548bb-2396-49cb-90a2-304dfcdf51f8,True,False,None
+Huawei de Alec,Huawei P40,11 45671230,Android,8GB,256GB,ec8548bb-2396-49cb-90a2-304dfcdf51f8,True,False,None
+iPhone de Franco,iPhone 13,22 46579361,iOS,4GB,64GB,ec8548bb-2396-49cb-90a2-304dfcdf51f8,True,True,None
+Oneplus de Manuel,Oneplus 9T,22 22349876,Android,4GB,32GB,ec8548bb-2396-49cb-90a2-304dfcdf51f8,True,False,None
+Samsung de Eze,Samsung Galaxy S21,33 48321234,Android,6GB,128GB,ec8548bb-2396-49cb-90a2-304dfcdf51f8,True,False,None

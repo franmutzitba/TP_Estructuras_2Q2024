@@ -10,7 +10,7 @@ from Apps.telefono import TelefonoApp
 from Apps.mensajeriaSMS import MensajesApp
 from Apps.mail import MailApp
 from Apps.contactos import ContactosApp
-from funciones_utiles import tamanio_a_bytes, tamanio_a_gb
+from funciones_utiles import tamanio_a_bytes, tamanio_a_gb, buscar_prefijo, validar_numero
 from central import Central
 
 class Celular:
@@ -58,14 +58,11 @@ class Celular:
     menu_navegacion():
         Menú de navegación del dispositivo
     """
-    central = Central() #habria q hacer que sea algo de cada celular, no de todos los celulares. hay q pasarlo como parametro
     numeros = set()
 
     def __init__(self, nombre, modelo, numero, sistema_operativo, memoria_ram, almacenamiento, id_celular = uuid.uuid4()):
         if not nombre or not modelo or not numero or not sistema_operativo or not memoria_ram or not almacenamiento:
             raise ValueError("Los campos no pueden estar vacíos")
-        if not numero.isdigit() or len(numero)!=8:
-            raise ValueError("Numero de celular incorrecto!! ... El formato son 8 digitos")
         if numero in Celular.numeros:
             raise ValueError(f"Numero -{ numero} - ya pertenece a un celular")
         if not bool(re.match(r"^\d+(\.\d+)?\s*[KMGTP]?B?$", almacenamiento)):
@@ -73,6 +70,8 @@ class Celular:
         #Se fija que haya espacio suficiente para las aplicaciones básicas
         if tamanio_a_bytes(almacenamiento) < tamanio_a_bytes("1.5 GB"):
             raise ValueError("El almacenamiento no es suficiente para las aplicaciones básicas")
+        if not validar_numero(numero):
+            raise ValueError("El número de telefono no es válido")
 
         #Almaceno los parámetros no modificables por Configuración
         self.id_celular = id_celular #Genera un UUID (Universal Unique Identifier) para el celular
@@ -83,23 +82,25 @@ class Celular:
 
         self.encendido = False
         self.bloqueado = False
-
+        
+        self.central = Central.centrales[buscar_prefijo(numero)]
+            
         self.aplicaciones = {}
-        self.descargar_apps_basicas(nombre, tamanio_a_bytes(almacenamiento), numero, self.aplicaciones)
+        self.descargar_apps_basicas(nombre, tamanio_a_bytes(almacenamiento), numero, self.aplicaciones, self.central)
         Celular.numeros.add(numero)
 
-    def descargar_apps_basicas(self, nombre, almacenamiento, numero, aplicaciones):
+    def descargar_apps_basicas(self, nombre, almacenamiento, numero, aplicaciones, central):
         """Descarga las aplicaciones básicas del celular
         Recibe los parámetros necesarios para la creación de las aplicaciones básicas
         """
         from Apps.appstore import AppStore
 
-        self.aplicaciones["Configuracion"] = ConfigApp(Configuracion(nombre, almacenamiento, Celular.central, numero, aplicaciones))
+        self.aplicaciones["Configuracion"] = ConfigApp(Configuracion(nombre, almacenamiento, central, numero, aplicaciones))
         self.aplicaciones["Contactos"] = ContactosApp()
-        self.aplicaciones["Mensajes"] = MensajesApp(numero, self.aplicaciones["Contactos"], Celular.central)
-        self.aplicaciones["Mail"] = MailApp(numero, Celular.central)
+        self.aplicaciones["Mensajes"] = MensajesApp(numero, self.aplicaciones["Contactos"], central)
+        self.aplicaciones["Mail"] = MailApp(numero, central)
         self.aplicaciones["AppStore"] = AppStore(self.aplicaciones, self.aplicaciones["Configuracion"])
-        self.aplicaciones["Telefono"] = TelefonoApp(numero, Celular.central, self.aplicaciones["Contactos"])
+        self.aplicaciones["Telefono"] = TelefonoApp(numero, central, self.aplicaciones["Contactos"])
 
     def encender_dispositivo(self):
         """

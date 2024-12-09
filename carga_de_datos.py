@@ -5,23 +5,31 @@ luego utilizados para ejecutar el main
 import os
 from datetime import datetime
 from manejadorCSV import ManejadorDispositivos, ManejadorSMS, ManejadorLlamadas
-from manejadorCSV import ManejadorCuentasMail, ManejadorContactos, ManejadorMails
+from manejadorCSV import ManejadorCuentasMail, ManejadorContactos, ManejadorMails, ManejadorCentrales
 from celular import Celular
 from Apps.mail import CuentaMail
 from comunicacion import Mail
-
+from central import Central
 
 
 ###########################
 ####### Manejadores #######
 ###########################
-manejador_celulares = ManejadorDispositivos("z_celulares.csv", Celular.central)
-manejador_sms = ManejadorSMS("z_archivo_sms.csv", Celular.central)
-manejador_llamadas = ManejadorLlamadas("z_archivo_llamadas.csv", Celular.central)
+manejador_celulares = ManejadorDispositivos("z_celulares.csv")
+manejador_sms = ManejadorSMS("z_archivo_sms.csv")
+manejador_llamadas = ManejadorLlamadas("z_archivo_llamadas.csv")
 manejador_cuentas_mail = ManejadorCuentasMail("z_cuentas_mail.csv")
-manejador_contactos = ManejadorContactos("z_contactos.csv", Celular.central)
+manejador_contactos = ManejadorContactos("z_contactos.csv")
 manejador_mails = ManejadorMails("z_mails.csv")
+manejador_centrales = ManejadorCentrales("z_centrales.csv")
 
+
+###########################
+# Instancia de Centrales ##
+###########################
+central1 = Central(11)
+central2 = Central(22)
+centrales3 = Central(33)
 
 
 ###########################
@@ -29,10 +37,10 @@ manejador_mails = ManejadorMails("z_mails.csv")
 ###########################
 os.system("cls")
 input("Presione para instanciar 4 celulares:")
-celular1 = Celular("iPhone de Franco", "iPhone 13", "46579361", "iOS", "4GB", "64GB")
-celular2 = Celular("Samsung de Eze", "Samsung Galaxy S21", "48321234", "Android", "6GB", "128GB")
-celular3 = Celular("Oneplus de Manuel", "Oneplus 9T", "22349876", "Android", "4GB", "32GB")
-celular4 = Celular("Huawei de Alec", "Huawei P40", "45671230", "Android", "8GB", "256GB")
+celular1 = Celular("iPhone de Franco", "iPhone 13", "11 46579361", "iOS", "4GB", "64GB")
+celular2 = Celular("Samsung de Eze", "Samsung Galaxy S21", "11 48321234", "Android", "6GB", "128GB")
+celular3 = Celular("Oneplus de Manuel", "Oneplus 9T", "22 22349876", "Android", "4GB", "32GB")
+celular4 = Celular("Huawei de Alec", "Huawei P40", "33 45671230", "Android", "8GB", "256GB")
 
 #Enciendo los 4 celulares
 input("Presione para encender los celulares:")

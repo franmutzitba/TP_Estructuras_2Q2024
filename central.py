@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from collections import deque
 from comunicacion import Llamada, Mensaje
 from Apps.configuracion import ModoRed
+from funciones_utiles import buscar_prefijo
 #from manejadorCSV import ManejadorSMS
 #La primera vez que se activa el servicio del celular se da de alta en la central
 #Luego la central chequea que tenga servicio o LTE segun corresponda para realizar la comunicacion
@@ -59,11 +60,17 @@ class Central:
     exportar_mensajes():
         Exporta los mensajes a un archivo.
     """
+
+    centrales = {}
     #agregaria una lista de clase que tenga todas las centrales y en cada instancia en la q hay q buscar numeros en las centrales recorres las listas y lo buscas entodos con un while asi apenas lo encuentra para (mas escalable q limitarnos a 2 centrales)
-    def __init__(self):
+    def __init__(self, prefijo):
+        if not (len(prefijo) == 2 and prefijo.isdigit()):
+            raise ValueError ("El numero del prefijo no es valido. Deben ser dos numeros.")
         self.registro_llamadas = deque()
         self.registro_dispositivos = {} #diccionario que contiene el numero en la key y el objeto celular en el valor
         self.registro_mensajes =  {} #Diccionario que contiene el numero en la key y una pila de mensajes en el valor
+        self.prefijo = prefijo
+        Central.centrales[prefijo] = self
 
     def registrar_dispositivo(self, numero, celular):
         """
@@ -81,15 +88,15 @@ class Central:
 
     def consultar_LTE(self, numero):
         """Devuelve True si un dispositivo está en modo LTE."""
-        return self.registro_dispositivos[numero].aplicaciones["Configuracion"].configuracion.modo_red == ModoRed.LTE
+        return Central.centrales[buscar_prefijo(numero)].registro_dispositivos[numero].aplicaciones["Configuracion"].configuracion.modo_red == ModoRed.LTE
 
     def esta_registrado(self, numero: str):
         """Verifica si un número está registrado en la central."""
-        return numero in self.registro_dispositivos
+        return numero in Central.centrales[buscar_prefijo(numero)].registro_dispositivos
 
-    def esta_activo(self, numero:str):
+    def esta_activo(self, numero: str):
         """Verifica si un número está activo en la central."""
-        return self.registro_dispositivos[numero].aplicaciones["Configuracion"].configuracion.modo_red != ModoRed.SIN_RED
+        return Central.centrales[buscar_prefijo(numero)].registro_dispositivos[numero].aplicaciones["Configuracion"].configuracion.modo_red != ModoRed.SIN_RED
 
     def registrar_llamada(self, llamada):
         """
@@ -102,8 +109,8 @@ class Central:
         emisor = llamada.get_emisor()
         receptor = llamada.get_receptor()
         
-        self.registro_dispositivos[emisor].aplicaciones["Telefono"].aniadir_llamada(llamada, iniciada=True)
-        self.registro_dispositivos[receptor].aplicaciones["Telefono"].aniadir_llamada(llamada, iniciada=False)
+        Central.centrales[buscar_prefijo(emisor)].registro_dispositivos[emisor].aplicaciones["Telefono"].aniadir_llamada(llamada, iniciada=True)
+        Central.centrales[buscar_prefijo(receptor)].registro_dispositivos[receptor].aplicaciones["Telefono"].aniadir_llamada(llamada, iniciada=False)
         print("")
         print(f"Se a registrado la llamada {'perdida' if llamada.get_perdida() else 'recibida'} por el numero - {receptor} - enviada por - {emisor} - en la central")
 
@@ -119,14 +126,15 @@ class Central:
         """
 
         receptor = mensaje.get_receptor()
+        central_receptor = Central.centrales[buscar_prefijo(receptor)]
 
-        if receptor not in self.registro_mensajes:
-            self.registro_mensajes[receptor] = deque()  # Crear una pila para el receptor
+        if receptor not in central_receptor.registro_mensajes:
+            central_receptor.registro_mensajes[receptor] = deque()  # Crear una pila para el receptor
 
-        self.registro_mensajes[receptor].appendleft(mensaje)
+        central_receptor.registro_mensajes[receptor].appendleft(mensaje)
 
-        if  self.esta_registrado(receptor) and self.esta_activo(receptor):
-            self.registro_dispositivos[receptor].aplicaciones["Mensajes"].recibir_sms(mensaje)
+        if central_receptor.esta_registrado(receptor) and central_receptor.esta_activo(receptor):
+            central_receptor.registro_dispositivos[receptor].aplicaciones["Mensajes"].recibir_sms(mensaje)
 
     def registrar_mensajes(self, numero_cel):
         """
@@ -187,7 +195,7 @@ class Central:
             bool: True si el número de teléfono se encuentra en una llamada en curso, False en caso contrario.
         """
         fecha_actual = datetime.now()
-        llamada = self.registro_dispositivos[numero].aplicaciones["Telefono"].get_ultima_llamada()
+        llamada = Central.centrales[buscar_prefijo(numero)].registro_dispositivos[numero].aplicaciones["Telefono"].get_ultima_llamada()
         if llamada:
             return fecha_actual < llamada.get_fecha() + llamada.get_duracion() 
         return False  
@@ -213,7 +221,7 @@ class Central:
         if not self.esta_activo(numero):
             raise ValueError (f"El celular {numero} no se encuentra activo en la Central")
 
-        llamada = self.registro_dispositivos[numero].aplicaciones["Telefono"].get_ultima_llamada()
+        llamada = Central.centrales[buscar_prefijo(numero)].registro_dispositivos[numero].aplicaciones["Telefono"].get_ultima_llamada()
         fecha_inicio = llamada.get_fecha()
         fecha_fin = datetime.now()
 
@@ -277,13 +285,13 @@ class Central:
             ValueError: Si el emisor está sin servicio y no puede mandar mensajes.
             ValueError: Si el receptor no está registrado en la central.
         """
-
+        central_receptor = Central.centrales[buscar_prefijo(receptor)]
         if not self.esta_registrado(emisor):
-            raise ValueError(f"El celular {emisor} no se encuentra registrado en la Central")
+            raise ValueError(f"El celular {emisor} no se encuentra registrado en la Central de prefijo: {self.get_prefijo()}")
         if not self.esta_activo(emisor):
             raise ValueError(f"El celular {emisor} se encuentra sin servicio e incapaz de mandar mensajes")
-        if not self.esta_registrado(receptor):
-            raise ValueError(f"El celular {receptor} no esta registrado en la Central")
+        if not central_receptor.esta_registrado(receptor):
+            raise ValueError(f"El celular {receptor} no esta registrado en la Central de prefijo: {central_receptor.get_prefijo()}")
         print(f"Enviando mensaje de {emisor} a {receptor}...\n")
 
     def eliminar_mensaje(self, mensaje, numero):
@@ -307,6 +315,9 @@ class Central:
         """
         for dispositivo in self.registro_dispositivos:
             print(dispositivo)
+
+    def get_prefijo(self):
+        return self.prefijo
 
     def __str__(self):
         return f"Registro de llamadas: {self.registro_llamadas}\n Registro de dispositivos: {self.registro_dispositivos}\n Registro de mensajes: {self.registro_mensajes}"

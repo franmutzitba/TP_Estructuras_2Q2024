@@ -5,11 +5,13 @@ archivos CSV
 
 import csv
 from collections import deque
-from datetime import datetime, timedelta 
+from datetime import datetime, timedelta
 import numpy as np
-from Apps.mail import CuentaMail, Mail
 from comunicacion import Mensaje, Llamada
+from central import Central
+from Apps.mail import CuentaMail, Mail
 from celular import Celular
+from funciones_utiles import buscar_prefijo
 
 class ManejadorCSV:
     """
@@ -105,27 +107,24 @@ class ManejadorSMS(ManejadorCSV):
     nombre_archivo (str): Nombre del archivo CSV.
     central (Central): Central telefónica a la que se le cargarán los mensajes
     """
-    def __init__(self, nombre_archivo, central):
-        """
-        Inicializa la clase ManejadorSMS con el nombre del archivo y la central.
-        
-        """
-        super().__init__(nombre_archivo)
-        self.central = central
-
+    
+    
     def exportar_mensajes(self):
         """
         Exporta los mensajes a un archivo CSV.
         """
-        colas = self.central.registro_mensajes.values()
+        
         lista_a_exportar = []
         titulo = ["Emisor", "Receptor", "Texto", "Fecha", "Sincronizado"]
         lista_a_exportar.append(titulo)
-        for cola in colas:
-            cola_2 = cola.copy()
-            while cola_2:
-                mensaje = cola_2.popleft()
-                lista_a_exportar.append([mensaje.get_emisor(), mensaje.get_receptor(), mensaje.get_mensaje(), mensaje.get_fecha(), mensaje.get_sincronizado()])
+        
+        for central in Central.centrales.values():
+            colas = central.registro_mensajes.values()
+            for cola in colas:
+                cola_2 = cola.copy()
+                while cola_2:
+                    mensaje = cola_2.popleft()
+                    lista_a_exportar.append([mensaje.get_emisor(), mensaje.get_receptor(), mensaje.get_mensaje(), mensaje.get_fecha(), mensaje.get_sincronizado()])
         self.exportar(lista_a_exportar)
 
     def cargar_mensajes(self):
@@ -138,34 +137,29 @@ class ManejadorSMS(ManejadorCSV):
         while lista_mensajes:
             lista = lista_mensajes.popleft()
             mensaje = Mensaje(lista[0], lista[1], lista[2], datetime.fromisoformat(lista[3]))
-            self.central.registrar_mensaje_nuevo(mensaje)
+            central = Central.centrales[buscar_prefijo(lista[0])]
+            central.registrar_mensaje_nuevo(mensaje)
 
 class ManejadorLlamadas(ManejadorCSV):
     """
     Clase para manejar archivos CSV específicos de llamadas.
     Hereda de ManejadorCSV.
     """
-
-    def __init__(self, nombre_archivo, central):
-        """
-        Inicializa la clase ManejadorLlamadas con el nombre del archivo y la central.
-
-        Args:
-            nombre_archivo (str): El nombre del archivo CSV.
-            central (Central): La instancia de la central telefónica.
-        """
-        super().__init__(nombre_archivo)
-        self.central = central
-
+    
+    
     def exportar_llamadas(self):
         """
         Exporta las llamadas a un archivo CSV.
         """
         self.exportar([['Emisor', 'Receptor', 'Duracion', 'Fecha Inicio', 'Perdida']])
-        while self.central.registro_llamadas:
-            llamada = self.central.registro_llamadas.popleft()
-            duracion = str(llamada.get_duracion())[:-7:] if len(str(llamada.get_duracion())[:-7:]) > 6 else str(llamada.get_duracion())
-            self.exportar([[llamada.get_emisor(), llamada.get_receptor(), duracion, llamada.get_fecha(), llamada.get_perdida()]], "a")
+        llamadas = set()
+        for central in Central.centrales.values():
+            while central.registro_llamadas:
+                llamada = central.registro_llamadas.popleft()
+                if llamada not in llamadas:
+                    llamadas.add(llamada)
+                    duracion = str(llamada.get_duracion())[:-7:] if len(str(llamada.get_duracion())[:-7:]) > 6 else str(llamada.get_duracion())
+                    self.exportar([[llamada.get_emisor(), llamada.get_receptor(), duracion, llamada.get_fecha(), llamada.get_perdida()]], "a")
 
     def cargar_llamadas(self):
         """
@@ -177,34 +171,23 @@ class ManejadorLlamadas(ManejadorCSV):
         for llamada in lista_llamadas:
             duracion = datetime.strptime(llamada[2],'%H:%M:%S').time()
             duracion_en_formato = timedelta(hours=duracion.hour, minutes=duracion.minute, seconds=duracion.second)
-            self.central.registrar_llamada(Llamada(llamada[0], llamada[1], duracion_en_formato , datetime.fromisoformat(llamada[3]), llamada[4] == "True"))
+            central = Central.centrales[buscar_prefijo(llamada[0])]
+            central.registrar_llamada(Llamada(llamada[0], llamada[1], duracion_en_formato , datetime.fromisoformat(llamada[3]), llamada[4] == "True"))
 
 class ManejadorContactos(ManejadorCSV):
     """
     Clase para manejar archivos CSV específicos de contactos.
     Hereda de ManejadorCSV.
     """
-
-    def __init__(self, nombre_archivo, central):
-        """
-        Inicializa la clase ManejadorContactos con el nombre del archivo y la aplicación 
-        de contactos.
-
-        Args:
-            nombre_archivo (str): El nombre del archivo CSV.
-            contactos_app (ContactosApp): La instancia de la aplicación de contactos.
-        """
-        super().__init__(nombre_archivo)
-        self.central = central
-
     def exportar_contactos(self):
         """
         Exporta los contactos a un archivo CSV.
         """
         self.exportar([['Numero Celular','Nombre', 'Numero Contacto']])
-        for celular in self.central.registro_dispositivos.values():
-            for numero, contacto in celular.aplicaciones["Contactos"].agenda.items():
-                self.exportar([[celular.aplicaciones['Configuracion'].configuracion.numero, contacto, numero]], "a")
+        for central in Central.centrales.values():
+            for celular in central.registro_dispositivos.values():
+                for numero, contacto in celular.aplicaciones["Contactos"].agenda.items():
+                    self.exportar([[celular.aplicaciones['Configuracion'].configuracion.numero, contacto, numero]], "a")
 
     def cargar_contactos(self):
         """
@@ -214,7 +197,8 @@ class ManejadorContactos(ManejadorCSV):
         if not lista_contactos:
             return None
         for linea in lista_contactos:
-            celular = self.central.registro_dispositivos[linea[0]]
+            central_celu = Central.centrales[buscar_prefijo(linea[0])]
+            celular = central_celu.registro_dispositivos[linea[0]]
             celular.aplicaciones["Contactos"].agregar_contacto(linea[2], linea[1])
 
 class ManejadorDispositivos(ManejadorCSV):
@@ -222,43 +206,34 @@ class ManejadorDispositivos(ManejadorCSV):
     Clase para manejar archivos CSV específicos de dispositivos.
     Hereda de ManejadorCSV.
     """
-
-    def __init__(self, nombre_archivo, central):
-        """
-        Inicializa la clase ManejadorDispositivos con el nombre del archivo y la central.
-
-        Args:
-            nombre_archivo (str): El nombre del archivo CSV.
-            central (Central): La instancia de la central telefónica.
-        """
-        super().__init__(nombre_archivo)
-        self.central = central
-
+    
+    
     def exportar_dispositivos(self):
         """
         Exporta los dispositivos a un archivo CSV.
         """
         self.exportar([['Nombre', 'Modelo', 'Numero', 'Sistema Operativo', 'Memoria RAM', 'Almacenamiento', 'ID', 'Encendido', 'Bloqueado','Contraseña', 'Aplicaciones']])
-        for celular in self.central.registro_dispositivos.values():
-            if celular.aplicaciones["Configuracion"].configuracion.contrasenia is None:
-                contrasenia = "None"
-            else:
-                contrasenia = celular.aplicaciones["Configuracion"].configuracion.contrasenia
-            lista = [
-                celular.aplicaciones["Configuracion"].configuracion.nombre,
-                celular.modelo,
-                celular.aplicaciones["Configuracion"].configuracion.numero,
-                celular.sistema_operativo,
-                celular.memoria_ram,
-                celular.almacenamiento_original,
-                celular.id_celular,
-                celular.encendido,
-                celular.bloqueado,
-                contrasenia
-            ]
-            #Instala las aplicaciones que no se instalan solas
-            lista.extend(nombre for nombre, app in celular.aplicaciones.items() if app.es_esencial() is False)
-            self.exportar([lista], "a")
+        for central in Central.centrales.values():
+            for celular in central.registro_dispositivos.values():
+                if celular.aplicaciones["Configuracion"].configuracion.contrasenia is None:
+                    contrasenia = "None"
+                else:
+                    contrasenia = celular.aplicaciones["Configuracion"].configuracion.contrasenia
+                celu = [
+                    celular.aplicaciones["Configuracion"].configuracion.nombre,
+                    celular.modelo,
+                    celular.aplicaciones["Configuracion"].configuracion.numero,
+                    celular.sistema_operativo,
+                    celular.memoria_ram,
+                    celular.almacenamiento_original,
+                    celular.id_celular,
+                    celular.encendido,
+                    celular.bloqueado,
+                    contrasenia
+                ]
+                #Instala las aplicaciones que no se instalan solas
+                celu.extend(nombre for nombre, app in celular.aplicaciones.items() if app.es_esencial() is False)
+                self.exportar([celu], "a")
 
     def cargar_dispositivos(self):
         """
@@ -293,7 +268,7 @@ class ManejadorDispositivos(ManejadorCSV):
 
             for aplicacion in dispositivo[10:]:
                 celular.aplicaciones["AppStore"].descargar_app(aplicacion, carga_datos = True)
-            self.central.registrar_dispositivo(dispositivo[2], celular)
+            Central.centrales[buscar_prefijo(dispositivo[2])].registrar_dispositivo(dispositivo[2], celular)
             lista_celulares.append(celular)
 
         return lista_celulares
@@ -303,6 +278,7 @@ class ManejadorMails(ManejadorCSV):
     Clase para manejar archivos CSV específicos de mails.
     Hereda de ManejadorCSV.
     """
+    
 
     def exportar_mails(self):
         """
@@ -351,3 +327,31 @@ class ManejadorCuentasMail(ManejadorCSV):
             return None
         for cuenta in lista_cuentas:
             CuentaMail(cuenta[0], cuenta[1])
+
+class ManejadorCentrales(ManejadorCSV):
+    """
+    Clase para manejar archivos CSV específicos de centrales.
+    Hereda de ManejadorCSV.
+    """
+
+    def exportar_centrales(self):
+        """
+        Exporta las centrales a un archivo CSV.
+        """
+        self.exportar([['Prefijo']])
+        for prefijo in Central.centrales:
+            self.exportar([[prefijo]], "a")
+
+    def cargar_centrales(self):
+        """
+        Carga las centrales desde un archivo CSV y las registra en la aplicación de mail.
+        """
+        lista_centrales = self.leer_archivo(True)
+        centrales_instanciadas = []
+        if not lista_centrales:
+            return None
+
+        for linea in lista_centrales:
+            central = Central(linea[0])
+            centrales_instanciadas.append(central)
+        return centrales_instanciadas

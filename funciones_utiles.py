@@ -2,6 +2,8 @@
 Módulo con funciones útiles para el manejo de archivos y directorios.
 """
 
+import re
+
 def tamanio_a_bytes(tamanio_formateado):
     """
     Convierte una cadena de tamaño formateado (ej. "117.74 MB") a su valor en bytes.
@@ -43,3 +45,17 @@ def tamanio_a_gb(tamanio_bytes):
         float: El tamaño convertido a gigabytes.
     """
     return tamanio_bytes / (1024 ** 3)
+
+def buscar_prefijo(numero):
+    """Busca el prefijo del número de celular"""
+    return numero[:2]
+
+def validar_numero(numero):
+    """Valida si el número de celular es válido"""
+    from central import Central
+    
+    formato = r'^\d{2} \d{8}$'
+    if bool(re.match(formato, numero)):
+        if numero[:2] in Central.centrales:
+            return True
+    return False

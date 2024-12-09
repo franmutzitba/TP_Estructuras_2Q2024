@@ -6,6 +6,7 @@ from collections import deque
 import datetime
 import os
 from Apps.aplicacion import Aplicacion
+from funciones_utiles import validar_numero
 
 class TelefonoApp(Aplicacion):
     """Clase que representa la aplicación de Teléfono de un dispositivo móvil.
@@ -122,7 +123,7 @@ class TelefonoApp(Aplicacion):
         Returns:
             None
         """
-        if len(numero_receptor) != 8 or not numero_receptor.isdigit():
+        if not validar_numero(numero_receptor):
             raise ValueError("Numero incorrecto")
         if duracion > 1440:
             raise ValueError("La duracion no puede ser mayor a 24hs (1440 minutos)")
@@ -242,7 +243,7 @@ class TelefonoApp(Aplicacion):
                 os.system("cls")
                 print("Marcar número y llamar")
                 receptor = input("Ingrese el número al que desea llamar: ")
-                while not receptor.isdigit() or len(receptor) != 8:
+                while not validar_numero(receptor):
                     receptor = input("Numero incorrecto! Ingrese el número al que desea llamar: ") 
                 duracion = input("Ingrese la duracion de la llamada en minutos: ")
                 while not duracion.isdigit():

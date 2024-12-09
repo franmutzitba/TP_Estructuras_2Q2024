@@ -9,6 +9,8 @@ from Apps.aplicacion import Aplicacion
 from Apps.contactos import ContactosApp
 from comunicacion import Mensaje
 from central import Central
+from funciones_utiles import validar_numero
+
 
 class MensajesApp(Aplicacion):
     """
@@ -308,6 +310,8 @@ class MensajesApp(Aplicacion):
                     elif opcion2 == "2":
                         os.system('cls')
                         numero = input("Ingrese el número de teléfono del receptor: ")
+                        if not validar_numero(numero):
+                            raise ValueError("Formato o Numero de celular incorrecto")
                         texto = input("Ingrese el mensaje a enviar: ")
                         if not texto:
                             raise ValueError("No se pueden enviar mensajes vacios")
