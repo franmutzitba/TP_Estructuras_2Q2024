@@ -58,7 +58,7 @@ class Celular:
     menu_navegacion():
         Menú de navegación del dispositivo
     """
-    central = Central()
+    central = Central() #habria q hacer que sea algo de cada celular, no de todos los celulares. hay q pasarlo como parametro
     numeros = set()
 
     def __init__(self, nombre, modelo, numero, sistema_operativo, memoria_ram, almacenamiento, id_celular = uuid.uuid4()):

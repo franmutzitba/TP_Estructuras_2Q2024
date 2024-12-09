@@ -59,7 +59,7 @@ class Central:
     exportar_mensajes():
         Exporta los mensajes a un archivo.
     """
-
+    #agregaria una lista de clase que tenga todas las centrales y en cada instancia en la q hay q buscar numeros en las centrales recorres las listas y lo buscas entodos con un while asi apenas lo encuentra para (mas escalable q limitarnos a 2 centrales)
     def __init__(self):
         self.registro_llamadas = deque()
         self.registro_dispositivos = {} #diccionario que contiene el numero en la key y el objeto celular en el valor
@@ -177,7 +177,7 @@ class Central:
             #primero los mas viejos, es decir los primeros de la lista, por eso popleft
             # Tambien fueron los ultimos en enntrar por eso pila
 
-    def esta_ocupado(self, numero):
+    def esta_ocupado(self, numero): #aca hay q agregar q lo verifique en la otra central tmb
         """Verifica si el número de celular se encuentra ocupado en una llamada en curso.
         
         Args:
@@ -192,7 +192,7 @@ class Central:
             return fecha_actual < llamada.get_fecha() + llamada.get_duracion() 
         return False  
 
-    def terminar_llamada(self, numero):
+    def terminar_llamada(self, numero): #aca hay q agregar q lo verifique en las otras centrales tmb
 
         """
         Termina la llamada en curso de un número de celular.
@@ -222,7 +222,7 @@ class Central:
 
         print(f"Se termino la llamada en curso entre {llamada.emisor} y {llamada.receptor}")
 
-    def manejar_llamada(self, emisor, receptor, fecha_inicio:datetime, duracion:timedelta):
+    def manejar_llamada(self, emisor, receptor, fecha_inicio:datetime, duracion:timedelta): #aca hay q agregar q lo verifique en las otras centrales tmb (CAMBIAR LOS PRIMEROS RAISE Y BUSCARLO EN TODAS)
         """
         Maneja una llamada que se produce en la central, la registra y la almacena en el 
         registro de llamadas.
@@ -261,7 +261,7 @@ class Central:
             llamada.set_duracion(timedelta(0))
         self.registrar_llamada(llamada)
 
-    def manejar_mensaje(self, emisor, receptor):
+    def manejar_mensaje(self, emisor, receptor): #aca hay q agregar q lo verifique en las otras centrales tmb (CAMBIAR LOS PRIMEROS RAISE Y BUSCARLO EN TODAS)
         """
         Maneja el envío de un mensaje de un emisor a un receptor.
         
