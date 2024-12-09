@@ -69,27 +69,33 @@ if "__main__" == __name__:
             except ValueError as e:
                 print(e)
             except Exception as e:
-                print(f"Error: {e}")
+                print(f"Error al agregar un nuevo: {e}")
 
             input("Presione para volver al menu de navegacion... ")
             os.system("cls")
         elif opcion == "3":
             os.system("cls")
-            analisis_de_datos = AnalisisDatos('Play Store Data.csv')
-            analisis_de_datos.menu_navegacion()
+            try:
+                analisis_de_datos = AnalisisDatos('Play Store Data.csv')
+                analisis_de_datos.menu_navegacion()
+            except Exception as e:
+                print(f"Error al analizar los datos: {e}")
             os.system("cls")
         elif opcion == "4":
             os.system("cls")
-            salir = True
-            manejador_celulares.exportar_dispositivos()
-            manejador_sms.exportar_mensajes()
-            manejador_llamadas.exportar_llamadas()
-            manejador_cuentas_mail.exportar_cuentas()
-            manejador_mails.exportar_mails()
-            manejador_contactos.exportar_contactos()
-            print("Saliendo del programa...")
-            print("")
-            print("Gracias por utilizar este programa!")
+            try:
+                salir = True
+                manejador_celulares.exportar_dispositivos()
+                manejador_sms.exportar_mensajes()
+                manejador_llamadas.exportar_llamadas()
+                manejador_cuentas_mail.exportar_cuentas()
+                manejador_mails.exportar_mails()
+                manejador_contactos.exportar_contactos()
+                print("Saliendo del programa...")
+                print("")
+                print("Gracias por utilizar este programa!")
+            except Exception as e:
+                print(f"Error al cerrar el programa: {e}")
         else:
             os.system("cls")
             print("Opción no válida, intente nuevamente")
