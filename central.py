@@ -111,7 +111,7 @@ class Central:
         receptor = llamada.get_receptor()
         central_receptor = Central.centrales[buscar_prefijo(receptor)]
         
-        if self != central_receptor:
+        if self.get_prefijo() != central_receptor.get_prefijo() :
             central_receptor.registro_llamadas.appendleft(llamada)
         
         self.registro_dispositivos[emisor].aplicaciones["Telefono"].aniadir_llamada(llamada, iniciada=True)
