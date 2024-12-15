@@ -244,16 +244,23 @@ class TelefonoApp(Aplicacion):
                 print("Marcar número y llamar")
                 receptor = input("Ingrese el número al que desea llamar: ")
                 while not validar_numero(receptor):
-                    receptor = input("Numero incorrecto! Ingrese el número al que desea llamar: ") 
-                duracion = input("Ingrese la duracion de la llamada en minutos: ")
-                while not duracion.isdigit():
-                    print("La duración debe ser un número entero")
-                    duracion = input("Ingrese la duracion de la llamada en minutos: ")  
-                try:
-                    self.iniciar_llamada(receptor, int(duracion))
-                except ValueError as e:
-                    print(e)
-                input("Presione cualquier tecla para volver al menú de Teléfono...")
+                    receptor = input("Numero incorrecto! Ingrese el número al que desea llamar o presione Enter para salir: ") 
+                    if not receptor:
+                        input("Presione cualquier tecla para volver al menú de Teléfono...")
+                        opcion = False
+                        break
+                        os.system('cls')
+                        
+                if receptor:    
+                    duracion = input("Ingrese la duracion de la llamada en minutos: ")
+                    while not duracion.isdigit():
+                        print("La duración debe ser un número entero")
+                        duracion = input("Ingrese la duracion de la llamada en minutos: ")  
+                    try:
+                        self.iniciar_llamada(receptor, int(duracion))
+                    except ValueError as e:
+                        print(e)
+                    input("Presione cualquier tecla para volver al menú de Teléfono...")
                 os.system('cls')
             elif opcion == "2":
                 os.system("cls")
