@@ -39,22 +39,21 @@ if "__main__" == __name__:
     salir = False
     while not salir:
         print("Bienvenido al menu de navegacion de celulares")
-        print(" 1. Agregar una nueva central")
+        print(" 1. Manejo de centrales")
         print(" 2. Manejar un celular existente")
         print(" 3. Agregar un nuevo celular")
         print(" 4. Menu de analisis de datos")
         print(" 5. Salir")
         opcion = input("Ingrese la opcion deseada: ")
+        
         if opcion == "1":
             os.system("cls")
             try:
-                prefijo = input("Ingrese el prefijo de la nueva central")
-                centrales.append(Central(prefijo))
-                print("Central cargada con exito")
+                centrales = Central.menu_navegacion()
             except ValueError as e:
                 print(e)
             except Exception as e:
-                print(f"Error al agregar un nuevo: {e}")
+                print(f"Error al manejar las centrales: {e}")
 
             input("Presione para volver al menu de navegacion... ")
             os.system("cls")
@@ -118,6 +117,7 @@ if "__main__" == __name__:
                 manejador_cuentas_mail.exportar_cuentas()
                 manejador_mails.exportar_mails()
                 manejador_contactos.exportar_contactos()
+                manejador_centrales.exportar_centrales()
                 print("Saliendo del programa...")
                 print("")
                 print("Gracias por utilizar este programa!")

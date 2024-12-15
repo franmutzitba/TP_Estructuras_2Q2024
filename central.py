@@ -1,12 +1,13 @@
 """
 Módulo que contiene la clase Central, que simula una central telefónica.
 """
-
+import os
 from datetime import datetime, timedelta
 from collections import deque
 from comunicacion import Llamada, Mensaje
 from Apps.configuracion import ModoRed
 from funciones_utiles import buscar_prefijo
+
 #from manejadorCSV import ManejadorSMS
 #La primera vez que se activa el servicio del celular se da de alta en la central
 #Luego la central chequea que tenga servicio o LTE segun corresponda para realizar la comunicacion
@@ -319,5 +320,48 @@ class Central:
     def get_prefijo(self):
         return self.prefijo
 
+    @classmethod
+    def menu_navegacion(cls):
+        """Menú de navegación de las centrales"""
+        print("Bienvenido a las centrales")
+        salir = False
+        while not salir:
+            print("Menu de las centrales:")
+            print("1. Agregar central")
+            print("2. Ver centrales existentes")
+            print("3. Salir")
+            opcion = input("Seleccione una opción: ")
+            
+            if opcion == "1":
+                os.system("cls")
+                try:
+                    prefijo = input("Ingrese el prefijo de la nueva central: ")
+                    central = Central(prefijo)
+                    print("Central cargada con exito")
+                except ValueError as e:
+                    print(e)
+                except Exception as e:
+                    print(f"Error al agregar un nuevo: {e}")
+            
+            elif opcion == "2":
+                os.system("cls")
+                try:
+                    
+                    for central in Central.centrales:
+                        print(f"Prefijo: {central}")
+                except ValueError as e:
+                    print(e)
+                except Exception as e:
+                    print(f"Error al agregar un nuevo: {e}")
+                    
+            elif opcion == "3":
+                salir = True
+                return Central.centrales
+            else:
+                print("Opción no válida")
+
+            input("Presione para volver al menu de navegacion... ")
+            os.system("cls")
+                
     def __str__(self):
         return f"Registro de llamadas: {self.registro_llamadas}\n Registro de dispositivos: {self.registro_dispositivos}\n Registro de mensajes: {self.registro_mensajes}"
