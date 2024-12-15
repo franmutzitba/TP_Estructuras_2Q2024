@@ -109,9 +109,13 @@ class Central:
         self.registro_llamadas.appendleft(llamada)
         emisor = llamada.get_emisor()
         receptor = llamada.get_receptor()
+        central_receptor = Central.centrales[buscar_prefijo(receptor)]
         
-        Central.centrales[buscar_prefijo(emisor)].registro_dispositivos[emisor].aplicaciones["Telefono"].aniadir_llamada(llamada, iniciada=True)
-        Central.centrales[buscar_prefijo(receptor)].registro_dispositivos[receptor].aplicaciones["Telefono"].aniadir_llamada(llamada, iniciada=False)
+        if self != central_receptor:
+            central_receptor.registro_llamadas.appendleft(llamada)
+        
+        self.registro_dispositivos[emisor].aplicaciones["Telefono"].aniadir_llamada(llamada, iniciada=True)
+        central_receptor.registro_dispositivos[receptor].aplicaciones["Telefono"].aniadir_llamada(llamada, iniciada=False)
         print("")
         print(f"Se a registrado la llamada {'perdida' if llamada.get_perdida() else 'recibida'} por el numero - {receptor} - enviada por - {emisor} - en la central")
 
